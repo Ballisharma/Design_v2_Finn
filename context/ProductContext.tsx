@@ -106,14 +106,14 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
         setIsLoading(false);
       });
 
-      // Set up automatic background sync every 5 minutes
+      // Set up automatic background sync every 1 minute
       const syncInterval = setInterval(async () => {
         console.log('🔄 Running background sync...');
         const freshProducts = await getMergedProducts();
         if (freshProducts.length > 0) {
           setProducts(freshProducts);
         }
-      }, 5 * 60 * 1000); // 5 minutes
+      }, 1 * 60 * 1000); // 1 minute
 
       return () => clearInterval(syncInterval);
     }

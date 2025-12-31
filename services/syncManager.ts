@@ -83,9 +83,9 @@ export const getMergedProducts = async (): Promise<Product[]> => {
         const cached = localStorage.getItem('woo_products');
         const lastSync = localStorage.getItem('last_sync');
 
-        // Check if cache is fresh (less than 5 minutes old)
+        // Check if cache is fresh (less than 1 minute old)
         const isCacheFresh = lastSync &&
-            (Date.now() - new Date(lastSync).getTime()) < 5 * 60 * 1000;
+            (Date.now() - new Date(lastSync).getTime()) < 1 * 60 * 1000;
 
         if (cached && isCacheFresh) {
             console.log('📦 Using cached WooCommerce products');
