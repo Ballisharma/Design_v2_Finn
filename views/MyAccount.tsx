@@ -61,7 +61,7 @@ const MyAccount: React.FC = () => {
                   </div>
                   <div className="text-center md:text-left flex-1">
                      <h1 className="font-heading font-black text-3xl md:text-5xl mb-2">HELLO, {user.first_name.toUpperCase()}! 👋</h1>
-                     <p className="font-mono opacity-60 text-sm md:text-base">{user.email} • Member since 2025</p>
+                     <p className="font-mono opacity-60 text-sm md:text-base">{user.email} • Joined {new Date().getFullYear()}</p>
                   </div>
                   <button
                      onClick={handleLogout}
@@ -136,10 +136,16 @@ const MyAccount: React.FC = () => {
                                           {order.line_items.map((item: any, idx: number) => (
                                              <div key={idx} className="flex justify-between items-center border-b border-gray-50 pb-4 last:border-0 last:pb-0">
                                                 <div className="flex items-center gap-3">
-                                                   <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center text-xl">🧦</div>
+                                                   <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center border border-gray-100">
+                                                      {item.image?.src ? (
+                                                         <img src={item.image.src} alt={item.name} className="w-full h-full object-cover" />
+                                                      ) : (
+                                                         <span className="text-xl">🧦</span>
+                                                      )}
+                                                   </div>
                                                    <div>
-                                                      <span className="font-bold text-gray-700 block">{item.name}</span>
-                                                      <span className="text-xs text-gray-400 font-mono">Qty: {item.quantity}</span>
+                                                      <span className="font-bold text-gray-700 block text-sm leading-tight mb-1">{item.name}</span>
+                                                      <span className="bg-gray-100 text-gray-500 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Qty: {item.quantity}</span>
                                                    </div>
                                                 </div>
                                                 <span className="font-mono font-bold text-gray-900">₹{item.total}</span>
