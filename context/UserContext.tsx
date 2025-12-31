@@ -44,7 +44,18 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const savedUser = localStorage.getItem('jumplings_user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        const parsed = JSON.parse(savedUser);
+        // Force logout if it's an old mock user from early development
+        if (parsed.first_name === 'Funky' || parsed.id === '1' || parsed.id === '0') {
+          localStorage.removeItem('jumplings_user');
+          setUser(null);
+        } else {
+          setUser(parsed);
+        }
+      } catch (e) {
+        localStorage.removeItem('jumplings_user');
+      }
     }
   }, []);
 
