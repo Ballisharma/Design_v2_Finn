@@ -64,14 +64,14 @@ const Checkout: React.FC = () => {
         console.log("✅ Order created ID:", order.id);
 
         if (paymentMethod === 'razorpay') {
-          const rzpInstance = new (window as any).Razorpay({
+          console.log("💳 Opening Razorpay for Key:", RAZORPAY_KEY_ID ? `${RAZORPAY_KEY_ID.substring(0, 8)}...` : "MISSING");
+
+          const options: any = {
             key: RAZORPAY_KEY_ID,
             amount: Math.round(cartTotal * 100),
             currency: 'INR',
             name: 'Jumplings',
             description: `Order #${order.id}`,
-            image: 'https://jumplings.in/wp-content/uploads/2023/06/cropped-Jumplings-Logo-Small.png',
-            order_id: '',
             prefill: {
               name: `${customer.firstName} ${customer.lastName}`,
               email: customer.email,
@@ -89,17 +89,32 @@ const Checkout: React.FC = () => {
                 clearCart();
                 navigate(user ? '/account' : '/');
                 alert("Payment Successful! Your happy feet are on the way. 🎉");
-              } catch (err) {
+              } catch (err: any) {
                 console.error("Payment sync failed:", err);
-                alert("Payment received, but we had trouble updating the order. Please contact support.");
+                alert(`Payment received, but we had trouble updating the order: ${err.message || 'Unknown Error'}`);
               }
             },
             modal: {
               ondismiss: function () {
                 setIsProcessing(false);
+                console.log("Payment window closed by user");
               }
             }
+          };
+
+          // Optional: Add image if available
+          if (RAZORPAY_KEY_ID.startsWith('rzp_live')) {
+            options.image = 'https://jumplings.in/wp-content/uploads/2023/06/cropped-Jumplings-Logo-Small.png';
+          }
+
+          const rzpInstance = new (window as any).Razorpay(options);
+
+          rzpInstance.on('payment.failed', function (response: any) {
+            console.error("Payment Step Failed:", response.error);
+            alert(`Payment Failed: ${response.error.description}`);
+            setIsProcessing(false);
           });
+
           rzpInstance.open();
           return;
         }
@@ -119,7 +134,7 @@ const Checkout: React.FC = () => {
       }
     } catch (error: any) {
       console.error("Checkout failed:", error);
-      alert(`Oops! ${error.message || "Something went wrong. Please check your details or connection."}`);
+      alert(`Oops! Checkout Step Failed: ${error.message || "Something went wrong."}`);
       setIsProcessing(false);
     }
   };
