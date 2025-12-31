@@ -1,6 +1,4 @@
-
 import React, { useState, useEffect } from 'react';
-import { getMergedProducts, syncProducts } from '../services/syncManager';
 
 const DebugPanel: React.FC = () => {
     const [logs, setLogs] = useState<string[]>([]);
@@ -12,23 +10,22 @@ const DebugPanel: React.FC = () => {
         checkConnection();
     }, []);
 
+    const getAuthHeaders = () => {
+        const key = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY;
+        const secret = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET;
+        return {
+            'Authorization': `Basic ${btoa(`${key}:${secret}`)}`,
+            'Content-Type': 'application/json'
+        };
+    };
+
     const checkConnection = async () => {
-        addLog('--- Checking Configuration ---');
-        addLog(`VITE_WORDPRESS_URL: ${import.meta.env.VITE_WORDPRESS_URL ? '✅ Present' : '❌ Missing'}`);
-        addLog(`VITE_WC_CONSUMER_KEY: ${import.meta.env.VITE_WC_CONSUMER_KEY ? '✅ Present' : '⚠️ Missing (checking fallback)'}`);
-        addLog(`VITE_CONSUMER_KEY: ${import.meta.env.VITE_CONSUMER_KEY ? '✅ Present' : '⚠️ Missing'}`);
-
-        // Check if at least one key is present
-        const hasKey = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY;
-        const hasSecret = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET;
-
-        addLog(`Effective Key Status: ${hasKey ? '✅ OK' : '❌ No Key Found'}`);
-        addLog(`Effective Secret Status: ${hasSecret ? '✅ OK' : '❌ No Secret Found'}`);
-
-        addLog('--- Starting Fetch Request ---');
+        addLog('--- Checking Product Fetch (GET) ---');
         try {
-            // Direct fetch to test proxy
-            const res = await fetch('/wp-json/wc/v3/products');
+            // Using Proxy path with Headers
+            const res = await fetch('/wp-json/wc/v3/products', {
+                headers: getAuthHeaders()
+            });
             addLog(`Fetch Status: ${res.status} ${res.statusText}`);
 
             if (res.ok) {
@@ -39,7 +36,7 @@ const DebugPanel: React.FC = () => {
                 }
             } else {
                 const text = await res.text();
-                addLog(`Error Body: ${text.substring(0, 100)}...`);
+                addLog(`Error Body: ${text.substring(0, 150)}...`);
             }
         } catch (e: any) {
             addLog(`Fetch Exception: ${e.message}`);
@@ -52,21 +49,13 @@ const DebugPanel: React.FC = () => {
             const dummyOrder = {
                 payment_method: 'cod',
                 payment_method_title: 'Debug Test',
-                billing: {
-                    first_name: 'Debug',
-                    last_name: 'Tester',
-                    email: 'debug@example.com',
-                    phone: '9999999999'
-                },
+                billing: { first_name: 'Debug', last_name: 'Tester', email: 'debug@example.com', phone: '9999999999' },
                 line_items: []
             };
 
             const res = await fetch('/wp-json/wc/v3/orders', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Basic ${btoa(`${import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY}:${import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET}`)}`,
-                    'Content-Type': 'application/json'
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(dummyOrder)
             });
 

@@ -1,16 +1,17 @@
 import { Product } from '../types';
 
 // WordPress/WooCommerce API Configuration
-const WP_URL = import.meta.env.VITE_WORDPRESS_URL;
+const WP_URL = import.meta.env.VITE_WORDPRESS_URL || 'https://jumplings.in';
 // Support both standard VITE_WC_ prefix and VITE_ prefix (fallback)
 const WC_CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY;
 const WC_CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET;
+// Use relative path in DEV to leverage Vite Proxy (bypassing CORS)
 const WC_API_URL = import.meta.env.DEV ? '/wp-json/wc/v3' : `${WP_URL}/wp-json/wc/v3`;
 
 // Create Basic Auth header for WooCommerce
 const getAuthHeader = () => {
     if (!WC_CONSUMER_KEY || !WC_CONSUMER_SECRET) {
-        console.error("Missing WooCommerce API Keys in environment variables");
+        console.error("❌ Missing WooCommerce API Keys in environment variables");
         return '';
     }
     const credentials = btoa(`${WC_CONSUMER_KEY}:${WC_CONSUMER_SECRET}`);
@@ -24,7 +25,9 @@ const getAuthHeader = () => {
  */
 export const fetchWooCommerceProducts = async (): Promise<Product[]> => {
     try {
-        const response = await fetch(`${WC_API_URL}/products?per_page=100`, {
+        console.log(`📥 Fetching from: ${WC_API_URL}/products`);
+
+        const response = await fetch(`${WC_API_URL}/products?per_page=100&status=publish`, {
             headers: {
                 'Authorization': getAuthHeader(),
                 'Content-Type': 'application/json',
@@ -32,6 +35,8 @@ export const fetchWooCommerceProducts = async (): Promise<Product[]> => {
         });
 
         if (!response.ok) {
+            const errText = await response.text();
+            console.error("WP API Failure:", response.status, errText);
             throw new Error(`Failed to fetch products: ${response.statusText}`);
         }
 
@@ -150,8 +155,6 @@ const transformLocalProductToWoo = (product: Product) => {
     };
 };
 
-// ==================== ORDER SYNC ====================
-
 /**
  * Create order in WooCommerce
  */
@@ -204,8 +207,6 @@ export const updateWooCommerceStock = async (productId: string, quantity: number
         return false;
     }
 };
-
-// ==================== WEBHOOK HANDLERS ====================
 
 /**
  * Handle incoming webhook from WordPress
