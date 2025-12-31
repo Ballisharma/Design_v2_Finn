@@ -1,26 +1,34 @@
 import { Product, CartItem } from '../types';
 
-// Configuration: Prefer Environment Variables, fall back to hardcoded strings for local dev
-const getEnv = (key: string) => {
-  // @ts-ignore
-  return import.meta.env?.[key] || process.env?.[key] || '';
-};
+// Configuration: Robust Environment Variable Loading
+const WP_URL = import.meta.env.VITE_WORDPRESS_URL || 'https://jumplings.in';
+// Support both standard VITE_WC_ prefix and VITE_ prefix (fallback)
+const CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY;
+const CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET;
+export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
 
-const WP_API_URL = getEnv('VITE_WP_API_URL') || 'https://api.thelagaadi.com/wp-json/wc/v3'; 
-const CONSUMER_KEY = getEnv('VITE_CONSUMER_KEY') || 'ck_YOUR_CONSUMER_KEY'; 
-const CONSUMER_SECRET = getEnv('VITE_CONSUMER_SECRET') || 'cs_YOUR_CONSUMER_SECRET';
-export const RAZORPAY_KEY_ID = getEnv('VITE_RAZORPAY_KEY_ID') || 'rzp_test_YOUR_ID_HERE';
+// Use relative path in DEV to leverage Vite Proxy (bypassing CORS)
+const WP_API_URL = import.meta.env.DEV
+  ? '/wp-json/wc/v3'
+  : `${WP_URL}/wp-json/wc/v3`;
+
+// Helper for Auth Header
+const getAuthHeader = () => {
+  if (!CONSUMER_KEY || !CONSUMER_SECRET) {
+    console.error("Missing WooCommerce API Keys");
+    return '';
+  }
+  return `Basic ${btoa(`${CONSUMER_KEY}:${CONSUMER_SECRET}`)}`;
+};
 
 /**
  * Fetches products from WooCommerce
  */
 export const fetchWooProducts = async (): Promise<Product[]> => {
   try {
-    const auth = btoa(`${CONSUMER_KEY}:${CONSUMER_SECRET}`);
-    
     const response = await fetch(`${WP_API_URL}/products?per_page=100&status=publish`, {
       headers: {
-        'Authorization': `Basic ${auth}`,
+        'Authorization': getAuthHeader(),
         'Content-Type': 'application/json'
       }
     });
@@ -43,8 +51,8 @@ export const fetchWooProducts = async (): Promise<Product[]> => {
       isNew: item.date_created > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
       colorHex: item.attributes.find((a: any) => a.name === 'Color')?.options[0] || '#FFD166',
       stock: item.stock_quantity || 0,
-      variants: item.variations.length > 0 
-        ? [] 
+      variants: item.variations.length > 0
+        ? []
         : [{ size: 'Free Size', stock: item.stock_quantity || 0 }]
     }));
 
@@ -58,15 +66,13 @@ export const fetchWooProducts = async (): Promise<Product[]> => {
  * Sends a new order to WooCommerce
  */
 export const createWooOrder = async (
-  customer: any, 
-  items: CartItem[], 
-  total: number, 
+  customer: any,
+  items: CartItem[],
+  total: number,
   paymentMethod: 'cod' | 'razorpay' = 'cod',
   customerId?: string
 ) => {
   try {
-    const auth = btoa(`${CONSUMER_KEY}:${CONSUMER_SECRET}`);
-
     const orderData = {
       payment_method: paymentMethod,
       payment_method_title: paymentMethod === 'razorpay' ? 'Online Payment (Razorpay)' : 'Cash on Delivery',
@@ -102,7 +108,7 @@ export const createWooOrder = async (
     const response = await fetch(`${WP_API_URL}/orders`, {
       method: 'POST',
       headers: {
-        'Authorization': `Basic ${auth}`,
+        'Authorization': getAuthHeader(),
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(orderData)
@@ -121,68 +127,66 @@ export const createWooOrder = async (
  * Updates a WooCommerce Order (e.g., after successful payment)
  */
 export const updateWooOrder = async (orderId: number, data: any) => {
-    try {
-        const auth = btoa(`${CONSUMER_KEY}:${CONSUMER_SECRET}`);
-        const response = await fetch(`${WP_API_URL}/orders/${orderId}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Basic ${auth}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
+  try {
+    const response = await fetch(`${WP_API_URL}/orders/${orderId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': getAuthHeader(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
 
-        if (!response.ok) throw new Error('Failed to update order');
-        return await response.json();
-    } catch (error) {
-        console.error("Order Update Error:", error);
-        throw error;
-    }
+    if (!response.ok) throw new Error('Failed to update order');
+    return await response.json();
+  } catch (error) {
+    console.error("Order Update Error:", error);
+    throw error;
+  }
 };
 
 /**
  * Fetch Orders for a specific logged-in customer
  */
 export const fetchCustomerOrders = async (customerId: string) => {
-    try {
-        const auth = btoa(`${CONSUMER_KEY}:${CONSUMER_SECRET}`);
-        const response = await fetch(`${WP_API_URL}/orders?customer=${customerId}`, {
-            headers: {
-                'Authorization': `Basic ${auth}`,
-                'Content-Type': 'application/json'
-            }
-        });
+  try {
+    const response = await fetch(`${WP_API_URL}/orders?customer=${customerId}`, {
+      headers: {
+        'Authorization': getAuthHeader(),
+        'Content-Type': 'application/json'
+      }
+    });
 
-        if (!response.ok) throw new Error('Failed to fetch orders');
-        return await response.json();
-    } catch (error) {
-        console.warn("Using Mock Orders (WP API not reachable)");
-        return [
-            {
-                id: 1024,
-                status: 'processing',
-                date_created: new Date().toISOString(),
-                total: '899.00',
-                currency: 'INR',
-                line_items: [
-                    { name: 'Nano-Grip™ Pro (Black)', quantity: 2, total: '598.00' },
-                    { name: 'Geometric Aqua', quantity: 1, total: '399.00' }
-                ]
-            }
-        ];
-    }
+    if (!response.ok) throw new Error('Failed to fetch orders');
+    return await response.json();
+  } catch (error) {
+    console.warn("Using Mock Orders (WP API not reachable)");
+    return [
+      {
+        id: 1024,
+        status: 'processing',
+        date_created: new Date().toISOString(),
+        total: '899.00',
+        currency: 'INR',
+        line_items: [
+          { name: 'Nano-Grip™ Pro (Black)', quantity: 2, total: '598.00' },
+          { name: 'Geometric Aqua', quantity: 1, total: '399.00' }
+        ]
+      }
+    ];
+  }
 };
 
 export const loginCustomer = async (email: string, password: string) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve({
-                id: '1',
-                email: email,
-                first_name: 'Funky',
-                last_name: 'Fan',
-                avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Funky'
-            });
-        }, 1000);
-    });
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        id: '1',
+        email: email,
+        first_name: 'Funky',
+        last_name: 'Fan',
+        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Funky'
+      });
+    }, 1000);
+  });
 };
