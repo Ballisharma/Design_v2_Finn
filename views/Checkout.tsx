@@ -64,7 +64,10 @@ const Checkout: React.FC = () => {
         console.log("✅ Order created ID:", order.id);
 
         if (paymentMethod === 'razorpay') {
-          console.log("💳 Opening Razorpay for Key:", RAZORPAY_KEY_ID ? `${RAZORPAY_KEY_ID.substring(0, 8)}...` : "MISSING");
+          if (!RAZORPAY_KEY_ID) {
+            throw new Error("Razorpay Key ID is missing. Please configure VITE_RAZORPAY_KEY_ID in your environment.");
+          }
+          console.log("💳 Opening Razorpay for Key:", `${RAZORPAY_KEY_ID.substring(0, 8)}...`);
 
           const options: any = {
             key: RAZORPAY_KEY_ID,
