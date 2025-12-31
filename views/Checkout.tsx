@@ -8,7 +8,7 @@ import { createWooOrder, updateWooOrder, RAZORPAY_KEY_ID } from '../utils/wordpr
 
 const Checkout: React.FC = () => {
   const { items, subtotal, shippingCost, cartTotal, clearCart } = useCart();
-  const { products, updateProduct, dataSource } = useProducts();
+  const { products, updateProduct, dataSource, refreshProducts } = useProducts();
   const { user } = useUser();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -62,6 +62,9 @@ const Checkout: React.FC = () => {
         console.log("🌐 Attempting to create WooCommerce Order...");
         // 1. Create Order in WooCommerce (Pending Status if Online, Processing if COD)
         const order = await createWooOrder(customer, items, cartTotal, paymentMethod, user?.id);
+
+        // 2. Refresh Products to update Stock locally
+        await refreshProducts();
 
         if (paymentMethod === 'razorpay') {
           // 2. Open Razorpay

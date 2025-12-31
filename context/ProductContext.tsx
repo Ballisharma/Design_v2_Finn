@@ -22,6 +22,7 @@ interface ProductContextType {
   dataSource: 'local' | 'wordpress'; // Track where data comes from
   setDataSource: (source: 'local' | 'wordpress') => void;
   isLoading: boolean;
+  refreshProducts: () => Promise<void>;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -182,11 +183,25 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     setSettings(prev => ({ ...prev, ...newSettings }));
   };
 
+  const refreshProducts = async () => {
+    setIsLoading(true);
+    try {
+      const freshProducts = await getMergedProducts();
+      if (freshProducts.length > 0) {
+        setProducts(freshProducts);
+      }
+    } catch (error) {
+      console.error("Failed to refresh products:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <ProductContext.Provider value={{
       products, categories, addProduct, deleteProduct, updateProduct, addCategory,
       availableSizes, addAvailableSize, settings, updateSettings,
-      dataSource, setDataSource, isLoading
+      dataSource, setDataSource, isLoading, refreshProducts
     }}>
       {children}
     </ProductContext.Provider>
