@@ -78,7 +78,7 @@ export const createWooOrder = async (
       payment_method_title: paymentMethod === 'razorpay' ? 'Online Payment (Razorpay)' : 'Cash on Delivery',
       set_paid: false,
       status: paymentMethod === 'razorpay' ? 'pending' : 'processing', // Pending for online, Processing for COD
-      customer_id: customerId ? Number(customerId) : 0,
+      customer_id: (customerId && !isNaN(Number(customerId))) ? Number(customerId) : 0,
       billing: {
         first_name: customer.firstName,
         last_name: customer.lastName,
@@ -105,6 +105,8 @@ export const createWooOrder = async (
       }))
     };
 
+    console.log("📤 Sending Order to WordPress:", orderData);
+
     const response = await fetch(`${WP_API_URL}/orders`, {
       method: 'POST',
       headers: {
@@ -114,7 +116,11 @@ export const createWooOrder = async (
       body: JSON.stringify(orderData)
     });
 
-    if (!response.ok) throw new Error('Order creation failed');
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ WordPress Order Failed:", response.status, errorText);
+      throw new Error(`Order creation failed: ${errorText}`);
+    }
     return await response.json();
 
   } catch (error) {
