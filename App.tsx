@@ -21,7 +21,6 @@ import CartDrawer from './components/CartDrawer';
 import ProductModal from './components/ProductModal';
 import WordPressSyncPanel from './components/WordPressSyncPanel';
 import DebugPanel from './components/DebugPanel';
-import DiagnosticPanel from './components/DiagnosticPanel';
 import { Instagram, Facebook, Twitter, Linkedin, Heart } from 'lucide-react';
 
 const ScrollToTop = () => {
@@ -74,9 +73,6 @@ const AppContent: React.FC = () => {
           </Routes>
         )}
       </main>
-
-      {/* Diagnostic Panel - visible in all modes */}
-      <DiagnosticPanel />
 
       {/* Redesigned Footer: 2-Column Layout */}
       <footer className="bg-[#002366] text-white pt-16 pb-8 px-6">
