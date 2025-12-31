@@ -37,6 +37,9 @@ const DEFAULT_SETTINGS: StoreSettings = {
 
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [dataSource, setDataSource] = useState<'local' | 'wordpress'>(() => {
+    // Force WordPress mode in production env
+    if (import.meta.env.PROD) return 'wordpress';
+
     const saved = localStorage.getItem('jumplings_data_source');
     return (saved as 'local' | 'wordpress') || 'wordpress';
   });
