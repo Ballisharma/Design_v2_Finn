@@ -231,7 +231,7 @@ const Checkout: React.FC = () => {
                 <span className={`font-bold ${paymentMethod === 'razorpay' ? 'text-funky-dark' : 'text-gray-500'}`}>Online Payment (UPI/Card/NetBanking)</span>
                 {paymentMethod === 'razorpay' && (
                   <div className="ml-auto flex items-center gap-2">
-                    {RAZORPAY_KEY_ID && !RAZORPAY_KEY_ID.includes('YourKeyHere') ? (
+                    {RAZORPAY_KEY_ID ? (
                       <span className="text-[10px] bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-bold">Key Detected</span>
                     ) : (
                       <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-bold">Key Missing!</span>

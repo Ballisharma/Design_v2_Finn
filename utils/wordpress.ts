@@ -6,7 +6,7 @@ const WP_URL = import.meta.env.VITE_WORDPRESS_URL || 'https://jumplings.in';
 const CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY || 'ck_717db3f2db699eb3c8b77425e28ccb716d3661f3';
 const CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET || 'cs_b536578381112bf7be0581eeaad03d3f6d963523';
 // Razorpay Configuration: Key ID is for Frontend, Secret is for Backend (WordPress Plugin)
-export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_YourKeyHere';
+export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
 
 // Use relative path in DEV to leverage Vite Proxy (bypassing CORS)
 const WP_API_URL = '/wp-json/wc/v3';
