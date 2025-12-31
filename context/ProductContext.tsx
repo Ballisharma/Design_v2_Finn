@@ -35,7 +35,15 @@ const DEFAULT_SETTINGS: StoreSettings = {
 };
 
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [dataSource, setDataSource] = useState<'local' | 'wordpress'>('local');
+  const [dataSource, setDataSource] = useState<'local' | 'wordpress'>(() => {
+    return (localStorage.getItem('jumplings_data_source') as 'local' | 'wordpress') || 'local';
+  });
+
+  // Save dataSource preference
+  useEffect(() => {
+    localStorage.setItem('jumplings_data_source', dataSource);
+  }, [dataSource]);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [products, setProducts] = useState<Product[]>(() => {
