@@ -22,7 +22,8 @@ const Checkout: React.FC = () => {
     lastName: user?.last_name || '',
     address: '',
     city: '',
-    pincode: ''
+    pincode: '',
+    state: ''
   });
 
   if (items.length === 0) {
@@ -205,6 +206,10 @@ const Checkout: React.FC = () => {
               <div>
                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1">City</label>
                 <input name="city" value={customer.city} onChange={handleInputChange} required type="text" placeholder="Sockville" className="w-full bg-funky-light border-2 border-transparent focus:border-funky-blue rounded-xl px-4 py-3 font-medium outline-none transition-colors" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase text-gray-500 mb-1">State</label>
+                <input name="state" value={customer.state} onChange={handleInputChange} required type="text" placeholder="State" className="w-full bg-funky-light border-2 border-transparent focus:border-funky-blue rounded-xl px-4 py-3 font-medium outline-none transition-colors" />
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase text-gray-500 mb-1">PIN Code</label>

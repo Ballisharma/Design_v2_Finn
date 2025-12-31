@@ -84,7 +84,7 @@ export const createWooOrder = async (
         last_name: customer.lastName,
         address_1: customer.address,
         city: customer.city,
-        state: '',
+        state: customer.state || 'MH',
         postcode: customer.pincode,
         country: 'IN',
         email: customer.email,
@@ -95,7 +95,7 @@ export const createWooOrder = async (
         last_name: customer.lastName,
         address_1: customer.address,
         city: customer.city,
-        state: '',
+        state: customer.state || 'MH',
         postcode: customer.pincode,
         country: 'IN'
       },
