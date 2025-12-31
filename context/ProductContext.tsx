@@ -37,7 +37,12 @@ const DEFAULT_SETTINGS: StoreSettings = {
 
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [dataSource, setDataSource] = useState<'local' | 'wordpress'>(() => {
-    return (localStorage.getItem('jumplings_data_source') as 'local' | 'wordpress') || 'local';
+    const saved = localStorage.getItem('jumplings_data_source');
+    if (saved) return saved as 'local' | 'wordpress';
+
+    // Default to 'wordpress' if we have API credentials configured
+    const hasCredentials = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY;
+    return hasCredentials ? 'wordpress' : 'local';
   });
 
   // Save dataSource preference
