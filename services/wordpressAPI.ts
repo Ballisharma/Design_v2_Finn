@@ -5,8 +5,8 @@ const WP_URL = import.meta.env.VITE_WORDPRESS_URL || 'https://jumplings.in';
 // Support both standard VITE_WC_ prefix and VITE_ prefix (fallback)
 const WC_CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY;
 const WC_CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET;
-// Use relative path in DEV to leverage Vite Proxy (bypassing CORS)
-const WC_API_URL = import.meta.env.DEV ? '/wp-json/wc/v3' : `${WP_URL}/wp-json/wc/v3`;
+// Use relative path - handled by Vite Proxy in DEV and Nginx in PROD
+const WC_API_URL = '/wp-json/wc/v3';
 
 // Create Basic Auth header for WooCommerce
 const getAuthHeader = () => {
@@ -101,7 +101,7 @@ export const syncProductToWooCommerce = async (product: Product): Promise<boolea
                     'Authorization': getAuthHeader(),
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(wooProduct),
+                body: JSON.stringify({ ...wooProduct, manage_stock: true }),
             });
         } else {
             // Create new product
@@ -192,7 +192,8 @@ export const updateWooCommerceStock = async (productId: string, quantity: number
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                stock_quantity: quantity
+                stock_quantity: quantity,
+                manage_stock: true
             }),
         });
 

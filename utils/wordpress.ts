@@ -8,9 +8,7 @@ const CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.e
 export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
 
 // Use relative path in DEV to leverage Vite Proxy (bypassing CORS)
-const WP_API_URL = import.meta.env.DEV
-  ? '/wp-json/wc/v3'
-  : `${WP_URL}/wp-json/wc/v3`;
+const WP_API_URL = '/wp-json/wc/v3';
 
 // Helper for Auth Header
 const getAuthHeader = () => {
