@@ -25,9 +25,13 @@ const getAuthHeader = () => {
  */
 export const fetchWooCommerceProducts = async (): Promise<Product[]> => {
     try {
-        console.log(`📥 Fetching from: ${WC_API_URL}/products`);
+        // Add cache busting to ensure we get fresh data from the server
+        const cacheBuster = `_=${Date.now()}`;
+        const url = `${WC_API_URL}/products?per_page=100&status=publish&${cacheBuster}`;
 
-        const response = await fetch(`${WC_API_URL}/products?per_page=100&status=publish`, {
+        console.log(`📥 Fetching fresh products from: ${url}`);
+
+        const response = await fetch(url, {
             headers: {
                 'Authorization': getAuthHeader(),
                 'Content-Type': 'application/json',
@@ -54,12 +58,16 @@ export const fetchWooCommerceProducts = async (): Promise<Product[]> => {
  * Transform WooCommerce product format to your local Product type
  */
 const transformWooProductToLocal = (wooProduct: any): Product => {
+    // If it's a variable product, the parent stock might be empty.
+    // In a real app, we'd fetch variations, but for now we rely on manage_stock being true.
+    const productStock = wooProduct.stock_quantity || 0;
+
     return {
         id: wooProduct.id.toString(),
         slug: wooProduct.slug,
         name: wooProduct.name,
-        subtitle: wooProduct.short_description || '',
-        description: wooProduct.description || wooProduct.short_description || '',
+        subtitle: wooProduct.short_description?.replace(/<[^>]*>?/gm, '') || '',
+        description: wooProduct.description?.replace(/<[^>]*>?/gm, '') || wooProduct.short_description?.replace(/<[^>]*>?/gm, '') || '',
         price: parseFloat(wooProduct.price),
         currency: 'INR',
         category: wooProduct.categories?.[0]?.name || 'Uncategorized',
@@ -67,11 +75,11 @@ const transformWooProductToLocal = (wooProduct: any): Product => {
         tags: wooProduct.tags?.map((tag: any) => tag.name) || [],
         isNew: wooProduct.featured || false,
         colorHex: wooProduct.attributes?.find((attr: any) => attr.name === 'Color')?.options?.[0] || '#000000',
-        stock: wooProduct.stock_quantity || 0,
+        stock: productStock,
         variants: wooProduct.attributes?.find((attr: any) => attr.name === 'Size')?.options?.map((size: string) => ({
             size,
-            stock: wooProduct.stock_quantity || 0
-        })) || [{ size: 'Free Size', stock: wooProduct.stock_quantity || 0 }]
+            stock: productStock // Default to parent stock if specific variation stock isn't fetched
+        })) || [{ size: 'Free Size', stock: productStock }]
     };
 };
 

@@ -190,7 +190,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   const refreshProducts = async () => {
     setIsLoading(true);
     try {
-      const freshProducts = await getMergedProducts();
+      const freshProducts = await getMergedProducts(true); // Force real refresh
       if (freshProducts.length > 0) {
         setProducts(freshProducts);
       }

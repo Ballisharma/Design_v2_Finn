@@ -35,6 +35,7 @@ export const syncProducts = async (direction: SyncDirection = 'bidirectional'): 
         if (direction === 'wordpress-to-local' || direction === 'bidirectional') {
             // Pull products from WordPress
             console.log('📥 Fetching products from WooCommerce...');
+            // In syncProducts, we always fetch fresh
             const wooProducts = await fetchWooCommerceProducts();
 
             if (wooProducts.length > 0) {
@@ -77,7 +78,7 @@ export const syncProducts = async (direction: SyncDirection = 'bidirectional'): 
  * Get merged products (local + WordPress)
  * Prioritizes WordPress data if available
  */
-export const getMergedProducts = async (): Promise<Product[]> => {
+export const getMergedProducts = async (force: boolean = false): Promise<Product[]> => {
     try {
         // Try to get cached WooCommerce products
         const cached = localStorage.getItem('woo_products');
@@ -87,7 +88,7 @@ export const getMergedProducts = async (): Promise<Product[]> => {
         const isCacheFresh = lastSync &&
             (Date.now() - new Date(lastSync).getTime()) < 1 * 60 * 1000;
 
-        if (cached && isCacheFresh) {
+        if (cached && isCacheFresh && !force) {
             console.log('📦 Using cached WooCommerce products');
             return JSON.parse(cached);
         }
