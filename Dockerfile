@@ -12,6 +12,15 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Pass build-time arguments (Vite needs these to bake them into the JS)
+ARG VITE_WORDPRESS_URL
+ARG VITE_WC_CONSUMER_KEY
+ARG VITE_WC_CONSUMER_SECRET
+
+ENV VITE_WORDPRESS_URL=$VITE_WORDPRESS_URL
+ENV VITE_WC_CONSUMER_KEY=$VITE_WC_CONSUMER_KEY
+ENV VITE_WC_CONSUMER_SECRET=$VITE_WC_CONSUMER_SECRET
+
 # Build the application
 RUN npm run build
 

@@ -3,8 +3,8 @@ import { Product } from '../types';
 // WordPress/WooCommerce API Configuration
 const WP_URL = import.meta.env.VITE_WORDPRESS_URL || 'https://jumplings.in';
 // Support both standard VITE_WC_ prefix and VITE_ prefix (fallback)
-const WC_CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY;
-const WC_CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET;
+const WC_CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY || 'ck_717db3f2db699eb3c8b77425e28ccb716d3661f3';
+const WC_CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET || 'cs_b536578381112bf7be0581eeaad03d3f6d963523';
 // Use relative path - handled by Vite Proxy in DEV and Nginx in PROD
 const WC_API_URL = '/wp-json/wc/v3';
 
