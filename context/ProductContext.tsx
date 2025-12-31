@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Product } from '../types';
 import { PRODUCTS as INITIAL_PRODUCTS } from '../constants';
-import { fetchWooProducts } from '../utils/wordpress';
+import { getMergedProducts, syncProducts, syncStockAfterPurchase, getSyncStatus } from '../services/syncManager';
 
 export interface StoreSettings {
   freeShippingThreshold: number;
@@ -75,22 +75,34 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   });
 
-  // WordPress Data Sync Logic
+  // WordPress Data Sync Logic - Enhanced with bi-directional sync
   useEffect(() => {
     if (dataSource === 'wordpress') {
       setIsLoading(true);
-      fetchWooProducts().then(wpProducts => {
-        if (wpProducts.length > 0) {
-           setProducts(wpProducts);
-           // Extract unique categories from WP products
-           const wpCategories = Array.from(new Set(wpProducts.map(p => p.category)));
-           if(wpCategories.length > 0) setCategories(wpCategories);
+
+      // Initial sync
+      getMergedProducts().then((mergedProducts: Product[]) => {
+        if (mergedProducts.length > 0) {
+          setProducts(mergedProducts);
+          // Extract unique categories from products
+          const wpCategories = Array.from(new Set(mergedProducts.map((p: Product) => p.category)));
+          if (wpCategories.length > 0) setCategories(wpCategories as string[]);
         } else {
-           // Fallback or Alert
-           console.warn("No products found in WordPress or API failed. Using local data.");
+          console.warn("No products found in WordPress or API failed. Using local data.");
         }
         setIsLoading(false);
       });
+
+      // Set up automatic background sync every 5 minutes
+      const syncInterval = setInterval(async () => {
+        console.log('🔄 Running background sync...');
+        const freshProducts = await getMergedProducts();
+        if (freshProducts.length > 0) {
+          setProducts(freshProducts);
+        }
+      }, 5 * 60 * 1000); // 5 minutes
+
+      return () => clearInterval(syncInterval);
     }
   }, [dataSource]);
 
@@ -121,7 +133,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, [settings]);
 
   const addProduct = (product: Product) => {
-    if(dataSource === 'wordpress') {
+    if (dataSource === 'wordpress') {
       alert("You are in WordPress mode. Please add products via your WP-Admin dashboard.");
       return;
     }
@@ -129,7 +141,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const deleteProduct = (id: string) => {
-    if(dataSource === 'wordpress') {
+    if (dataSource === 'wordpress') {
       alert("Please delete this product in your WordPress dashboard.");
       return;
     }
@@ -137,9 +149,9 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const updateProduct = (id: string, updates: Partial<Product>) => {
-    if(dataSource === 'wordpress') {
-       // Ideally we would POST to WP API here to update stock
-       console.log("Mocking stock update to WP for product:", id);
+    if (dataSource === 'wordpress') {
+      // Ideally we would POST to WP API here to update stock
+      console.log("Mocking stock update to WP for product:", id);
     }
     setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, ...updates } : p)));
   };
@@ -163,7 +175,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   return (
-    <ProductContext.Provider value={{ 
+    <ProductContext.Provider value={{
       products, categories, addProduct, deleteProduct, updateProduct, addCategory,
       availableSizes, addAvailableSize, settings, updateSettings,
       dataSource, setDataSource, isLoading
