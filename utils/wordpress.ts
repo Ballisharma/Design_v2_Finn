@@ -5,7 +5,8 @@ const WP_URL = import.meta.env.VITE_WORDPRESS_URL || 'https://jumplings.in';
 // Support both standard VITE_WC_ prefix and VITE_ prefix (fallback)
 const CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY || 'ck_717db3f2db699eb3c8b77425e28ccb716d3661f3';
 const CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET || 'cs_b536578381112bf7be0581eeaad03d3f6d963523';
-export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || '';
+// Razorpay Configuration: Key ID is for Frontend, Secret is for Backend (WordPress Plugin)
+export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_YourKeyHere';
 
 // Use relative path in DEV to leverage Vite Proxy (bypassing CORS)
 const WP_API_URL = '/wp-json/wc/v3';
@@ -73,41 +74,54 @@ export const createWooOrder = async (
   try {
     let finalCustomerId = (customerId && !isNaN(Number(customerId))) ? Number(customerId) : 0;
 
+    // Map common Indian states to their codes if necessary
+    const stateMap: { [key: string]: string } = {
+      'delhi': 'DL', 'maharashtra': 'MH', 'karnataka': 'KA', 'tamil nadu': 'TN',
+      'west bengal': 'WB', 'gujarat': 'GJ', 'telangana': 'TG', 'uttar pradesh': 'UP',
+      'haryana': 'HR', 'punjab': 'PB', 'rajasthan': 'RJ'
+    };
+    const stateInput = (customer.state || 'MH').toLowerCase().trim();
+    const finalState = stateMap[stateInput] || customer.state || 'MH';
+
     // If guest, check if customer already exists by email
     if (!finalCustomerId) {
-      const existingCustomer = await fetch(`${WP_API_URL}/customers?email=${customer.email}`, {
+      const custCheckResponse = await fetch(`${WP_API_URL}/customers?email=${customer.email}`, {
         headers: { 'Authorization': getAuthHeader() }
-      }).then(res => res.json());
+      });
 
-      if (existingCustomer.length > 0) {
-        finalCustomerId = existingCustomer[0].id;
-      } else {
-        // Create new customer
-        const newCustomerResponse = await fetch(`${WP_API_URL}/customers`, {
-          method: 'POST',
-          headers: {
-            'Authorization': getAuthHeader(),
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: customer.email,
-            first_name: customer.firstName,
-            last_name: customer.lastName,
-            billing: {
+      if (custCheckResponse.ok) {
+        const existingCustomers = await custCheckResponse.json();
+        if (Array.isArray(existingCustomers) && existingCustomers.length > 0) {
+          finalCustomerId = existingCustomers[0].id;
+        } else {
+          // Create new customer
+          const newCustomerResponse = await fetch(`${WP_API_URL}/customers`, {
+            method: 'POST',
+            headers: {
+              'Authorization': getAuthHeader(),
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: customer.email,
               first_name: customer.firstName,
               last_name: customer.lastName,
-              address_1: customer.address,
-              city: customer.city,
-              postcode: customer.pincode,
-              country: 'IN',
-              email: customer.email,
-              phone: customer.phone
-            }
-          })
-        });
-        if (newCustomerResponse.ok) {
-          const newCust = await newCustomerResponse.json();
-          finalCustomerId = newCust.id;
+              billing: {
+                first_name: customer.firstName,
+                last_name: customer.lastName,
+                address_1: customer.address,
+                city: customer.city,
+                state: finalState,
+                postcode: customer.pincode,
+                country: 'IN',
+                email: customer.email,
+                phone: customer.phone
+              }
+            })
+          });
+          if (newCustomerResponse.ok) {
+            const newCust = await newCustomerResponse.json();
+            finalCustomerId = newCust.id;
+          }
         }
       }
     }
@@ -123,7 +137,7 @@ export const createWooOrder = async (
         last_name: customer.lastName,
         address_1: customer.address,
         city: customer.city,
-        state: customer.state || 'MH',
+        state: finalState,
         postcode: customer.pincode,
         country: 'IN',
         email: customer.email,
@@ -134,7 +148,7 @@ export const createWooOrder = async (
         last_name: customer.lastName,
         address_1: customer.address,
         city: customer.city,
-        state: customer.state || 'MH',
+        state: finalState,
         postcode: customer.pincode,
         country: 'IN'
       },

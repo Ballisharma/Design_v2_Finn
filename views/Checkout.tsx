@@ -154,9 +154,9 @@ const Checkout: React.FC = () => {
         navigate(user ? '/account' : '/');
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Checkout failed:", error);
-      alert("Something went wrong processing your order. Please try again.");
+      alert(`Oops! ${error.message || "Something went wrong processing your order. Please try again."}`);
       setIsProcessing(false);
     }
   };
