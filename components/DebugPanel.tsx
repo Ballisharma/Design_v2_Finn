@@ -10,9 +10,12 @@ const DebugPanel: React.FC = () => {
         checkConnection();
     }, []);
 
-    const getAuthHeaders = () => {
-        const key = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY;
-        const secret = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET;
+    const getAuthHeaders = (): Record<string, string> => {
+        const key = import.meta.env.VITE_WC_CONSUMER_KEY;
+        const secret = import.meta.env.VITE_WC_CONSUMER_SECRET;
+        if (!key || !secret) {
+            return {};
+        }
         return {
             'Authorization': `Basic ${btoa(`${key}:${secret}`)}`,
             'Content-Type': 'application/json'
@@ -20,9 +23,13 @@ const DebugPanel: React.FC = () => {
     };
 
     const checkConnection = async () => {
+        addLog('--- Checking Environment Variables ---');
+        addLog(`WP_URL: ${import.meta.env.VITE_WORDPRESS_URL || '❌ MISSING (Using Fallback)'}`);
+        addLog(`WC_KEY: ${import.meta.env.VITE_WC_CONSUMER_KEY ? `${import.meta.env.VITE_WC_CONSUMER_KEY.substring(0, 10)}...` : '❌ MISSING'}`);
+        addLog(`RPAY_KEY: ${import.meta.env.VITE_RAZORPAY_KEY_ID ? `${import.meta.env.VITE_RAZORPAY_KEY_ID.substring(0, 10)}...` : '❌ MISSING'}`);
+
         addLog('--- Checking Product Fetch (GET) ---');
         try {
-            // Using Proxy path with Headers
             const res = await fetch('/wp-json/wc/v3/products', {
                 headers: getAuthHeaders()
             });
