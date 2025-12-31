@@ -7,6 +7,23 @@ interface User {
   first_name: string;
   last_name: string;
   avatar_url?: string;
+  billing?: {
+    first_name: string;
+    last_name: string;
+    address_1: string;
+    city: string;
+    postcode: string;
+    country: string;
+    phone: string;
+  };
+  shipping?: {
+    first_name: string;
+    last_name: string;
+    address_1: string;
+    city: string;
+    postcode: string;
+    country: string;
+  };
 }
 
 interface UserContextType {
@@ -27,21 +44,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const savedUser = localStorage.getItem('jumplings_user');
     if (savedUser) {
-        setUser(JSON.parse(savedUser));
+      setUser(JSON.parse(savedUser));
     }
   }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-        const userData: any = await loginCustomer(email, password);
-        setUser(userData);
-        localStorage.setItem('jumplings_user', JSON.stringify(userData));
+      const userData: any = await loginCustomer(email, password);
+      setUser(userData);
+      localStorage.setItem('jumplings_user', JSON.stringify(userData));
     } catch (error) {
-        console.error("Login failed", error);
-        throw error;
+      console.error("Login failed", error);
+      throw error;
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 

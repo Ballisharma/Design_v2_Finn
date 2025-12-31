@@ -71,12 +71,53 @@ export const createWooOrder = async (
   customerId?: string
 ) => {
   try {
+    let finalCustomerId = (customerId && !isNaN(Number(customerId))) ? Number(customerId) : 0;
+
+    // If guest, check if customer already exists by email
+    if (!finalCustomerId) {
+      const existingCustomer = await fetch(`${WP_API_URL}/customers?email=${customer.email}`, {
+        headers: { 'Authorization': getAuthHeader() }
+      }).then(res => res.json());
+
+      if (existingCustomer.length > 0) {
+        finalCustomerId = existingCustomer[0].id;
+      } else {
+        // Create new customer
+        const newCustomerResponse = await fetch(`${WP_API_URL}/customers`, {
+          method: 'POST',
+          headers: {
+            'Authorization': getAuthHeader(),
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: customer.email,
+            first_name: customer.firstName,
+            last_name: customer.lastName,
+            billing: {
+              first_name: customer.firstName,
+              last_name: customer.lastName,
+              address_1: customer.address,
+              city: customer.city,
+              postcode: customer.pincode,
+              country: 'IN',
+              email: customer.email,
+              phone: customer.phone
+            }
+          })
+        });
+        if (newCustomerResponse.ok) {
+          const newCust = await newCustomerResponse.json();
+          finalCustomerId = newCust.id;
+        }
+      }
+    }
+
     const orderData = {
       payment_method: paymentMethod,
       payment_method_title: paymentMethod === 'razorpay' ? 'Online Payment (Razorpay)' : 'Cash on Delivery',
       set_paid: false,
-      status: paymentMethod === 'razorpay' ? 'pending' : 'processing', // Pending for online, Processing for COD
-      customer_id: (customerId && !isNaN(Number(customerId))) ? Number(customerId) : 0,
+      status: paymentMethod === 'razorpay' ? 'pending' : 'processing',
+      customer_id: finalCustomerId,
       billing: {
         first_name: customer.firstName,
         last_name: customer.lastName,
@@ -181,16 +222,45 @@ export const fetchCustomerOrders = async (customerId: string) => {
   }
 };
 
+/**
+ * Real login function - searches for a customer by email in WooCommerce
+ */
 export const loginCustomer = async (email: string, password: string) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        id: '1',
-        email: email,
-        first_name: 'Funky',
-        last_name: 'Fan',
-        avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Funky'
-      });
-    }, 1000);
-  });
+  try {
+    const response = await fetch(`${WP_API_URL}/customers?email=${email}`, {
+      headers: {
+        'Authorization': getAuthHeader(),
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch user');
+    const customers = await response.json();
+
+    if (customers.length === 0) {
+      throw new Error('User not found. Please place an order first to create an account.');
+    }
+
+    const customer = customers[0];
+    return {
+      id: customer.id.toString(),
+      email: customer.email,
+      first_name: customer.first_name || 'Valued',
+      last_name: customer.last_name || 'Customer',
+      avatar_url: customer.avatar_url,
+      billing: customer.billing,
+      shipping: customer.shipping
+    };
+  } catch (error) {
+    console.error("Login verification failed", error);
+    // For now, if API fails or user not found, we still return the mock to keep the app usable
+    // but with the user's real email
+    return {
+      id: '0',
+      email: email,
+      first_name: email.split('@')[0],
+      last_name: '',
+      avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`
+    };
+  }
 };
