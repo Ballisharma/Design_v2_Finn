@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductContext';
 import { useUser } from '../context/UserContext';
@@ -42,121 +42,84 @@ const Checkout: React.FC = () => {
     setCustomer({ ...customer, [e.target.name]: e.target.value });
   };
 
-  const loadRazorpay = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
+  // Pre-load Razorpay SDK
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    }
+  }, []);
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    console.log("💳 Processing Payment...");
-    console.log("📊 Current Data Source:", dataSource);
+    console.log("💳 Processing Order...");
 
     try {
       if (dataSource === 'wordpress') {
-        console.log("🌐 Attempting to create WooCommerce Order...");
-        // 1. Create Order in WooCommerce (Pending Status if Online, Processing if COD)
         const order = await createWooOrder(customer, items, cartTotal, paymentMethod, user?.id);
-
-        // 2. Refresh Products to update Stock locally
-        await refreshProducts();
+        console.log("✅ Order created ID:", order.id);
 
         if (paymentMethod === 'razorpay') {
-          // 2. Open Razorpay
-          const res = await loadRazorpay();
-          if (!res) {
-            alert('Razorpay SDK failed to load. Are you online?');
-            setIsProcessing(false);
-            return;
-          }
-
-          // @ts-ignore
-          const rzp = new window.Razorpay({
+          const rzpInstance = new (window as any).Razorpay({
             key: RAZORPAY_KEY_ID,
-            amount: cartTotal * 100, // Amount in paise
+            amount: Math.round(cartTotal * 100),
             currency: 'INR',
             name: 'Jumplings',
             description: `Order #${order.id}`,
-            image: 'https://api.dicebear.com/7.x/identicon/svg?seed=Jumplings', // Replace with logo
-            order_id: '', // Optional: Use if creating orders via Razorpay Orders API on backend
+            image: 'https://jumplings.in/wp-content/uploads/2023/06/cropped-Jumplings-Logo-Small.png',
+            order_id: '',
             prefill: {
               name: `${customer.firstName} ${customer.lastName}`,
               email: customer.email,
               contact: customer.phone,
             },
-            theme: {
-              color: '#EF476F'
-            },
+            theme: { color: '#EF476F' },
             handler: async function (response: any) {
-              // 3. On Success -> Update Order to Processing
               try {
                 await updateWooOrder(order.id, {
                   status: 'processing',
                   set_paid: true,
                   transaction_id: response.razorpay_payment_id
                 });
-
+                refreshProducts();
                 clearCart();
                 navigate(user ? '/account' : '/');
-                alert("Payment Successful! Order Placed. 🎉");
+                alert("Payment Successful! Your happy feet are on the way. 🎉");
               } catch (err) {
-                console.error("Failed to update order after payment", err);
-                alert("Payment successful but failed to update order. Please contact support.");
+                console.error("Payment sync failed:", err);
+                alert("Payment received, but we had trouble updating the order. Please contact support.");
               }
             },
             modal: {
               ondismiss: function () {
                 setIsProcessing(false);
-                alert("Payment cancelled.");
               }
             }
           });
-
-          rzp.open();
-          return; // Don't clear cart yet, wait for handler
+          rzpInstance.open();
+          return;
         }
 
-      } else {
-        // Local simulation (Demo Mode)
-        // Deduct stock for each purchased item VARIANT
-        items.forEach(cartItem => {
-          const product = products.find(p => p.id === cartItem.id);
-          if (product) {
-            const updatedVariants = product.variants.map(v => {
-              if (v.size === cartItem.selectedSize) {
-                return { ...v, stock: Math.max(0, v.stock - cartItem.quantity) };
-              }
-              return v;
-            });
-
-            // Recalculate total stock
-            const newTotalStock = updatedVariants.reduce((sum, v) => sum + v.stock, 0);
-
-            updateProduct(product.id, {
-              stock: newTotalStock,
-              variants: updatedVariants
-            });
-          }
-        });
-      }
-
-      // Success (For COD or Local Mode)
-      if (paymentMethod !== 'razorpay' || dataSource === 'local') {
+        await refreshProducts();
         clearCart();
         setIsProcessing(false);
-        alert("Woohoo! Order placed successfully! 🎉");
         navigate(user ? '/account' : '/');
+        alert("Order Placed Successfully! (Cash on Delivery) 🚚");
+      } else {
+        setTimeout(() => {
+          clearCart();
+          setIsProcessing(false);
+          alert("Order Processed (Simulated Mode) 🎉");
+          navigate('/');
+        }, 1500);
       }
-
     } catch (error: any) {
       console.error("Checkout failed:", error);
-      alert(`Oops! ${error.message || "Something went wrong processing your order. Please try again."}`);
+      alert(`Oops! ${error.message || "Something went wrong. Please check your details or connection."}`);
       setIsProcessing(false);
     }
   };
