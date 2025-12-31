@@ -2,12 +2,17 @@ import { Product } from '../types';
 
 // WordPress/WooCommerce API Configuration
 const WP_URL = import.meta.env.VITE_WORDPRESS_URL;
-const WC_CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY;
-const WC_CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET;
-const WC_API_URL = `${WP_URL}/wp-json/wc/v3`;
+// Support both standard VITE_WC_ prefix and VITE_ prefix (fallback)
+const WC_CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY;
+const WC_CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET;
+const WC_API_URL = import.meta.env.DEV ? '/wp-json/wc/v3' : `${WP_URL}/wp-json/wc/v3`;
 
 // Create Basic Auth header for WooCommerce
 const getAuthHeader = () => {
+    if (!WC_CONSUMER_KEY || !WC_CONSUMER_SECRET) {
+        console.error("Missing WooCommerce API Keys in environment variables");
+        return '';
+    }
     const credentials = btoa(`${WC_CONSUMER_KEY}:${WC_CONSUMER_SECRET}`);
     return `Basic ${credentials}`;
 };
