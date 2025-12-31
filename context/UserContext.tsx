@@ -40,6 +40,16 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const refreshUser = async (email: string) => {
+    try {
+      const userData: any = await loginCustomer(email, '');
+      setUser(userData);
+      localStorage.setItem('jumplings_user', JSON.stringify(userData));
+    } catch (error) {
+      console.error("Failed to refresh user profile", error);
+    }
+  };
+
   // Check for existing session
   useEffect(() => {
     const savedUser = localStorage.getItem('jumplings_user');
@@ -52,6 +62,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           setUser(null);
         } else {
           setUser(parsed);
+          // Auto-refresh profile from WordPress in the background
+          refreshUser(parsed.email);
         }
       } catch (e) {
         localStorage.removeItem('jumplings_user');
