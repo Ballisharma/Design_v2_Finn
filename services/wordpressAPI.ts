@@ -11,7 +11,7 @@ const WC_API_URL = '/wp-json/wc/v3';
 // Create Basic Auth header for WooCommerce
 const getAuthHeader = () => {
     if (!WC_CONSUMER_KEY || !WC_CONSUMER_SECRET) {
-        console.error("❌ Missing WooCommerce API Keys in environment variables");
+        console.warn("⚠️ WooCommerce API Keys missing in this environment (services)");
         return '';
     }
     const credentials = btoa(`${WC_CONSUMER_KEY}:${WC_CONSUMER_SECRET}`);

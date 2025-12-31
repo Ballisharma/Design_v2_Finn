@@ -13,7 +13,7 @@ const WP_API_URL = '/wp-json/wc/v3';
 // Helper for Auth Header
 const getAuthHeader = () => {
   if (!CONSUMER_KEY || !CONSUMER_SECRET) {
-    console.error("Missing WooCommerce API Keys");
+    console.warn("⚠️ WooCommerce API Keys missing in this environment");
     return '';
   }
   return `Basic ${btoa(`${CONSUMER_KEY}:${CONSUMER_SECRET}`)}`;
