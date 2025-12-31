@@ -29,11 +29,35 @@ if (products.length > 0) {
 
 // Test 4: Full sync test
 console.log('\n🔄 Test 4: Testing Bi-directional Sync...');
-const syncResult = await syncProducts('wordpress-to-local');
-console.log('Sync Result:', syncResult);
-console.log(`✅ Success: ${syncResult.success}`);
-console.log(`📦 Synced: ${syncResult.synced} products`);
-console.log(`❌ Failed: ${syncResult.failed} products`);
+try {
+    const syncResult = await syncProducts('wordpress-to-local');
+    console.log('Sync Result:', syncResult);
+    console.log(`✅ Success: ${syncResult.success}`);
+    console.log(`📦 Synced: ${syncResult.synced} products`);
+} catch (e) {
+    console.error('Sync Test Failed:', e);
+}
+
+// Test 5: Order Creation (Write Test)
+console.log('\n📝 Test 5: Testing Order Creation (WRITE Permission)...');
+import { createWooOrder } from './utils/wordpress';
+try {
+    const dummyOrderItems = products.length > 0 ? [{ id: products[0].id, quantity: 1, cartId: 'test', name: products[0].name, price: products[0].price, images: products[0].images, category: products[0].category, selectedSize: 'Free Size' }] : [];
+
+    if (dummyOrderItems.length > 0) {
+        const order = await createWooOrder(
+            { email: 'test@example.com', firstName: 'Test', lastName: 'User', phone: '9999999999', address: 'Test', city: 'Test', state: 'MH', pincode: '400001' },
+            dummyOrderItems,
+            dummyOrderItems[0].price,
+            'cod'
+        );
+        console.log('✅ Order Created Successfully!', order.id);
+    } else {
+        console.log('⚠️ Skipping order test (no products available)');
+    }
+} catch (e) {
+    console.error('❌ Order Creation Failed (Possible Permission Issue):', e.message);
+}
 
 console.log('\n✨ WordPress Integration Test Complete!');
 console.log('Your React app is now connected to jumplings.in WordPress!');
