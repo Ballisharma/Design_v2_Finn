@@ -11,13 +11,8 @@ const DebugPanel: React.FC = () => {
     }, []);
 
     const getAuthHeaders = (): Record<string, string> => {
-        const key = import.meta.env.VITE_WC_CONSUMER_KEY;
-        const secret = import.meta.env.VITE_WC_CONSUMER_SECRET;
-        if (!key || !secret) {
-            return {};
-        }
+        // The secure proxy (Nginx/Vite) handles the Authorization header automatically.
         return {
-            'Authorization': `Basic ${btoa(`${key}:${secret}`)}`,
             'Content-Type': 'application/json'
         };
     };

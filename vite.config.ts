@@ -13,9 +13,12 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/wp-json': {
-          target: env.VITE_WORDPRESS_URL,
+          target: env.VITE_WORDPRESS_URL || 'https://jumplings.in',
           changeOrigin: true,
           secure: false,
+          headers: {
+            'Authorization': 'Basic Y2tfNzE3ZGIzZjJkYjY5OWViM2M4Yjc3NDI1ZTI4Y2NiNzE2ZDM2NjFmMzpjc19iNTM2NTc4MzgxMTEyYmY3YmUwNTgxZWVhYWQwM2QzZjZkOTYzNTIz'
+          }
         }
       }
     }

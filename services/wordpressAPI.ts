@@ -2,20 +2,14 @@ import { Product } from '../types';
 
 // WordPress/WooCommerce API Configuration
 const WP_URL = import.meta.env.VITE_WORDPRESS_URL || 'https://jumplings.in';
-// Support both standard VITE_WC_ prefix and VITE_ prefix (fallback)
-const WC_CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY || 'ck_717db3f2db699eb3c8b77425e28ccb716d3661f3';
-const WC_CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET || 'cs_b536578381112bf7be0581eeaad03d3f6d963523';
+
 // Use relative path - handled by Vite Proxy in DEV and Nginx in PROD
+// Authentication is securely handled by the server proxy (Nginx).
 const WC_API_URL = '/wp-json/wc/v3';
 
-// Create Basic Auth header for WooCommerce
+// Create Basic Auth header (Secure Proxy handles this now)
 const getAuthHeader = () => {
-    if (!WC_CONSUMER_KEY || !WC_CONSUMER_SECRET) {
-        console.warn("⚠️ WooCommerce API Keys missing in this environment (services)");
-        return '';
-    }
-    const credentials = btoa(`${WC_CONSUMER_KEY}:${WC_CONSUMER_SECRET}`);
-    return `Basic ${credentials}`;
+    return ''; // The Nginx/Vite proxy automatically injects the basic auth header
 };
 
 // ==================== PRODUCT SYNC ====================

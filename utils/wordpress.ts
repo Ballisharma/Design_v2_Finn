@@ -2,28 +2,18 @@ import { Product, CartItem } from '../types';
 
 // Configuration: Robust Environment Variable Loading
 const WP_URL = import.meta.env.VITE_WORDPRESS_URL || import.meta.env.VITE_URL || 'https://jumplings.in';
-// Support both standard VITE_WC_ prefix and VITE_ prefix (fallback)
-const CONSUMER_KEY = import.meta.env.VITE_WC_CONSUMER_KEY || import.meta.env.VITE_CONSUMER_KEY || 'ck_717db3f2db699eb3c8b77425e28ccb716d3661f3';
-const CONSUMER_SECRET = import.meta.env.VITE_WC_CONSUMER_SECRET || import.meta.env.VITE_CONSUMER_SECRET || 'cs_b536578381112bf7be0581eeaad03d3f6d963523';
+
 // Razorpay Configuration: Key ID from your screenshot as fallback
+// (Public key, safe for frontend)
 export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_RyG0ZXrWONWBho';
 
-// Use relative path in DEV to leverage Vite Proxy (bypassing CORS)
+// Use relative path - Handled by Vite Proxy in DEV and Nginx in PROD
+// Authentication is now securely handled by the server proxy.
 const WP_API_URL = '/wp-json/wc/v3';
 
-// Helper for Auth Header
+// Helper for Auth Header (Secure Proxy handles this now)
 const getAuthHeader = () => {
-  if (!CONSUMER_KEY || !CONSUMER_SECRET) {
-    console.warn("⚠️ WooCommerce API Keys missing in this environment");
-    return '';
-  }
-  try {
-    const credentials = btoa(`${CONSUMER_KEY}:${CONSUMER_SECRET}`);
-    return `Basic ${credentials}`;
-  } catch (e) {
-    console.error("❌ Failed to encode Auth Header", e);
-    return '';
-  }
+  return ''; // The Nginx/Vite proxy automatically injects the basic auth header
 };
 
 /**
