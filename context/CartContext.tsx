@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Product, CartItem } from '../types';
 import { useProducts } from './ProductContext';
 
@@ -17,8 +17,22 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    try {
+      const savedItems = localStorage.getItem('jumplings_cart');
+      return savedItems ? JSON.parse(savedItems) : [];
+    } catch (error) {
+      console.error("Failed to load cart from localStorage", error);
+      return [];
+    }
+  });
+
   const { settings } = useProducts();
+
+  // Persist items to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('jumplings_cart', JSON.stringify(items));
+  }, [items]);
 
   const addToCart = (product: Product, quantity = 1, selectedSize?: string) => {
     if (!selectedSize) {
@@ -43,37 +57,37 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // Validation: Check if adding this quantity exceeds stock for this size
       if (currentQtyInCart + quantity > availableStock) {
         alert(`Sorry, we only have ${availableStock} units of size ${selectedSize} in stock.`);
-        
+
         // If we can add some, add the difference
         const remainingSpace = availableStock - currentQtyInCart;
         if (remainingSpace > 0) {
-           if (existing) {
-             return prev.map((item) =>
-               item.cartId === existing.cartId ? { ...item, quantity: item.quantity + remainingSpace } : item
-             );
-           } else {
-             return [...prev, { 
-                ...product, 
-                cartId: `${product.id}-${selectedSize}-${Date.now()}`, 
-                quantity: remainingSpace,
-                selectedSize 
-             }];
-           }
+          if (existing) {
+            return prev.map((item) =>
+              item.cartId === existing.cartId ? { ...item, quantity: item.quantity + remainingSpace } : item
+            );
+          } else {
+            return [...prev, {
+              ...product,
+              cartId: `${product.id}-${selectedSize}-${Date.now()}`,
+              quantity: remainingSpace,
+              selectedSize
+            }];
+          }
         }
         return prev;
       }
-      
+
       if (existing) {
         return prev.map((item) =>
           item.cartId === existing.cartId ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
-      
-      return [...prev, { 
-        ...product, 
-        cartId: `${product.id}-${selectedSize}-${Date.now()}`, 
+
+      return [...prev, {
+        ...product,
+        cartId: `${product.id}-${selectedSize}-${Date.now()}`,
         quantity,
-        selectedSize 
+        selectedSize
       }];
     });
   };
@@ -88,16 +102,16 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setItems((prev) =>
       prev.map((item) => {
         if (item.cartId === cartId) {
-             // Find product variant stock again
-             const variant = item.variants.find(v => v.size === item.selectedSize);
-             const stock = variant ? variant.stock : 0;
+          // Find product variant stock again
+          const variant = item.variants.find(v => v.size === item.selectedSize);
+          const stock = variant ? variant.stock : 0;
 
-             // Check against stock
-             if (quantity > stock) {
-                 alert(`Cannot add more. Only ${stock} units available for this size.`);
-                 return { ...item, quantity: stock };
-             }
-             return { ...item, quantity };
+          // Check against stock
+          if (quantity > stock) {
+            alert(`Cannot add more. Only ${stock} units available for this size.`);
+            return { ...item, quantity: stock };
+          }
+          return { ...item, quantity };
         }
         return item;
       })
@@ -110,7 +124,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  
+
   // Shipping Logic
   const shippingCost = (subtotal > 0 && subtotal < settings.freeShippingThreshold) ? settings.shippingFee : 0;
   const cartTotal = subtotal + shippingCost;
