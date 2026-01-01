@@ -16,6 +16,7 @@ import Shipping from './views/Shipping';
 import Returns from './views/Returns';
 import Login from './views/Login';
 import Register from './views/Register';
+import ResetPassword from './views/ResetPassword';
 import MyAccount from './views/MyAccount';
 import GripSocksLP from './views/GripSocksLP';
 import CartDrawer from './components/CartDrawer';
@@ -63,6 +64,7 @@ const AppContent: React.FC = () => {
           <Route path="/returns" element={<Returns />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/account" element={<MyAccount />} />
           <Route path="/admin/sync" element={<WordPressSyncPanel />} />
           <Route path="/admin/debug" element={<DebugPanel />} />

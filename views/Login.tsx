@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useUser } from '../context/UserContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Lock, Mail, ArrowRight, Loader2, ArrowLeft } from 'lucide-react';
-import { requestPasswordReset } from '../utils/wordpress';
 
 const Login: React.FC = () => {
   const { login, isLoading } = useUser();
@@ -10,8 +9,6 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isResettingPassword, setIsResettingPassword] = useState(false);
-  const [resetMessage, setResetMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,34 +85,12 @@ const Login: React.FC = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <button
-                onClick={async () => {
-                  if (!email) {
-                    setError('Please enter your email address first');
-                    return;
-                  }
-                  setIsResettingPassword(true);
-                  setResetMessage('');
-                  setError('');
-                  try {
-                    await requestPasswordReset(email);
-                    setResetMessage('Password reset link sent! Please check your email.');
-                  } catch (err: any) {
-                    setError(err.message || 'Failed to send password reset email. Please try again.');
-                  } finally {
-                    setIsResettingPassword(false);
-                  }
-                }}
-                disabled={isResettingPassword}
-                className="text-funky-blue font-black hover:text-funky-pink uppercase tracking-wide text-xs transition-colors disabled:opacity-50"
+              <Link
+                to="/reset-password"
+                className="text-funky-blue font-black hover:text-funky-pink uppercase tracking-wide text-xs transition-colors text-center"
               >
-                {isResettingPassword ? 'Sending...' : 'Forgot your password?'}
-              </button>
-              {resetMessage && (
-                <div className="bg-green-50 border-2 border-green-200 rounded-xl p-3">
-                  <p className="text-green-600 text-xs font-bold text-center">{resetMessage}</p>
-                </div>
-              )}
+                Forgot your password?
+              </Link>
               <p className="text-gray-400 text-sm">
                 Don't have an account?{' '}
                 <Link to="/register" className="text-funky-pink font-bold hover:underline">

@@ -146,7 +146,7 @@ export const createWooOrder = async (
         const existingCustomers = await custCheckResponse.json();
         if (Array.isArray(existingCustomers) && existingCustomers.length > 0) {
           finalCustomerId = existingCustomers[0].id;
-          
+
           // Update existing customer billing info if needed
           try {
             await fetch(`${WP_API_URL}/customers/${finalCustomerId}`, {
@@ -175,11 +175,11 @@ export const createWooOrder = async (
         } else {
           // Generate a secure random password for new customer
           // Format: alphanumeric + special characters (meets WordPress requirements)
-          const randomPassword = Math.random().toString(36).slice(-10) + 
-                                 Math.random().toString(36).slice(-10).toUpperCase() + 
-                                 '!@' + 
-                                 Math.floor(Math.random() * 100);
-          
+          const randomPassword = Math.random().toString(36).slice(-10) +
+            Math.random().toString(36).slice(-10).toUpperCase() +
+            '!@' +
+            Math.floor(Math.random() * 100);
+
           // Create new customer with password
           const newCustomerResponse = await fetch(`${WP_API_URL}/customers`, {
             method: 'POST',
@@ -206,7 +206,7 @@ export const createWooOrder = async (
               }
             })
           });
-          
+
           if (newCustomerResponse.ok) {
             const newCust = await newCustomerResponse.json();
             finalCustomerId = newCust.id;
@@ -223,7 +223,7 @@ export const createWooOrder = async (
     const lineItems = items.map(item => {
       const lineSubtotal = (item.price * item.quantity).toFixed(2);
       const lineTotal = (item.price * item.quantity).toFixed(2); // Same as subtotal if no discounts
-      
+
       return {
         product_id: Number(item.id),
         quantity: item.quantity,
@@ -368,7 +368,7 @@ const triggerOrderEmail = async (orderId: number) => {
             customer_note: true // Customer notes can trigger emails
           })
         });
-        
+
         if (noteResponse.ok) {
           console.log("📧 Customer note added to trigger email for order #", orderId);
         }
@@ -439,7 +439,7 @@ export const fetchCustomerOrders = async (customerId: string) => {
       const errorText = await response.text();
       throw new Error(`Failed to fetch orders: ${response.status} - ${errorText}`);
     }
-    
+
     const orders = await response.json();
     return Array.isArray(orders) ? orders : [];
   } catch (error: any) {
@@ -611,44 +611,143 @@ export const registerCustomer = async (
 };
 
 /**
- * Request password reset
+ * Request password reset via WordPress/WooCommerce
+ * Uses custom WordPress endpoint (requires WordPress function in functions.php)
  */
 export const requestPasswordReset = async (email: string) => {
   try {
-    // Use WordPress REST API for password reset
-    const response = await fetch('/wp-json/bdpwr/v1/reset-password', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-      }),
-    });
-
-    if (!response.ok) {
-      // Fallback: Try WooCommerce customer lookup to verify email exists
-      const custResponse = await fetch(`${WP_API_URL}/customers?email=${encodeURIComponent(email)}`, {
-        headers: {
-          'Authorization': getAuthHeader(),
-        }
-      });
-
-      if (custResponse.ok) {
-        const customers = await custResponse.json();
-        if (customers.length === 0) {
-          throw new Error('Email address not found.');
-        }
-      }
-
-      // If customer exists but reset endpoint fails, provide helpful message
-      throw new Error('Password reset request failed. Please try again or contact support.');
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      throw new Error('Please enter a valid email address.');
     }
 
-    return true;
+    // Method 1: Try custom WordPress REST API endpoint
+    try {
+      const response = await fetch('/wp-json/jumplings/v1/lost-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        // If it's a 404, the endpoint isn't installed
+        if (response.status === 404) {
+          console.warn('Custom lost-password endpoint not found (404)');
+        } else {
+          throw new Error(errorData.message || 'Password reset request failed.');
+        }
+      }
+    } catch (customError: any) {
+      console.log('Error with custom endpoint, falling back to verification:', customError.message);
+    }
+
+    // Method 2: Verify customer exists first as a fallback
+    const custResponse = await fetch(`${WP_API_URL}/customers?email=${encodeURIComponent(email)}`, {
+      headers: {
+        'Authorization': getAuthHeader(),
+      }
+    });
+
+    if (!custResponse.ok) {
+      throw new Error('Unable to verify email address. Please contact support or try again later.');
+    }
+
+    const customers = await custResponse.json();
+    if (!Array.isArray(customers) || customers.length === 0) {
+      throw new Error('No account found with this email address. Please check your email or register for a new account.');
+    }
+
+    // Method 3: If we are here, the email exists but our custom endpoints might be missing
+    // Try to trigger the standard WordPress reset if possible, otherwise provide instructions
+    try {
+      const response = await fetch('/wp-json/jumplings/v1/send-password-reset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_login: email,
+        }),
+      });
+
+      if (response.ok) {
+        return { success: true, message: 'Password reset email sent successfully.' };
+      }
+    } catch (e) {
+      console.warn('Standard reset endpoint also failed');
+    }
+
+    // Final Fallback: Inform user that configuration is required
+    throw new Error('Password reset service is not fully configured on the server. Please contact support or use the standard WordPress password reset page.');
+
   } catch (error: any) {
-    console.error("Password reset request failed", error);
-    throw new Error(error.message || 'Password reset failed. Please try again.');
+    console.error("Password reset request failed:", error);
+    throw new Error(error.message || 'Failed to send password reset request. Please try again or contact support.');
+  }
+};
+
+/**
+ * Reset password with reset token (from email link)
+ * This is called when user clicks the reset link from email
+ */
+export const resetPasswordWithToken = async (login: string, key: string, newPassword: string) => {
+  try {
+    // Validate password strength
+    if (!newPassword || newPassword.length < 8) {
+      throw new Error('Password must be at least 8 characters long.');
+    }
+
+    // Validate password requirements
+    if (!/[A-Z]/.test(newPassword)) {
+      throw new Error('Password must contain at least one uppercase letter.');
+    }
+    if (!/[a-z]/.test(newPassword)) {
+      throw new Error('Password must contain at least one lowercase letter.');
+    }
+    if (!/[0-9]/.test(newPassword)) {
+      throw new Error('Password must contain at least one number.');
+    }
+
+    // Method 1: Try custom WordPress REST API endpoint
+    try {
+      const response = await fetch('/wp-json/jumplings/v1/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          login: login,
+          key: key,
+          password: newPassword,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        if (response.status === 404) {
+          throw new Error('Password reset service is not fully configured on the server. Please contact support.');
+        }
+        throw new Error(errorData.message || 'Password reset failed. The link may have expired.');
+      }
+    } catch (customError: any) {
+      if (customError.message.includes('not fully configured')) throw customError;
+      throw new Error('Failed to reach password reset service. Please try again or contact support.');
+    }
+  } catch (error: any) {
+    console.error("Password reset with token failed:", error);
+    throw new Error(error.message || 'Failed to reset password. The link may have expired or service is unavailable.');
   }
 };
 
@@ -687,7 +786,7 @@ export const updateCustomerProfile = async (customerId: string, data: {
 
     // Build update payload - ensure billing and shipping are properly structured
     const updateData: any = {};
-    
+
     if (data.first_name) updateData.first_name = data.first_name.trim();
     if (data.last_name) updateData.last_name = data.last_name.trim();
     if (data.email) updateData.email = data.email.trim().toLowerCase();
@@ -733,14 +832,14 @@ export const updateCustomerProfile = async (customerId: string, data: {
     if (!response.ok) {
       const errorText = await response.text();
       let errorMessage = 'Profile update failed';
-      
+
       try {
         const errorData = JSON.parse(errorText);
         errorMessage = errorData.message || errorData.code || errorMessage;
       } catch (e) {
         errorMessage = errorText.substring(0, 200); // Limit error message length
       }
-      
+
       throw new Error(errorMessage);
     }
 
@@ -773,7 +872,7 @@ export const getCurrentUser = async () => {
     }
 
     const user = await response.json();
-    
+
     // Fetch WooCommerce customer data
     const custResponse = await fetch(`${WP_API_URL}/customers?email=${encodeURIComponent(user.email)}`, {
       headers: {
