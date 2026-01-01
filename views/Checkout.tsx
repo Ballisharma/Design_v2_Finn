@@ -9,7 +9,7 @@ import { createWooOrder, updateWooOrder, RAZORPAY_KEY_ID } from '../utils/wordpr
 const Checkout: React.FC = () => {
   const { items, subtotal, shippingCost, cartTotal, clearCart } = useCart();
   const { products, updateProduct, dataSource, refreshProducts } = useProducts();
-  const { user } = useUser();
+  const { user, login } = useUser();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'razorpay'>('cod');
@@ -88,9 +88,13 @@ const Checkout: React.FC = () => {
                   set_paid: true,
                   transaction_id: response.razorpay_payment_id
                 });
+                if (!user) {
+                  await login(customer.email, '');
+                }
+
                 refreshProducts();
                 clearCart();
-                navigate(user ? '/account' : '/');
+                navigate('/account');
                 alert("Payment Successful! Your happy feet are on the way. 🎉");
               } catch (err: any) {
                 console.error("Payment sync failed:", err);
@@ -122,10 +126,14 @@ const Checkout: React.FC = () => {
           return;
         }
 
+        if (!user) {
+          await login(customer.email, '');
+        }
+
         await refreshProducts();
         clearCart();
         setIsProcessing(false);
-        navigate(user ? '/account' : '/');
+        navigate('/account');
         alert("Order Placed Successfully! (Cash on Delivery) 🚚");
       } else {
         setTimeout(() => {
