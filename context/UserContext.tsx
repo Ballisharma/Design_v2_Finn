@@ -7,6 +7,7 @@ interface User {
   first_name: string;
   last_name: string;
   avatar_url?: string;
+  lastUpdated?: number; // Timestamp for session management
   billing?: {
     first_name: string;
     last_name: string;
@@ -37,6 +38,9 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
+// Session duration: 30 minutes
+const SESSION_DURATION = 30 * 60 * 1000;
+
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,8 +48,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const refreshUser = async (email: string) => {
     try {
       const userData: any = await loginCustomer(email, '');
-      setUser(userData);
-      localStorage.setItem('jumplings_user', JSON.stringify(userData));
+      handleSetUser(userData);
     } catch (error) {
       console.error("Failed to refresh user profile", error);
     }
@@ -57,17 +60,26 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
+
+        // Check session age
+        const now = Date.now();
+        const lastUpdated = parsed.lastUpdated || 0;
+        const isSessionFresh = (now - lastUpdated) < SESSION_DURATION;
+
         // Force logout if it's an old mock user from early development
-        if (parsed.first_name === 'Funky' || parsed.id === '1' || parsed.id === '0') {
-          localStorage.removeItem('jumplings_user');
-          setUser(null);
-        } else {
-          setUser(parsed);
-          // Auto-refresh profile from WordPress in the background
+        if (parsed.first_name === 'Funky' || parsed.id === '1') {
+          handleSetUser(null);
+        } else if (!isSessionFresh) {
+          // Session expired or needs refresh
+          console.log("🔄 Session needs refresh...");
+          setUser(parsed); // Keep old data until refresh
           refreshUser(parsed.email);
+        } else {
+          // Session is still fresh (within 30 mins)
+          setUser(parsed);
         }
       } catch (e) {
-        localStorage.removeItem('jumplings_user');
+        handleSetUser(null);
       }
     }
   }, []);
@@ -87,10 +99,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const handleSetUser = (userData: User | null) => {
-    setUser(userData);
     if (userData) {
-      localStorage.setItem('jumplings_user', JSON.stringify(userData));
+      const updatedUser = { ...userData, lastUpdated: Date.now() };
+      setUser(updatedUser);
+      localStorage.setItem('jumplings_user', JSON.stringify(updatedUser));
     } else {
+      setUser(null);
       localStorage.removeItem('jumplings_user');
     }
   };
