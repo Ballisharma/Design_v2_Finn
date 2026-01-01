@@ -9,7 +9,6 @@ const MyAccount: React.FC = () => {
    const navigate = useNavigate();
    const [orders, setOrders] = useState<any[]>([]);
    const [isLoading, setIsLoading] = useState(true);
-   const [activeTab, setActiveTab] = useState<'orders' | 'address'>('orders');
 
    useEffect(() => {
       if (!isAuthenticated) {
@@ -76,154 +75,140 @@ const MyAccount: React.FC = () => {
 
                {/* Sidebar Nav */}
                <div className="lg:col-span-1">
-                  <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 sticky top-24">
-                     <button
-                        onClick={() => setActiveTab('orders')}
-                        className={`w-full flex items-center gap-3 px-4 py-4 rounded-xl font-bold transition-all mb-2 ${activeTab === 'orders' ? 'bg-funky-light text-funky-dark' : 'text-gray-500 hover:bg-gray-50'}`}
-                     >
+                  <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sticky top-24">
+                     <h3 className="font-heading font-black text-xl text-funky-dark mb-4 uppercase tracking-tight text-center lg:text-left">ACCOUNT</h3>
+                     <div className="w-full flex items-center gap-3 px-4 py-4 rounded-xl font-bold bg-funky-light text-funky-dark mb-2">
                         <Package size={20} /> My Orders
-                     </button>
-                     <button
-                        onClick={() => setActiveTab('address')}
-                        className={`w-full flex items-center gap-3 px-4 py-4 rounded-xl font-bold transition-all ${activeTab === 'address' ? 'bg-funky-light text-funky-dark' : 'text-gray-500 hover:bg-gray-50'}`}
-                     >
-                        <MapPin size={20} /> Addresses
-                     </button>
+                     </div>
+                     <Link to="/shop" className="w-full flex items-center gap-3 px-4 py-4 rounded-xl font-bold text-gray-500 hover:bg-gray-50 transition-all mb-2">
+                        <ShoppingBag size={20} /> Shop More
+                     </Link>
                   </div>
                </div>
 
-               {/* Content Area */}
                <div className="lg:col-span-3 space-y-8">
+                  <h2 className="font-heading font-black text-2xl text-funky-dark mb-6 flex items-center gap-2">
+                     <ShoppingBag className="text-funky-pink" /> ORDER HISTORY
+                  </h2>
 
-                  {activeTab === 'orders' && (
-                     <>
-                        <h2 className="font-heading font-black text-2xl text-funky-dark mb-6 flex items-center gap-2">
-                           <ShoppingBag className="text-funky-pink" /> ORDER HISTORY
-                        </h2>
-
-                        {isLoading ? (
-                           <div className="bg-white p-12 rounded-3xl text-center shadow-sm">
-                              <RefreshCw className="animate-spin mx-auto text-gray-400 mb-4" size={32} />
-                              <p className="text-gray-500 font-bold">Fetching your funky socks...</p>
-                           </div>
-                        ) : orders.length > 0 ? (
-                           <div className="space-y-6">
-                              {orders.map((order) => (
-                                 <div key={order.id} className="bg-white rounded-3xl border-2 border-gray-100 overflow-hidden shadow-sm hover:border-funky-blue transition-colors group">
-                                    {/* Order Header */}
-                                    <div className="bg-gray-50 p-6 flex flex-wrap gap-4 justify-between items-center border-b border-gray-100">
-                                       <div className="flex gap-4 items-center">
-                                          <div className="w-12 h-12 bg-white rounded-full border border-gray-200 flex items-center justify-center font-black text-gray-400">
-                                             #{order.id}
-                                          </div>
-                                          <div>
-                                             <p className="text-xs font-bold text-gray-400 uppercase">Order Placed</p>
-                                             <p className="font-bold text-funky-dark">{new Date(order.date_created).toLocaleDateString()}</p>
-                                          </div>
-                                       </div>
-
-                                       <div className={`px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider flex items-center gap-2 ${getStatusColor(order.status)}`}>
-                                          {order.status === 'processing' && <Clock size={12} />}
-                                          {order.status === 'completed' && <Truck size={12} />}
-                                          {order.status === 'cancelled' && <AlertCircle size={12} />}
-                                          {order.status}
-                                       </div>
+                  {isLoading ? (
+                     <div className="bg-white p-12 rounded-3xl text-center shadow-sm">
+                        <RefreshCw className="animate-spin mx-auto text-gray-400 mb-4" size={32} />
+                        <p className="text-gray-500 font-bold">Fetching your funky socks...</p>
+                     </div>
+                  ) : orders.length > 0 ? (
+                     <div className="space-y-6">
+                        {orders.map((order) => (
+                           <div key={order.id} className="bg-white rounded-3xl border-2 border-gray-100 overflow-hidden shadow-sm hover:border-funky-blue transition-colors group">
+                              {/* Order Header */}
+                              <div className="bg-gray-50 p-6 flex flex-wrap gap-4 justify-between items-center border-b border-gray-100">
+                                 <div className="flex gap-4 items-center">
+                                    <div className="w-12 h-12 bg-white rounded-full border border-gray-200 flex items-center justify-center font-black text-gray-400 text-xs">
+                                       #{order.id}
                                     </div>
-
-                                    {/* Order Items */}
-                                    <div className="p-6">
-                                       <div className="space-y-4 mb-6">
-                                          {order.line_items.map((item: any, idx: number) => (
-                                             <div key={idx} className="flex justify-between items-center border-b border-gray-50 pb-4 last:border-0 last:pb-0">
-                                                <div className="flex items-center gap-3">
-                                                   <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center border border-gray-100">
-                                                      {item.image?.src ? (
-                                                         <img src={item.image.src} alt={item.name} className="w-full h-full object-cover" />
-                                                      ) : (
-                                                         <span className="text-xl">🧦</span>
-                                                      )}
-                                                   </div>
-                                                   <div>
-                                                      <span className="font-bold text-gray-700 block text-sm leading-tight mb-1">{item.name}</span>
-                                                      <span className="bg-gray-100 text-gray-500 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Qty: {item.quantity}</span>
-                                                   </div>
-                                                </div>
-                                                <span className="font-mono font-bold text-gray-900">₹{item.total}</span>
-                                             </div>
-                                          ))}
-                                       </div>
-
-                                       <div className="flex justify-between items-center pt-6 border-t border-dashed border-gray-200">
-                                          <div className="text-sm text-gray-500 font-bold">Total Amount</div>
-                                          <div className="text-2xl font-heading font-black text-funky-dark">₹{order.total}</div>
-                                       </div>
-                                    </div>
-
-                                    {/* Order Actions */}
-                                    <div className="bg-gray-50 px-6 py-4 flex flex-wrap gap-4 justify-between items-center">
-                                       {/* Tracking Button */}
-                                       {order.status === 'completed' || order.status === 'shipped' ? (
-                                          <button
-                                             onClick={() => alert(`Tracking Number: TRK-${order.id}-IN\nCourier: BlueDart`)}
-                                             className="text-xs font-bold bg-funky-dark text-white px-4 py-2 rounded-lg hover:bg-funky-pink transition-colors flex items-center gap-2"
-                                          >
-                                             <Truck size={14} /> TRACK PACKAGE
-                                          </button>
-                                       ) : order.status === 'processing' ? (
-                                          <span className="text-xs font-bold text-funky-blue flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-full">
-                                             <Clock size={12} /> Packing your socks...
-                                          </span>
-                                       ) : (
-                                          <span></span>
-                                       )}
-
-                                       <div className="flex gap-3">
-                                          <Link to="/contact" className="text-xs font-bold text-gray-500 hover:text-funky-dark flex items-center gap-1 transition-colors border border-gray-200 px-3 py-2 rounded-lg bg-white">
-                                             <HelpCircle size={14} /> Need Help?
-                                          </Link>
-                                       </div>
+                                    <div>
+                                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Order Placed</p>
+                                       <p className="font-bold text-funky-dark text-sm">{new Date(order.date_created).toLocaleDateString()}</p>
                                     </div>
                                  </div>
-                              ))}
+
+                                 <div className={`px-4 py-1.5 rounded-full border text-[10px] font-bold uppercase tracking-wider flex items-center gap-2 ${getStatusColor(order.status)}`}>
+                                    {order.status === 'processing' && <Clock size={12} />}
+                                    {order.status === 'completed' && <Truck size={12} />}
+                                    {order.status === 'cancelled' && <AlertCircle size={12} />}
+                                    {order.status}
+                                 </div>
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+                                 {/* Order Items */}
+                                 <div className="p-6 border-b md:border-b-0 md:border-r border-gray-100">
+                                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">ITEMS</h3>
+                                    <div className="space-y-4">
+                                       {order.line_items.map((item: any, idx: number) => (
+                                          <div key={idx} className="flex justify-between items-center border-b border-gray-50 pb-4 last:border-0 last:pb-0">
+                                             <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center border border-gray-200">
+                                                   {item.image?.src ? (
+                                                      <img src={item.image.src} alt={item.name} className="w-full h-full object-cover" />
+                                                   ) : (
+                                                      <span className="text-lg">🧦</span>
+                                                   )}
+                                                </div>
+                                                <div>
+                                                   <span className="font-bold text-gray-700 block text-xs leading-tight mb-1">{item.name}</span>
+                                                   <span className="bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider">Qty: {item.quantity}</span>
+                                                </div>
+                                             </div>
+                                             <span className="font-mono font-bold text-gray-900 text-xs text-right">₹{item.total}</span>
+                                          </div>
+                                       ))}
+                                    </div>
+                                 </div>
+
+                                 {/* Shipping Address */}
+                                 <div className="p-6 bg-funky-light/20">
+                                    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                       <MapPin size={10} /> SHIPPING TO
+                                    </h3>
+                                    <div className="space-y-1">
+                                       <p className="font-bold text-funky-dark text-sm leading-tight">
+                                          {order.shipping?.first_name} {order.shipping?.last_name}
+                                       </p>
+                                       <p className="text-xs text-gray-500 leading-relaxed font-medium">
+                                          {order.shipping?.address_1}, {order.shipping?.address_2 && `${order.shipping.address_2}, `}
+                                          {order.shipping?.city}, {order.shipping?.state} - {order.shipping?.postcode}<br />
+                                          {order.shipping?.country === 'IN' ? 'India' : order.shipping?.country}
+                                       </p>
+                                       <p className="text-[10px] font-bold text-funky-blue mt-2 pt-2 border-t border-gray-100 border-dashed">
+                                          📞 {order.billing?.phone || 'No phone provided'}
+                                       </p>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div className="px-6 py-4 bg-white border-t border-gray-100 flex justify-between items-center">
+                                 <div className="text-[10px] text-gray-400 font-bold uppercase">Total Order Value</div>
+                                 <div className="text-xl font-heading font-black text-funky-dark">₹{order.total}</div>
+                              </div>
+
+                              {/* Order Actions */}
+                              <div className="bg-gray-50 px-6 py-4 flex flex-wrap gap-4 justify-between items-center">
+                                 {/* Tracking Button */}
+                                 {order.status === 'completed' || order.status === 'shipped' ? (
+                                    <button
+                                       onClick={() => alert(`Tracking Number: TRK-${order.id}-IN\nCourier: BlueDart`)}
+                                       className="text-[10px] font-black bg-funky-dark text-white px-4 py-2 rounded-lg hover:bg-funky-pink transition-colors flex items-center gap-2 uppercase tracking-wide"
+                                    >
+                                       <Truck size={12} /> TRACK PACKAGE
+                                    </button>
+                                 ) : order.status === 'processing' ? (
+                                    <span className="text-[10px] font-black text-funky-blue flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full uppercase tracking-tighter">
+                                       <Clock size={10} /> Packing your socks...
+                                    </span>
+                                 ) : (
+                                    <span></span>
+                                 )}
+
+                                 <div className="flex gap-3">
+                                    <Link to="/contact" className="text-[10px] font-black text-gray-500 hover:text-funky-dark flex items-center gap-1 transition-colors border border-gray-200 px-3 py-2 rounded-lg bg-white uppercase tracking-tighter">
+                                       <HelpCircle size={12} /> Need Help?
+                                    </Link>
+                                 </div>
+                              </div>
                            </div>
-                        ) : (
-                           <div className="bg-white p-12 rounded-3xl text-center border-2 border-dashed border-gray-200">
-                              <div className="text-6xl mb-4">🌵</div>
-                              <h3 className="font-heading font-bold text-xl text-funky-dark mb-2">No Orders Yet</h3>
-                              <p className="text-gray-500 mb-6">Your sock drawer is looking a little empty.</p>
-                              <button onClick={() => navigate('/shop')} className="px-6 py-3 bg-funky-dark text-white rounded-xl font-bold hover:bg-funky-pink transition-colors">
-                                 Start Shopping
-                              </button>
-                           </div>
-                        )}
-                     </>
-                  )}
-
-                  {activeTab === 'address' && (
-                     <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
-                        <h2 className="font-heading font-black text-2xl text-funky-dark mb-6">SAVED ADDRESSES</h2>
-                        <div className="bg-funky-light p-6 rounded-2xl border-2 border-funky-dark relative overflow-hidden">
-                           <div className="absolute top-0 right-0 bg-funky-dark text-white text-xs font-bold px-3 py-1 rounded-bl-xl">DEFAULT</div>
-                           <h3 className="font-bold text-lg mb-2">{user.first_name} {user.last_name}</h3>
-
-                           {user.billing ? (
-                              <>
-                                 <p className="text-gray-600 leading-relaxed mb-4">
-                                    {user.billing.address_1}<br />
-                                    {user.billing.city}, {user.billing.postcode}<br />
-                                    {user.billing.country}
-                                 </p>
-                                 <p className="text-sm font-bold text-gray-400">{user.billing.phone}</p>
-                              </>
-                           ) : (
-                              <p className="text-gray-500 italic mb-4">No address saved yet. Place an order to save your address!</p>
-                           )}
-
-                           <Link to="/contact" className="mt-4 inline-block text-xs font-bold text-funky-blue hover:underline uppercase tracking-wide">Update Address</Link>
-                        </div>
+                        ))}
+                     </div>
+                  ) : (
+                     <div className="bg-white p-12 rounded-3xl text-center border-2 border-dashed border-gray-200">
+                        <div className="text-6xl mb-4">🌵</div>
+                        <h3 className="font-heading font-bold text-xl text-funky-dark mb-2">No Orders Yet</h3>
+                        <p className="text-gray-500 mb-6">Your sock drawer is looking a little empty.</p>
+                        <button onClick={() => navigate('/shop')} className="px-6 py-3 bg-funky-dark text-white rounded-xl font-bold hover:bg-funky-pink transition-colors">
+                           Start Shopping
+                        </button>
                      </div>
                   )}
-
                </div>
             </div>
          </div>
