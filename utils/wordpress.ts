@@ -226,10 +226,88 @@ export const createWooOrder = async (
       console.error("❌ WordPress Order Failed:", response.status, errorText);
       throw new Error(`Order creation failed: ${errorText}`);
     }
-    return await response.json();
+
+    const order = await response.json();
+
+    // Trigger order confirmation email
+    // WooCommerce REST API doesn't automatically send emails, so we need to trigger it
+    try {
+      await triggerOrderEmail(order.id);
+    } catch (emailError) {
+      console.warn("⚠️ Failed to trigger order email (order was created successfully):", emailError);
+      // Don't fail the order creation if email trigger fails
+    }
+
+    return order;
 
   } catch (error) {
     console.error("Order Error:", error);
+    throw error;
+  }
+};
+
+/**
+ * Triggers order confirmation email for a WooCommerce order
+ * This is needed because REST API doesn't automatically send emails
+ * 
+ * Note: For this to work reliably, you may need to add a WordPress function
+ * to your theme's functions.php or a custom plugin. See documentation.
+ */
+const triggerOrderEmail = async (orderId: number) => {
+  try {
+    // Method: Update order status to trigger WooCommerce email hooks
+    // WooCommerce sends emails when order status changes to certain statuses
+    // This should trigger the "Order on-hold" or "Processing order" email
+    
+    // First, get current order to check status
+    const orderResponse = await fetch(`${WP_API_URL}/orders/${orderId}`, {
+      headers: {
+        'Authorization': getAuthHeader(),
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (orderResponse.ok) {
+      const currentOrder = await orderResponse.json();
+      const currentStatus = currentOrder.status;
+
+      // If order is pending, update to processing to trigger email
+      // If already processing, we'll update it anyway to trigger hooks
+      if (currentStatus === 'pending' || currentStatus === 'on-hold') {
+        await fetch(`${WP_API_URL}/orders/${orderId}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': getAuthHeader(),
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            status: 'processing'
+          })
+        });
+        console.log("📧 Order status updated to trigger email for order #", orderId);
+      } else {
+        // For other statuses, try adding a customer note which can trigger email
+        try {
+          await fetch(`${WP_API_URL}/orders/${orderId}/notes`, {
+            method: 'POST',
+            headers: {
+              'Authorization': getAuthHeader(),
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              note: 'Thank you for your order!',
+              customer_note: true // Customer notes can trigger emails
+            })
+          });
+        } catch (noteError) {
+          // Note creation failed, but that's okay
+          console.warn("Could not add customer note:", noteError);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Failed to trigger order email:", error);
+    // Don't throw - email failure shouldn't break order creation
     throw error;
   }
 };
