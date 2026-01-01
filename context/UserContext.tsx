@@ -29,6 +29,7 @@ interface User {
 interface UserContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
+  setUser: (user: User | null) => void;
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -85,13 +86,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const handleSetUser = (userData: User | null) => {
+    setUser(userData);
+    if (userData) {
+      localStorage.setItem('jumplings_user', JSON.stringify(userData));
+    } else {
+      localStorage.removeItem('jumplings_user');
+    }
+  };
+
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem('jumplings_user');
+    handleSetUser(null);
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout, isAuthenticated: !!user, isLoading }}>
+    <UserContext.Provider value={{ user, login, setUser: handleSetUser, logout, isAuthenticated: !!user, isLoading }}>
       {children}
     </UserContext.Provider>
   );

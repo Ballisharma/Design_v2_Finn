@@ -76,19 +76,26 @@ const Login: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-8 text-center border-t border-gray-100 pt-6 space-y-4">
-            <div className="bg-funky-light p-4 rounded-xl text-left border-2 border-dashed border-gray-200">
-              <p className="text-xs font-bold text-funky-blue uppercase mb-1">First Time Here?</p>
-              <p className="text-[11px] text-gray-500 leading-relaxed">
-                If you placed a guest order, we've created an account for you! Check your email for a <b>"Set Password"</b> link to access your history.
+          <div className="mt-8 text-center border-t border-gray-100 pt-6 space-y-6">
+            <div className="bg-funky-light p-6 rounded-2xl text-left border-2 border-dashed border-gray-200 relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-funky-pink text-white text-[10px] font-black px-2 py-1 rounded-bl-lg">PRO TIP</div>
+              <p className="text-xs font-bold text-funky-dark uppercase mb-2">New to Jumplings?</p>
+              <p className="text-[11px] text-gray-500 leading-relaxed mb-3">
+                Placed a guest order? We've already created an account for you! Check your email for a <b>"Set Password"</b> link to access your funky order history.
               </p>
+              <Link to="/contact" className="text-[10px] font-black text-funky-blue hover:underline uppercase flex items-center gap-1">
+                Still need help? Contact Us <ArrowRight size={10} />
+              </Link>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <Link to="/contact" className="text-funky-blue font-black hover:underline uppercase tracking-wide text-sm">
-                Set Password / Forgot Password
-              </Link>
-              <p className="text-gray-400 text-sm">Don't have an account? <Link to="/shop" className="text-funky-pink font-bold">Start Shopping</Link></p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => alert("Please check your email for the 'Set Password' link, or use the WordPress default login at https://jumplings.in/my-account/lost-password/")}
+                className="text-funky-blue font-black hover:text-funky-pink uppercase tracking-wide text-xs transition-colors"
+              >
+                Forgot your password?
+              </button>
+              <p className="text-gray-400 text-sm">Don't have an account? <Link to="/shop" className="text-funky-pink font-bold hover:underline">Start Shopping</Link></p>
             </div>
           </div>
         </div>

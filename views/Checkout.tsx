@@ -9,7 +9,7 @@ import { createWooOrder, updateWooOrder, RAZORPAY_KEY_ID } from '../utils/wordpr
 const Checkout: React.FC = () => {
   const { items, subtotal, shippingCost, cartTotal, clearCart } = useCart();
   const { products, updateProduct, dataSource, refreshProducts } = useProducts();
-  const { user, login } = useUser();
+  const { user, setUser } = useUser();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'razorpay'>('cod');
@@ -88,8 +88,22 @@ const Checkout: React.FC = () => {
                   set_paid: true,
                   transaction_id: response.razorpay_payment_id
                 });
-                if (!user) {
-                  await login(customer.email, '');
+                if (!user && order.customer_id) {
+                  setUser({
+                    id: order.customer_id.toString(),
+                    email: customer.email,
+                    first_name: customer.firstName,
+                    last_name: customer.lastName,
+                    billing: {
+                      first_name: customer.firstName,
+                      last_name: customer.lastName,
+                      address_1: customer.address,
+                      city: customer.city,
+                      postcode: customer.pincode,
+                      country: 'IN',
+                      phone: customer.phone
+                    }
+                  });
                 }
 
                 refreshProducts();
@@ -126,8 +140,22 @@ const Checkout: React.FC = () => {
           return;
         }
 
-        if (!user) {
-          await login(customer.email, '');
+        if (!user && order.customer_id) {
+          setUser({
+            id: order.customer_id.toString(),
+            email: customer.email,
+            first_name: customer.firstName,
+            last_name: customer.lastName,
+            billing: {
+              first_name: customer.firstName,
+              last_name: customer.lastName,
+              address_1: customer.address,
+              city: customer.city,
+              postcode: customer.pincode,
+              country: 'IN',
+              phone: customer.phone
+            }
+          });
         }
 
         await refreshProducts();
