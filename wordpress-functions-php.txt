@@ -1,0 +1,104 @@
+/**
+ * ============================================
+ * JUMPLINGS WORDPRESS CONFIGURATION
+ * Add this code to your WordPress theme's functions.php file
+ * ============================================
+ */
+
+/**
+ * Trigger order confirmation emails when orders are created via REST API
+ * This fixes the issue where emails are not sent for API-created orders
+ */
+add_action('woocommerce_rest_insert_shop_order_object', 'jumplings_send_order_email_rest', 10, 3);
+
+function jumplings_send_order_email_rest($order, $request, $creating) {
+    if ($creating) {
+        // Order was just created via REST API
+        $order_id = $order->get_id();
+        
+        // Trigger the new order email (admin notification)
+        if (class_exists('WC_Email_New_Order')) {
+            WC()->mailer()->emails['WC_Email_New_Order']->trigger($order_id);
+        }
+        
+        // Trigger customer processing order email
+        if (class_exists('WC_Email_Customer_Processing_Order')) {
+            WC()->mailer()->emails['WC_Email_Customer_Processing_Order']->trigger($order_id);
+        }
+        
+        error_log("Jumplings: Order confirmation emails triggered for order #" . $order_id);
+    }
+}
+
+/**
+ * Alternative: Trigger emails on order status change
+ * This is a backup method if the above doesn't work
+ */
+add_action('woocommerce_order_status_pending_to_processing_notification', 'jumplings_order_email_on_status_change', 10, 2);
+add_action('woocommerce_order_status_pending_to_on-hold_notification', 'jumplings_order_email_on_status_change', 10, 2);
+
+function jumplings_order_email_on_status_change($order_id, $order) {
+    // Emails should trigger automatically on status change
+    // This function ensures they're sent
+    if (class_exists('WC_Email_Customer_Processing_Order')) {
+        WC()->mailer()->emails['WC_Email_Customer_Processing_Order']->trigger($order_id);
+    }
+}
+
+/**
+ * Enable CORS for frontend domain (if not already configured)
+ * This allows your React app to make API calls
+ */
+add_action('rest_api_init', function() {
+    remove_filter('rest_pre_serve_request', 'rest_send_cors_headers');
+    add_filter('rest_pre_serve_request', function($value) {
+        header('Access-Control-Allow-Origin: https://frontend.jumplings.in');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Allow-Headers: Authorization, Content-Type');
+        return $value;
+    });
+}, 15);
+
+/**
+ * ============================================
+ * INSTALLATION INSTRUCTIONS:
+ * ============================================
+ * 
+ * 1. Log into WordPress Admin Panel (https://jumplings.in/wp-admin)
+ * 
+ * 2. Go to Appearance > Theme Editor
+ * 
+ * 3. Select "functions.php" from the list on the right
+ * 
+ * 4. Scroll to the bottom of the file
+ * 
+ * 5. Paste the code above (everything between the comment blocks)
+ * 
+ * 6. Click "Update File"
+ * 
+ * 7. Test by placing an order through your React frontend
+ * 
+ * ALTERNATIVE: Use a child theme or custom plugin instead of editing functions.php directly
+ * 
+ * ============================================
+ * RECOMMENDED ADDITIONAL SETUP:
+ * ============================================
+ * 
+ * 1. Install "WP Mail SMTP" plugin for reliable email delivery
+ *    - Go to Plugins > Add New
+ *    - Search for "WP Mail SMTP"
+ *    - Install and configure with your email provider
+ * 
+ * 2. Verify WooCommerce Email Settings
+ *    - Go to WooCommerce > Settings > Emails
+ *    - Ensure "New Order" and "Processing Order" emails are enabled
+ * 
+ * 3. Test email delivery
+ *    - Place a test order
+ *    - Check spam folder
+ *    - Install "WP Mail Logging" plugin to see if emails were sent
+ * 
+ * ============================================
+ */
+

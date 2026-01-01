@@ -76,7 +76,7 @@ const Checkout: React.FC = () => {
 
     try {
       if (dataSource === 'wordpress') {
-        const order = await createWooOrder(customer, items, cartTotal, paymentMethod, user?.id);
+        const order = await createWooOrder(customer, items, cartTotal, paymentMethod, user?.id, shippingCost);
         console.log("✅ Order created ID:", order.id);
 
         if (paymentMethod === 'razorpay') {

@@ -75,15 +75,45 @@ export const fetchWooProducts = async (): Promise<Product[]> => {
 
 /**
  * Sends a new order to WooCommerce
+ * Includes all required WooCommerce fields for proper order creation
  */
 export const createWooOrder = async (
   customer: any,
   items: CartItem[],
   total: number,
   paymentMethod: 'cod' | 'razorpay' = 'cod',
-  customerId?: string
+  customerId?: string,
+  shippingCost: number = 0
 ) => {
   try {
+    // Validate inputs
+    if (!customer || !customer.email || !customer.firstName || !customer.lastName) {
+      throw new Error('Customer information is incomplete. Please fill in all required fields.');
+    }
+
+    if (!items || items.length === 0) {
+      throw new Error('Cart is empty. Cannot create order without items.');
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customer.email)) {
+      throw new Error('Please enter a valid email address.');
+    }
+
+    // Validate product IDs
+    for (const item of items) {
+      if (!item.id || isNaN(Number(item.id))) {
+        throw new Error(`Invalid product ID for item: ${item.name}`);
+      }
+      if (!item.quantity || item.quantity < 1) {
+        throw new Error(`Invalid quantity for item: ${item.name}`);
+      }
+      if (!item.price || item.price <= 0) {
+        throw new Error(`Invalid price for item: ${item.name}`);
+      }
+    }
+
     let finalCustomerId = (customerId && !isNaN(Number(customerId))) ? Number(customerId) : 0;
 
     // Map common Indian states to their codes if necessary
@@ -94,6 +124,17 @@ export const createWooOrder = async (
     };
     const stateInput = (customer.state || 'MH').toLowerCase().trim();
     const finalState = stateMap[stateInput] || customer.state || 'MH';
+
+    // Calculate order totals
+    const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalTax = 0; // No tax for now, but field is required
+    const shippingTotal = shippingCost || 0;
+    const orderTotal = subtotal + shippingTotal + totalTax;
+
+    // Validate totals match
+    if (Math.abs(orderTotal - total) > 0.01) {
+      console.warn(`Order total mismatch: calculated ${orderTotal}, provided ${total}. Using calculated total.`);
+    }
 
     // If guest, check if customer already exists by email
     if (!finalCustomerId) {
@@ -132,9 +173,12 @@ export const createWooOrder = async (
             console.warn('Failed to update customer billing info', updateError);
           }
         } else {
-          // Generate a random password for new customer
-          // WooCommerce will send a "Set Password" email
-          const randomPassword = Math.random().toString(36).slice(-12) + Math.random().toString(36).slice(-12) + '!1A';
+          // Generate a secure random password for new customer
+          // Format: alphanumeric + special characters (meets WordPress requirements)
+          const randomPassword = Math.random().toString(36).slice(-10) + 
+                                 Math.random().toString(36).slice(-10).toUpperCase() + 
+                                 '!@' + 
+                                 Math.floor(Math.random() * 100);
           
           // Create new customer with password
           const newCustomerResponse = await fetch(`${WP_API_URL}/customers`, {
@@ -166,9 +210,6 @@ export const createWooOrder = async (
           if (newCustomerResponse.ok) {
             const newCust = await newCustomerResponse.json();
             finalCustomerId = newCust.id;
-            
-            // Note: WooCommerce should automatically send password reset email
-            // If using WordPress, you may need to trigger this manually via hook
           } else {
             const errorText = await newCustomerResponse.text();
             console.error('Failed to create customer:', errorText);
@@ -178,12 +219,37 @@ export const createWooOrder = async (
       }
     }
 
+    // Build line items with required totals
+    const lineItems = items.map(item => {
+      const lineSubtotal = (item.price * item.quantity).toFixed(2);
+      const lineTotal = (item.price * item.quantity).toFixed(2); // Same as subtotal if no discounts
+      
+      return {
+        product_id: Number(item.id),
+        quantity: item.quantity,
+        subtotal: lineSubtotal, // Required: subtotal for this line
+        total: lineTotal, // Required: total for this line (after discounts)
+      };
+    });
+
+    // Build shipping lines
+    const shippingLines = shippingTotal > 0 ? [{
+      method_id: 'flat_rate',
+      method_title: 'Standard Shipping',
+      total: shippingTotal.toFixed(2)
+    }] : [];
+
     const orderData = {
       payment_method: paymentMethod,
       payment_method_title: paymentMethod === 'razorpay' ? 'Online Payment (Razorpay)' : 'Cash on Delivery',
       set_paid: false,
       status: paymentMethod === 'razorpay' ? 'pending' : 'processing',
-      customer_id: finalCustomerId,
+      customer_id: finalCustomerId || 0, // 0 for guest orders
+      currency: 'INR', // Required: currency code
+      total: orderTotal.toFixed(2), // Required: order total
+      subtotal: subtotal.toFixed(2), // Subtotal before shipping/tax
+      total_tax: totalTax.toFixed(2), // Required: total tax (even if 0)
+      shipping_total: shippingTotal.toFixed(2), // Required: shipping cost
       billing: {
         first_name: customer.firstName,
         last_name: customer.lastName,
@@ -193,7 +259,7 @@ export const createWooOrder = async (
         postcode: customer.pincode,
         country: 'IN',
         email: customer.email,
-        phone: customer.phone
+        phone: customer.phone || ''
       },
       shipping: {
         first_name: customer.firstName,
@@ -204,10 +270,8 @@ export const createWooOrder = async (
         postcode: customer.pincode,
         country: 'IN'
       },
-      line_items: items.map(item => ({
-        product_id: Number(item.id),
-        quantity: item.quantity,
-      }))
+      line_items: lineItems, // Includes totals
+      shipping_lines: shippingLines // Required: shipping information
     };
 
     console.log("📤 Sending Order to WordPress:", orderData);
@@ -255,11 +319,7 @@ export const createWooOrder = async (
  */
 const triggerOrderEmail = async (orderId: number) => {
   try {
-    // Method: Update order status to trigger WooCommerce email hooks
-    // WooCommerce sends emails when order status changes to certain statuses
-    // This should trigger the "Order on-hold" or "Processing order" email
-    
-    // First, get current order to check status
+    // Get current order to check status
     const orderResponse = await fetch(`${WP_API_URL}/orders/${orderId}`, {
       headers: {
         'Authorization': getAuthHeader(),
@@ -267,48 +327,60 @@ const triggerOrderEmail = async (orderId: number) => {
       }
     });
 
-    if (orderResponse.ok) {
-      const currentOrder = await orderResponse.json();
-      const currentStatus = currentOrder.status;
+    if (!orderResponse.ok) {
+      console.warn(`Could not fetch order ${orderId} to trigger email`);
+      return; // Don't fail if we can't check status
+    }
 
-      // If order is pending, update to processing to trigger email
-      // If already processing, we'll update it anyway to trigger hooks
-      if (currentStatus === 'pending' || currentStatus === 'on-hold') {
-        await fetch(`${WP_API_URL}/orders/${orderId}`, {
-          method: 'PUT',
+    const currentOrder = await orderResponse.json();
+    const currentStatus = currentOrder.status;
+
+    // Only update status if it's different - avoids unnecessary API calls
+    // and ensures email is triggered by status change
+    if (currentStatus === 'pending' || currentStatus === 'on-hold') {
+      const updateResponse = await fetch(`${WP_API_URL}/orders/${orderId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': getAuthHeader(),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          status: 'processing'
+        })
+      });
+
+      if (updateResponse.ok) {
+        console.log("📧 Order status updated to trigger email for order #", orderId);
+      } else {
+        console.warn(`Failed to update order status for email trigger: ${updateResponse.status}`);
+      }
+    } else if (currentStatus === 'processing') {
+      // Order is already processing, try adding a customer note to trigger email
+      try {
+        const noteResponse = await fetch(`${WP_API_URL}/orders/${orderId}/notes`, {
+          method: 'POST',
           headers: {
             'Authorization': getAuthHeader(),
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            status: 'processing'
+            note: 'Thank you for your order!',
+            customer_note: true // Customer notes can trigger emails
           })
         });
-        console.log("📧 Order status updated to trigger email for order #", orderId);
-      } else {
-        // For other statuses, try adding a customer note which can trigger email
-        try {
-          await fetch(`${WP_API_URL}/orders/${orderId}/notes`, {
-            method: 'POST',
-            headers: {
-              'Authorization': getAuthHeader(),
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              note: 'Thank you for your order!',
-              customer_note: true // Customer notes can trigger emails
-            })
-          });
-        } catch (noteError) {
-          // Note creation failed, but that's okay
-          console.warn("Could not add customer note:", noteError);
+        
+        if (noteResponse.ok) {
+          console.log("📧 Customer note added to trigger email for order #", orderId);
         }
+      } catch (noteError) {
+        // Note creation failed, but that's okay - WordPress function should handle email
+        console.warn("Could not add customer note (email should still be sent via WordPress function):", noteError);
       }
     }
   } catch (error) {
-    console.error("Failed to trigger order email:", error);
     // Don't throw - email failure shouldn't break order creation
-    throw error;
+    // WordPress function should handle email sending as backup
+    console.warn("Failed to trigger order email (order was created successfully):", error);
   }
 };
 
@@ -380,80 +452,89 @@ export const fetchCustomerOrders = async (customerId: string) => {
 
 /**
  * Authenticate user with WordPress JWT (requires JWT Authentication plugin)
- * Falls back to WooCommerce customer lookup if JWT is not available
+ * SECURITY: Password verification is REQUIRED - no fallback without password check
  */
 export const loginCustomer = async (email: string, password: string) => {
+  if (!email || !password) {
+    throw new Error('Email and password are required.');
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    throw new Error('Please enter a valid email address.');
+  }
+
   try {
-    // Try JWT authentication first (recommended)
-    try {
-      const jwtResponse = await fetch(WP_JWT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: email,
-          password: password,
-        }),
-      });
-
-      if (jwtResponse.ok) {
-        const jwtData = await jwtResponse.json();
-        if (jwtData.token && jwtData.user) {
-          setJWTToken(jwtData.token);
-          return {
-            id: jwtData.user.id.toString(),
-            email: jwtData.user.email || email,
-            first_name: jwtData.user.name?.split(' ')[0] || jwtData.user.display_name?.split(' ')[0] || 'Valued',
-            last_name: jwtData.user.name?.split(' ').slice(1).join(' ') || jwtData.user.display_name?.split(' ').slice(1).join(' ') || 'Customer',
-            avatar_url: jwtData.user.avatar_url,
-            billing: jwtData.user.billing,
-            shipping: jwtData.user.shipping,
-          };
-        }
-      }
-    } catch (jwtError) {
-      console.log('JWT authentication not available, using WooCommerce API');
-    }
-
-    // Fallback: Verify via WooCommerce API (if JWT plugin not installed)
-    // Note: This requires the customer to exist in WooCommerce
-    const response = await fetch(`${WP_API_URL}/customers?email=${encodeURIComponent(email)}`, {
+    // JWT authentication is REQUIRED - no fallback without password verification
+    const jwtResponse = await fetch(WP_JWT_URL, {
+      method: 'POST',
       headers: {
-        'Authorization': getAuthHeader(),
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: email,
+        password: password,
+      }),
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to authenticate. Please check your credentials.');
+    if (!jwtResponse.ok) {
+      // Check if it's a 403 (wrong credentials) vs 404 (endpoint not found)
+      if (jwtResponse.status === 403 || jwtResponse.status === 401) {
+        throw new Error('Invalid email or password. Please check your credentials and try again.');
+      } else if (jwtResponse.status === 404) {
+        throw new Error('Authentication service unavailable. Please contact support or install JWT Authentication plugin on WordPress.');
+      } else {
+        const errorData = await jwtResponse.json().catch(() => ({}));
+        const errorMessage = errorData.message || errorData.code || 'Authentication failed';
+        throw new Error(errorMessage);
+      }
     }
 
-    const customers = await response.json();
+    const jwtData = await jwtResponse.json();
 
-    if (customers.length === 0) {
-      throw new Error('Account not found. Please register or place an order to create an account.');
+    if (!jwtData.token || !jwtData.user) {
+      throw new Error('Invalid authentication response. Please try again.');
     }
 
-    // Note: WooCommerce API doesn't verify passwords directly
-    // For proper password verification, JWT plugin is required
-    // If we get here, we found the customer but couldn't verify password via JWT
-    // This is a fallback that should be avoided in production
-    console.warn('Using WooCommerce customer lookup without password verification. Install JWT Authentication plugin for secure login.');
+    setJWTToken(jwtData.token);
 
-    const customer = customers[0];
+    // Fetch WooCommerce customer data to get billing/shipping info
+    let customerData: any = {};
+    try {
+      const custResponse = await fetch(`${WP_API_URL}/customers?email=${encodeURIComponent(email)}`, {
+        headers: {
+          'Authorization': getAuthHeader(),
+        }
+      });
+
+      if (custResponse.ok) {
+        const customers = await custResponse.json();
+        if (Array.isArray(customers) && customers.length > 0) {
+          customerData = customers[0];
+        }
+      }
+    } catch (custError) {
+      console.warn('Could not fetch WooCommerce customer data:', custError);
+      // Continue with JWT user data even if customer fetch fails
+    }
+
     return {
-      id: customer.id.toString(),
-      email: customer.email,
-      first_name: customer.first_name || 'Valued',
-      last_name: customer.last_name || 'Customer',
-      avatar_url: customer.avatar_url,
-      billing: customer.billing,
-      shipping: customer.shipping
+      id: customerData.id?.toString() || jwtData.user.id.toString(),
+      email: jwtData.user.email || email,
+      first_name: customerData.first_name || jwtData.user.name?.split(' ')[0] || jwtData.user.display_name?.split(' ')[0] || 'Valued',
+      last_name: customerData.last_name || jwtData.user.name?.split(' ').slice(1).join(' ') || jwtData.user.display_name?.split(' ').slice(1).join(' ') || 'Customer',
+      avatar_url: customerData.avatar_url || jwtData.user.avatar_url,
+      billing: customerData.billing || jwtData.user.billing,
+      shipping: customerData.shipping || jwtData.user.shipping
     };
   } catch (error: any) {
     console.error("Login failed", error);
-    throw new Error(error.message || 'Login failed. Please check your email and password.');
+    // Re-throw with user-friendly message if it's our error
+    if (error.message && error.message !== 'Login failed') {
+      throw error;
+    }
+    throw new Error('Login failed. Please check your email and password, or contact support if the problem persists.');
   }
 };
 
@@ -573,6 +654,7 @@ export const requestPasswordReset = async (email: string) => {
 
 /**
  * Update customer profile
+ * Includes validation and proper data structure
  */
 export const updateCustomerProfile = async (customerId: string, data: {
   first_name?: string;
@@ -582,6 +664,62 @@ export const updateCustomerProfile = async (customerId: string, data: {
   shipping?: any;
 }) => {
   try {
+    // Validate customer ID
+    if (!customerId || isNaN(Number(customerId))) {
+      throw new Error('Invalid customer ID');
+    }
+
+    // Validate input data
+    if (data.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(data.email)) {
+        throw new Error('Please enter a valid email address.');
+      }
+    }
+
+    if (data.first_name && data.first_name.trim().length === 0) {
+      throw new Error('First name cannot be empty.');
+    }
+
+    if (data.last_name && data.last_name.trim().length === 0) {
+      throw new Error('Last name cannot be empty.');
+    }
+
+    // Build update payload - ensure billing and shipping are properly structured
+    const updateData: any = {};
+    
+    if (data.first_name) updateData.first_name = data.first_name.trim();
+    if (data.last_name) updateData.last_name = data.last_name.trim();
+    if (data.email) updateData.email = data.email.trim().toLowerCase();
+
+    // Include billing if provided
+    if (data.billing) {
+      updateData.billing = {
+        ...data.billing,
+        country: data.billing.country || 'IN'
+      };
+    }
+
+    // Include shipping if provided (use billing as default if shipping not provided but billing is)
+    if (data.shipping) {
+      updateData.shipping = {
+        ...data.shipping,
+        country: data.shipping.country || 'IN'
+      };
+    } else if (data.billing) {
+      // If shipping not provided but billing is, copy billing to shipping
+      updateData.shipping = {
+        first_name: data.billing.first_name || updateData.first_name,
+        last_name: data.billing.last_name || updateData.last_name,
+        address_1: data.billing.address_1 || '',
+        address_2: data.billing.address_2 || '',
+        city: data.billing.city || '',
+        state: data.billing.state || '',
+        postcode: data.billing.postcode || '',
+        country: data.billing.country || 'IN'
+      };
+    }
+
     const token = getJWTToken();
     const response = await fetch(`${WP_API_URL}/customers/${customerId}`, {
       method: 'PUT',
@@ -589,12 +727,21 @@ export const updateCustomerProfile = async (customerId: string, data: {
         'Authorization': token ? `Bearer ${token}` : getAuthHeader(),
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(updateData)
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Profile update failed: ${errorText}`);
+      let errorMessage = 'Profile update failed';
+      
+      try {
+        const errorData = JSON.parse(errorText);
+        errorMessage = errorData.message || errorData.code || errorMessage;
+      } catch (e) {
+        errorMessage = errorText.substring(0, 200); // Limit error message length
+      }
+      
+      throw new Error(errorMessage);
     }
 
     return await response.json();
