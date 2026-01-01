@@ -1,14 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useUser } from '../context/UserContext';
-import { fetchCustomerOrders } from '../utils/wordpress';
+import { fetchCustomerOrders, updateCustomerProfile } from '../utils/wordpress';
 import { useNavigate, Link } from 'react-router-dom';
-import { Package, Truck, Clock, LogOut, MapPin, ShoppingBag, AlertCircle, RefreshCw, HelpCircle, ExternalLink, ChevronRight } from 'lucide-react';
+import { Package, Truck, Clock, LogOut, MapPin, ShoppingBag, AlertCircle, RefreshCw, HelpCircle, ExternalLink, ChevronRight, User, Edit2, Save, X } from 'lucide-react';
 
 const MyAccount: React.FC = () => {
-   const { user, logout, isAuthenticated } = useUser();
+   const { user, logout, isAuthenticated, refreshUser } = useUser();
    const navigate = useNavigate();
    const [orders, setOrders] = useState<any[]>([]);
    const [isLoading, setIsLoading] = useState(true);
+   const [isEditingProfile, setIsEditingProfile] = useState(false);
+   const [profileData, setProfileData] = useState({
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone: '',
+      address_1: '',
+      city: '',
+      state: '',
+      postcode: ''
+   });
+   const [isSavingProfile, setIsSavingProfile] = useState(false);
+   const [profileError, setProfileError] = useState('');
 
    useEffect(() => {
       if (!isAuthenticated) {
@@ -27,6 +40,55 @@ const MyAccount: React.FC = () => {
 
       loadOrders();
    }, [isAuthenticated, user, navigate]);
+
+   // Initialize profile data when user changes
+   useEffect(() => {
+      if (user) {
+         setProfileData({
+            first_name: user.first_name || '',
+            last_name: user.last_name || '',
+            email: user.email || '',
+            phone: user.billing?.phone || '',
+            address_1: user.billing?.address_1 || '',
+            city: user.billing?.city || '',
+            state: user.billing?.state || '',
+            postcode: user.billing?.postcode || ''
+         });
+      }
+   }, [user]);
+
+   const handleSaveProfile = async () => {
+      if (!user?.id) return;
+
+      setIsSavingProfile(true);
+      setProfileError('');
+
+      try {
+         await updateCustomerProfile(user.id, {
+            first_name: profileData.first_name,
+            last_name: profileData.last_name,
+            billing: {
+               first_name: profileData.first_name,
+               last_name: profileData.last_name,
+               phone: profileData.phone,
+               address_1: profileData.address_1,
+               city: profileData.city,
+               state: profileData.state,
+               postcode: profileData.postcode,
+               country: 'IN'
+            }
+         });
+
+         // Refresh user data
+         await refreshUser();
+         setIsEditingProfile(false);
+         alert('Profile updated successfully!');
+      } catch (error: any) {
+         setProfileError(error.message || 'Failed to update profile. Please try again.');
+      } finally {
+         setIsSavingProfile(false);
+      }
+   };
 
    const handleLogout = () => {
       logout();
@@ -77,6 +139,12 @@ const MyAccount: React.FC = () => {
                <div className="lg:col-span-1">
                   <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sticky top-24">
                      <h3 className="font-heading font-black text-xl text-funky-dark mb-4 uppercase tracking-tight text-center lg:text-left">ACCOUNT</h3>
+                     <button
+                        onClick={() => setIsEditingProfile(!isEditingProfile)}
+                        className="w-full flex items-center gap-3 px-4 py-4 rounded-xl font-bold text-gray-500 hover:bg-gray-50 transition-all mb-2"
+                     >
+                        <User size={20} /> {isEditingProfile ? 'View Orders' : 'Edit Profile'}
+                     </button>
                      <div className="w-full flex items-center gap-3 px-4 py-4 rounded-xl font-bold bg-funky-light text-funky-dark mb-2">
                         <Package size={20} /> My Orders
                      </div>
@@ -87,9 +155,149 @@ const MyAccount: React.FC = () => {
                </div>
 
                <div className="lg:col-span-3 space-y-8">
-                  <h2 className="font-heading font-black text-2xl text-funky-dark mb-6 flex items-center gap-2">
-                     <ShoppingBag className="text-funky-pink" /> ORDER HISTORY
-                  </h2>
+                  {isEditingProfile ? (
+                     <div className="bg-white rounded-3xl border-2 border-gray-100 p-8 shadow-sm">
+                        <div className="flex justify-between items-center mb-6">
+                           <h2 className="font-heading font-black text-2xl text-funky-dark flex items-center gap-2">
+                              <User className="text-funky-blue" /> EDIT PROFILE
+                           </h2>
+                           <button
+                              onClick={() => setIsEditingProfile(false)}
+                              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                           >
+                              <X size={20} />
+                           </button>
+                        </div>
+
+                        {profileError && (
+                           <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 mb-6">
+                              <p className="text-red-600 text-sm font-bold">{profileError}</p>
+                           </div>
+                        )}
+
+                        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleSaveProfile(); }}>
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div>
+                                 <label className="block text-xs font-bold uppercase text-gray-400 mb-2">First Name</label>
+                                 <input
+                                    type="text"
+                                    value={profileData.first_name}
+                                    onChange={(e) => setProfileData({ ...profileData, first_name: e.target.value })}
+                                    className="w-full bg-funky-light border-2 border-transparent focus:border-funky-blue rounded-xl px-4 py-3 font-medium outline-none transition-colors"
+                                    required
+                                 />
+                              </div>
+                              <div>
+                                 <label className="block text-xs font-bold uppercase text-gray-400 mb-2">Last Name</label>
+                                 <input
+                                    type="text"
+                                    value={profileData.last_name}
+                                    onChange={(e) => setProfileData({ ...profileData, last_name: e.target.value })}
+                                    className="w-full bg-funky-light border-2 border-transparent focus:border-funky-blue rounded-xl px-4 py-3 font-medium outline-none transition-colors"
+                                    required
+                                 />
+                              </div>
+                           </div>
+
+                           <div>
+                              <label className="block text-xs font-bold uppercase text-gray-400 mb-2">Email</label>
+                              <input
+                                 type="email"
+                                 value={profileData.email}
+                                 disabled
+                                 className="w-full bg-gray-100 border-2 border-transparent rounded-xl px-4 py-3 font-medium text-gray-500 cursor-not-allowed"
+                              />
+                              <p className="text-xs text-gray-400 mt-1">Email cannot be changed</p>
+                           </div>
+
+                           <div>
+                              <label className="block text-xs font-bold uppercase text-gray-400 mb-2">Phone</label>
+                              <input
+                                 type="tel"
+                                 value={profileData.phone}
+                                 onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                                 className="w-full bg-funky-light border-2 border-transparent focus:border-funky-blue rounded-xl px-4 py-3 font-medium outline-none transition-colors"
+                              />
+                           </div>
+
+                           <div>
+                              <label className="block text-xs font-bold uppercase text-gray-400 mb-2">Address</label>
+                              <input
+                                 type="text"
+                                 value={profileData.address_1}
+                                 onChange={(e) => setProfileData({ ...profileData, address_1: e.target.value })}
+                                 className="w-full bg-funky-light border-2 border-transparent focus:border-funky-blue rounded-xl px-4 py-3 font-medium outline-none transition-colors"
+                              />
+                           </div>
+
+                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              <div>
+                                 <label className="block text-xs font-bold uppercase text-gray-400 mb-2">City</label>
+                                 <input
+                                    type="text"
+                                    value={profileData.city}
+                                    onChange={(e) => setProfileData({ ...profileData, city: e.target.value })}
+                                    className="w-full bg-funky-light border-2 border-transparent focus:border-funky-blue rounded-xl px-4 py-3 font-medium outline-none transition-colors"
+                                 />
+                              </div>
+                              <div>
+                                 <label className="block text-xs font-bold uppercase text-gray-400 mb-2">State</label>
+                                 <input
+                                    type="text"
+                                    value={profileData.state}
+                                    onChange={(e) => setProfileData({ ...profileData, state: e.target.value })}
+                                    className="w-full bg-funky-light border-2 border-transparent focus:border-funky-blue rounded-xl px-4 py-3 font-medium outline-none transition-colors"
+                                 />
+                              </div>
+                              <div>
+                                 <label className="block text-xs font-bold uppercase text-gray-400 mb-2">PIN Code</label>
+                                 <input
+                                    type="text"
+                                    value={profileData.postcode}
+                                    onChange={(e) => setProfileData({ ...profileData, postcode: e.target.value })}
+                                    className="w-full bg-funky-light border-2 border-transparent focus:border-funky-blue rounded-xl px-4 py-3 font-medium outline-none transition-colors"
+                                 />
+                              </div>
+                           </div>
+
+                           <div className="flex gap-4 pt-4">
+                              <button
+                                 type="submit"
+                                 disabled={isSavingProfile}
+                                 className="flex-1 bg-funky-dark text-white py-3 rounded-xl font-heading font-black hover:bg-funky-pink transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+                              >
+                                 {isSavingProfile ? <RefreshCw className="animate-spin" size={20} /> : <><Save size={20} /> SAVE CHANGES</>}
+                              </button>
+                              <button
+                                 type="button"
+                                 onClick={() => {
+                                    setIsEditingProfile(false);
+                                    // Reset to original values
+                                    if (user) {
+                                       setProfileData({
+                                          first_name: user.first_name || '',
+                                          last_name: user.last_name || '',
+                                          email: user.email || '',
+                                          phone: user.billing?.phone || '',
+                                          address_1: user.billing?.address_1 || '',
+                                          city: user.billing?.city || '',
+                                          state: user.billing?.state || '',
+                                          postcode: user.billing?.postcode || ''
+                                       });
+                                    }
+                                 }}
+                                 className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-bold hover:bg-gray-200 transition-colors"
+                              >
+                                 Cancel
+                              </button>
+                           </div>
+                        </form>
+                     </div>
+                  ) : (
+                     <>
+                        <h2 className="font-heading font-black text-2xl text-funky-dark mb-6 flex items-center gap-2">
+                           <ShoppingBag className="text-funky-pink" /> ORDER HISTORY
+                        </h2>
 
                   {isLoading ? (
                      <div className="bg-white p-12 rounded-3xl text-center shadow-sm">
@@ -209,6 +417,8 @@ const MyAccount: React.FC = () => {
                         </button>
                      </div>
                   )}
+                  </>
+               )}
                </div>
             </div>
          </div>

@@ -17,14 +17,30 @@ const Checkout: React.FC = () => {
   // Auto-fill from user context if available
   const [customer, setCustomer] = useState({
     email: user?.email || '',
-    phone: '',
-    firstName: user?.first_name || '',
-    lastName: user?.last_name || '',
-    address: '',
-    city: '',
-    pincode: '',
-    state: ''
+    phone: user?.billing?.phone || '',
+    firstName: user?.first_name || user?.billing?.first_name || '',
+    lastName: user?.last_name || user?.billing?.last_name || '',
+    address: user?.billing?.address_1 || '',
+    city: user?.billing?.city || '',
+    pincode: user?.billing?.postcode || '',
+    state: user?.billing?.state || ''
   });
+
+  // Update form when user changes
+  useEffect(() => {
+    if (user?.billing) {
+      setCustomer({
+        email: user.email || '',
+        phone: user.billing.phone || '',
+        firstName: user.first_name || user.billing.first_name || '',
+        lastName: user.last_name || user.billing.last_name || '',
+        address: user.billing.address_1 || '',
+        city: user.billing.city || '',
+        pincode: user.billing.postcode || '',
+        state: user.billing.state || ''
+      });
+    }
+  }, [user]);
 
   if (items.length === 0) {
     return (
@@ -88,28 +104,19 @@ const Checkout: React.FC = () => {
                   set_paid: true,
                   transaction_id: response.razorpay_payment_id
                 });
-                if (!user && order.customer_id) {
-                  setUser({
-                    id: order.customer_id.toString(),
-                    email: customer.email,
-                    first_name: customer.firstName,
-                    last_name: customer.lastName,
-                    billing: {
-                      first_name: customer.firstName,
-                      last_name: customer.lastName,
-                      address_1: customer.address,
-                      city: customer.city,
-                      postcode: customer.pincode,
-                      country: 'IN',
-                      phone: customer.phone
-                    }
-                  });
-                }
 
                 refreshProducts();
                 clearCart();
-                navigate('/account');
-                alert("Payment Successful! Your happy feet are on the way. 🎉");
+                
+                // If user was already logged in, go to account page
+                // Otherwise, show success message and redirect to login
+                if (user) {
+                  navigate('/account');
+                  alert("Payment Successful! Your happy feet are on the way. 🎉");
+                } else {
+                  navigate('/login');
+                  alert("Payment Successful! An account was created for you. Please check your email to set a password and view your orders.");
+                }
               } catch (err: any) {
                 console.error("Payment sync failed:", err);
                 alert(`Payment received, but we had trouble updating the order: ${err.message || 'Unknown Error'}`);
@@ -140,29 +147,19 @@ const Checkout: React.FC = () => {
           return;
         }
 
-        if (!user && order.customer_id) {
-          setUser({
-            id: order.customer_id.toString(),
-            email: customer.email,
-            first_name: customer.firstName,
-            last_name: customer.lastName,
-            billing: {
-              first_name: customer.firstName,
-              last_name: customer.lastName,
-              address_1: customer.address,
-              city: customer.city,
-              postcode: customer.pincode,
-              country: 'IN',
-              phone: customer.phone
-            }
-          });
-        }
-
         await refreshProducts();
         clearCart();
         setIsProcessing(false);
-        navigate('/account');
-        alert("Order Placed Successfully! (Cash on Delivery) 🚚");
+        
+        // If user was already logged in, go to account page
+        // Otherwise, show message and redirect to login
+        if (user) {
+          navigate('/account');
+          alert("Order Placed Successfully! (Cash on Delivery) 🚚");
+        } else {
+          navigate('/login');
+          alert("Order Placed Successfully! An account was created for you. Please check your email to set a password and view your orders.");
+        }
       } else {
         setTimeout(() => {
           clearCart();

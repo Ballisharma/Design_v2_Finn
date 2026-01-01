@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useUser } from '../context/UserContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { Lock, Mail, ArrowRight, Loader2 } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Loader2, ArrowLeft } from 'lucide-react';
+import { requestPasswordReset } from '../utils/wordpress';
 
 const Login: React.FC = () => {
   const { login, isLoading } = useUser();
@@ -9,6 +10,8 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [resetMessage, setResetMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,26 +79,55 @@ const Login: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-8 text-center border-t border-gray-100 pt-6 space-y-6">
-            <div className="bg-funky-light p-6 rounded-2xl text-left border-2 border-dashed border-gray-200 relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-funky-pink text-white text-[10px] font-black px-2 py-1 rounded-bl-lg">PRO TIP</div>
-              <p className="text-xs font-bold text-funky-dark uppercase mb-2">New to Jumplings?</p>
-              <p className="text-[11px] text-gray-500 leading-relaxed mb-3">
-                Placed a guest order? We've already created an account for you! Check your email for a <b>"Set Password"</b> link to access your funky order history.
+          <div className="mt-8 text-center border-t border-gray-100 pt-6">
+            <div className="bg-funky-light p-4 rounded-2xl text-left border-2 border-dashed border-gray-200 mb-4">
+              <p className="text-xs font-bold text-funky-dark uppercase mb-1">Guest Order?</p>
+              <p className="text-[11px] text-gray-500 leading-relaxed">
+                Placed a guest order? An account was created for you! Check your email for a password setup link.
               </p>
-              <Link to="/contact" className="text-[10px] font-black text-funky-blue hover:underline uppercase flex items-center gap-1">
-                Still need help? Contact Us <ArrowRight size={10} />
-              </Link>
             </div>
 
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => alert("Please check your email for the 'Set Password' link, or use the WordPress default login at https://jumplings.in/my-account/lost-password/")}
-                className="text-funky-blue font-black hover:text-funky-pink uppercase tracking-wide text-xs transition-colors"
+                onClick={async () => {
+                  if (!email) {
+                    setError('Please enter your email address first');
+                    return;
+                  }
+                  setIsResettingPassword(true);
+                  setResetMessage('');
+                  setError('');
+                  try {
+                    await requestPasswordReset(email);
+                    setResetMessage('Password reset link sent! Please check your email.');
+                  } catch (err: any) {
+                    setError(err.message || 'Failed to send password reset email. Please try again.');
+                  } finally {
+                    setIsResettingPassword(false);
+                  }
+                }}
+                disabled={isResettingPassword}
+                className="text-funky-blue font-black hover:text-funky-pink uppercase tracking-wide text-xs transition-colors disabled:opacity-50"
               >
-                Forgot your password?
+                {isResettingPassword ? 'Sending...' : 'Forgot your password?'}
               </button>
-              <p className="text-gray-400 text-sm">Don't have an account? <Link to="/shop" className="text-funky-pink font-bold hover:underline">Start Shopping</Link></p>
+              {resetMessage && (
+                <div className="bg-green-50 border-2 border-green-200 rounded-xl p-3">
+                  <p className="text-green-600 text-xs font-bold text-center">{resetMessage}</p>
+                </div>
+              )}
+              <p className="text-gray-400 text-sm">
+                Don't have an account?{' '}
+                <Link to="/register" className="text-funky-pink font-bold hover:underline">
+                  Create Account
+                </Link>
+              </p>
+              <Link 
+                to="/" 
+                className="mt-2 inline-flex items-center justify-center gap-2 text-gray-500 hover:text-funky-dark text-sm font-bold transition-colors"
+              >
+                <ArrowLeft size={16} /> Back to Home
+              </Link>
             </div>
           </div>
         </div>
