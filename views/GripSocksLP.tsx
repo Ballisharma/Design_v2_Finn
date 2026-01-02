@@ -223,7 +223,7 @@ const GripSocksLP: React.FC = () => {
                   {/* Center Image */}
                   <div className="relative w-full max-w-sm aspect-[3/4] rounded-full border border-gray-200 p-3 bg-white shadow-2xl">
                      <div className="w-full h-full bg-funky-light rounded-full overflow-hidden relative shadow-inner">
-                        <img src={blackImg} className="w-full h-full object-cover transform scale-110" alt="Anatomy" />
+                        <img src={blackImg} loading="lazy" className="w-full h-full object-cover transform scale-110" alt="Anatomy" />
                         {/* Overlay pointers */}
                         <div className="absolute top-1/4 left-1/4 w-8 h-8 bg-funky-yellow border-4 border-white rounded-full animate-ping opacity-75"></div>
                         <div className="absolute top-1/4 left-1/4 w-8 h-8 bg-funky-yellow border-4 border-white rounded-full flex items-center justify-center z-10 shadow-lg"><span className="text-xs font-black text-funky-dark">1</span></div>
@@ -471,6 +471,7 @@ const GripSocksLP: React.FC = () => {
                         <img
                            src={activeTab === 'black' ? blackImg : greyImg}
                            alt="Selected Sock"
+                           loading="lazy"
                            className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
                         />
                      </div>

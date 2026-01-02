@@ -36,6 +36,7 @@ const HappyFeetSection: React.FC = () => {
                     <img
                         src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop"
                         alt="Happy customer with stylish socks"
+                        loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover"
                     />
                     {/* Overlay to subtly darken/tint if needed */}

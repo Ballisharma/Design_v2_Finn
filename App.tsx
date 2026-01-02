@@ -4,26 +4,28 @@ import { CartProvider } from './context/CartContext';
 import { ProductProvider } from './context/ProductContext';
 import { UserProvider } from './context/UserContext';
 import Navbar from './components/Navbar';
-import Home from './views/Home';
-import ProductDetails from './views/ProductDetails';
-import AllProducts from './views/AllProducts';
-import Checkout from './views/Checkout';
-import About from './views/About';
-import Contact from './views/Contact';
-import Privacy from './views/Privacy';
-import Terms from './views/Terms';
-import Shipping from './views/Shipping';
-import Returns from './views/Returns';
-import Login from './views/Login';
-import Register from './views/Register';
-import ResetPassword from './views/ResetPassword';
-import MyAccount from './views/MyAccount';
-import GripSocksLP from './views/GripSocksLP';
 import CartDrawer from './components/CartDrawer';
 import ProductModal from './components/ProductModal';
 import WordPressSyncPanel from './components/WordPressSyncPanel';
 import DebugPanel from './components/DebugPanel';
-import { Instagram, Facebook, Twitter, Linkedin, Heart } from 'lucide-react';
+import { Instagram, Facebook, Twitter, Linkedin, Heart, Loader2 } from 'lucide-react';
+
+// Lazy load views for better initial performance
+const Home = React.lazy(() => import('./views/Home'));
+const AllProducts = React.lazy(() => import('./views/AllProducts'));
+const GripSocksLP = React.lazy(() => import('./views/GripSocksLP'));
+const ProductDetails = React.lazy(() => import('./views/ProductDetails'));
+const Checkout = React.lazy(() => import('./views/Checkout'));
+const About = React.lazy(() => import('./views/About'));
+const Contact = React.lazy(() => import('./views/Contact'));
+const Privacy = React.lazy(() => import('./views/Privacy'));
+const Terms = React.lazy(() => import('./views/Terms'));
+const Shipping = React.lazy(() => import('./views/Shipping'));
+const Returns = React.lazy(() => import('./views/Returns'));
+const Login = React.lazy(() => import('./views/Login'));
+const Register = React.lazy(() => import('./views/Register'));
+const ResetPassword = React.lazy(() => import('./views/ResetPassword'));
+const MyAccount = React.lazy(() => import('./views/MyAccount'));
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -50,25 +52,32 @@ const AppContent: React.FC = () => {
       {!background && <ScrollToTop />}
 
       <main className="flex-grow">
-        <Routes location={background || location}>
-          <Route path="/" element={<Home />} />
-          <Route path="/shop" element={<AllProducts />} />
-          <Route path="/grip-socks" element={<GripSocksLP />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/shipping" element={<Shipping />} />
-          <Route path="/returns" element={<Returns />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/account" element={<MyAccount />} />
-          <Route path="/admin/sync" element={<WordPressSyncPanel />} />
-          <Route path="/admin/debug" element={<DebugPanel />} />
-        </Routes>
+        <React.Suspense fallback={
+          <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4">
+            <Loader2 className="w-12 h-12 text-funky-dark animate-spin opacity-20" />
+            <p className="font-heading font-black text-xs uppercase tracking-[0.2em] text-funky-dark/20">Loading...</p>
+          </div>
+        }>
+          <Routes location={background || location}>
+            <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<AllProducts />} />
+            <Route path="/grip-socks" element={<GripSocksLP />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/shipping" element={<Shipping />} />
+            <Route path="/returns" element={<Returns />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/account" element={<MyAccount />} />
+            <Route path="/admin/sync" element={<WordPressSyncPanel />} />
+            <Route path="/admin/debug" element={<DebugPanel />} />
+          </Routes>
+        </React.Suspense>
 
         {/* Modal Routes */}
         {background && (
