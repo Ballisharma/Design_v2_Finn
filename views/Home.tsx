@@ -53,10 +53,10 @@ const Home: React.FC = () => {
                   setActiveFilter(filter);
                   setVisibleCount(6); // Reset on filter change
                 }}
-                className={`px - 3 py - 1.5 md: px - 4 md: py - 2 rounded - lg text - xs md: text - sm font - bold transition - colors border - 2 ${activeFilter === filter
+                className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-colors border-2 ${activeFilter === filter
                   ? 'bg-funky-dark text-white border-funky-dark shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]'
                   : 'bg-white text-funky-dark border-gray-100 hover:border-funky-dark hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-                  } `}
+                  }`}
               >
                 {filter}
               </button>
@@ -93,8 +93,17 @@ const Home: React.FC = () => {
         )}
       </section>
 
-      {/* Sustainability Section */}
       <SustainabilitySection />
+
+      {/* Shop Best Sellers Section */}
+      <SectionHeader title="Shop Best Sellers" />
+      <section className="max-w-7xl mx-auto px-4 md:px-6 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {products.slice(0, 3).map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
