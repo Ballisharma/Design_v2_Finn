@@ -1,29 +1,28 @@
 import React from 'react';
 
+// Using the same style logos as reference (The Dodo, Travel+Leisure, Forbes, Great Pet)
 const logos = [
-    { name: "Vogue", file: "https://upload.wikimedia.org/wikipedia/commons/f/f6/Vogue_logo.svg" },
-    { name: "GQ", file: "https://upload.wikimedia.org/wikipedia/commons/9/92/GQ_magazine_logo.svg" },
+    { name: "The Dodo", file: "https://upload.wikimedia.org/wikipedia/commons/6/66/The_Dodo_Logo.png" }, // Trying to find real ones or close match
     { name: "Forbes", file: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Forbes_logo.svg" },
-    { name: "Hypebeast", file: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Hypebeast_Logo.svg" },
-    { name: "Esquire", file: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Esquire_logo.svg" },
-    { name: "Vanity Fair", file: "https://upload.wikimedia.org/wikipedia/commons/7/77/Vanity_Fair_logo.svg" },
+    { name: "Travel + Leisure", file: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Travel_%2B_Leisure_loogo.svg/2560px-Travel_%2B_Leisure_loogo.svg.png" },
+    { name: "Great Pet", file: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Petco_logo.svg/2560px-Petco_logo.svg.png" }, // Placeholder for Great Pet
 ];
 
 const LogoTicker: React.FC = () => {
     return (
-        <div className="py-8 md:py-12 bg-funky-light border-y border-funky-dark/5 overflow-hidden">
-            <div className="bg-transparent relative w-full overflow-hidden">
-                {/* Gradient Masks */}
-                <div className="absolute top-0 left-0 h-full w-20 md:w-32 bg-gradient-to-r from-funky-light to-transparent z-10"></div>
-                <div className="absolute top-0 right-0 h-full w-20 md:w-32 bg-gradient-to-l from-funky-light to-transparent z-10"></div>
+        <div className="w-full bg-[#DDEEFF] py-8 border-y-0 overflow-hidden">
+            {/* Reference image shows a light blue bar (#DDEEFF likely matches the second slide color) */}
 
-                <div className="flex gap-12 md:gap-24 w-max animate-infinite-scroll hover:[animation-play-state:paused]">
-                    {[...logos, ...logos, ...logos].map((logo, index) => (
-                        <div key={index} className="flex items-center justify-center opacity-40 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
+            <div className="max-w-[100vw] mx-auto relative overflow-hidden">
+                <div className="flex gap-16 md:gap-24 w-max animate-infinite-scroll hover:[animation-play-state:paused] items-center">
+                    {/* Duplicating list multiple times for smooth infinite scroll */}
+                    {[...logos, ...logos, ...logos, ...logos].map((logo, index) => (
+                        <div key={index} className="flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity grayscale-0">
+                            {/* Logos in reference are dark blue / colored, not grayscale */}
                             <img
                                 src={logo.file}
                                 alt={logo.name}
-                                className="h-6 md:h-8 w-auto object-contain"
+                                className="h-8 md:h-10 w-auto object-contain mix-blend-multiply"
                             />
                         </div>
                     ))}
