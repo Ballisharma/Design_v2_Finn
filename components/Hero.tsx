@@ -10,7 +10,7 @@ const slides = [
     subtitle: "Find the right\npair for you!",
     buttonText: "Shop Now",
     buttonLink: "/shop",
-    image: "https://images.unsplash.com/photo-1552874869-8132604971ca?q=80&w=1000&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1552874869-8132604971ca?q=80&w=1200&auto=format&fit=crop",
   }
 ];
 
@@ -48,6 +48,7 @@ const Hero: React.FC = () => {
                   <img
                     src={slide.image}
                     alt="Hero"
+                    fetchPriority="high"
                     className="h-full object-contain object-bottom drop-shadow-2xl"
                   />
                 </div>
@@ -77,6 +78,7 @@ const Hero: React.FC = () => {
                 <img
                   src={slide.image}
                   alt="Hero"
+                  fetchPriority="high"
                   className="relative z-10 max-h-[750px] object-contain object-bottom drop-shadow-2xl"
                 />
               </div>
