@@ -6,6 +6,8 @@ import ProductHero from '../components/ProductHero';
 import ShopHeader from '../components/ShopHeader';
 import ProductCard from '../components/ProductCard';
 import SustainabilitySection from '../components/SustainabilitySection';
+import HappyFeetSection from '../components/HappyFeetSection';
+import QuizSection from '../components/QuizSection';
 import { useProducts } from '../context/ProductContext';
 import { Smile, ShieldCheck, Zap, Star, ArrowDown, Anchor, Activity, Wind, Quote } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -104,6 +106,12 @@ const Home: React.FC = () => {
           ))}
         </div>
       </section>
+
+      {/* Quiz Section */}
+      <QuizSection />
+
+      {/* Happy Feet Section (Reviews) */}
+      <HappyFeetSection />
     </div>
   );
 };
