@@ -12,7 +12,7 @@ export const PRODUCTS: Product[] = [
     category: 'Grip Socks',
     images: [
       'https://images.unsplash.com/photo-1596707328151-61472554d32e?q=80&w=1000&auto=format&fit=crop', // Placeholder until user uploads
-      'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=1000&auto=format&fit=crop', 
+      'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=1000&auto=format&fit=crop',
     ],
     tags: ['Best Seller', 'Grip'],
     isNew: true,
@@ -139,7 +139,7 @@ export const PRODUCTS: Product[] = [
       'https://images.unsplash.com/photo-1504198358623-6e7f1695cd3f?q=80&w=1000&auto=format&fit=crop',
     ],
     tags: ['New'],
-    colorHex: '#073B4C',
+    colorHex: '#161345',
     stock: 42,
     variants: [
       { size: '36-40', stock: 20 },

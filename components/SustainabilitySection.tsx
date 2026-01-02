@@ -8,7 +8,7 @@ const SustainabilitySection: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Left Side - Text Content */}
                 <div className="px-8 md:px-16 lg:px-24 py-20 md:py-28 lg:py-32 flex flex-col justify-center">
-                    <h2 className="font-heading font-medium text-[#1a2b4a] text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-8">
+                    <h2 className="font-heading font-medium text-funky-dark text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-8">
                         We're Certified<br />
                         Eco-Friendly
                     </h2>
@@ -16,10 +16,10 @@ const SustainabilitySection: React.FC = () => {
                     <div className="flex items-center gap-3 mb-8">
                         <span className="text-base md:text-lg text-gray-700">in partnership with</span>
                         <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-[#1a2b4a] flex items-center justify-center">
+                            <div className="w-6 h-6 rounded-full bg-funky-dark flex items-center justify-center">
                                 <span className="text-white text-sm">♻</span>
                             </div>
-                            <span className="font-semibold text-[#1a2b4a] text-base md:text-lg">EcoThread</span>
+                            <span className="font-semibold text-funky-dark text-base md:text-lg">EcoThread</span>
                         </div>
                     </div>
 
@@ -30,7 +30,7 @@ const SustainabilitySection: React.FC = () => {
                     <div>
                         <Link
                             to="/sustainability"
-                            className="inline-flex items-center gap-3 px-8 py-4 rounded-full border-2 border-gray-300 text-[#1a2b4a] font-heading font-semibold text-base md:text-lg hover:border-[#1a2b4a] hover:bg-gray-50 transition-all group"
+                            className="inline-flex items-center gap-3 px-8 py-4 rounded-full border-2 border-gray-300 text-funky-dark font-heading font-semibold text-base md:text-lg hover:border-funky-dark hover:bg-gray-50 transition-all group"
                         >
                             Learn more
                             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />

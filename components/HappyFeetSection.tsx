@@ -25,7 +25,7 @@ const HappyFeetSection: React.FC = () => {
         <section className="w-full bg-white relative">
             {/* Heading - Overlapping Section */}
             <div className="w-full text-center pt-20 pb-12 bg-white relative z-10">
-                <h2 className="font-heading font-black text-[#1a2b4a] text-6xl md:text-7xl lg:text-9xl leading-none tracking-tighter">
+                <h2 className="font-heading font-black text-funky-dark text-6xl md:text-7xl lg:text-9xl leading-none tracking-tighter">
                     Worth Walking About
                 </h2>
             </div>
@@ -39,7 +39,7 @@ const HappyFeetSection: React.FC = () => {
                         className="absolute inset-0 w-full h-full object-cover"
                     />
                     {/* Overlay to subtly darken/tint if needed */}
-                    <div className="absolute inset-0 bg-[#1a2b4a]/5"></div>
+                    <div className="absolute inset-0 bg-funky-dark/5"></div>
                 </div>
 
                 {/* Right Side - Reviews */}
@@ -55,7 +55,7 @@ const HappyFeetSection: React.FC = () => {
                                     </div>
                                     <span className="text-xs font-bold tracking-widest text-gray-400 uppercase">{review.name}</span>
                                 </div>
-                                <p className="font-body text-[#1a2b4a] text-lg leading-relaxed opacity-90">
+                                <p className="font-body text-funky-dark text-lg leading-relaxed opacity-90">
                                     "{review.text}"
                                 </p>
                             </div>

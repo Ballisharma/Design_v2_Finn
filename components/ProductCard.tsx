@@ -104,8 +104,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   onClick={(e) => handleSizeClick(e, v.size)}
                   disabled={v.stock === 0}
                   className={`px-3 py-2 text-xs font-bold rounded-xl border transition-all ${v.stock === 0
-                      ? 'border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50'
-                      : 'border-gray-200 text-black hover:bg-black hover:text-white hover:border-black'
+                    ? 'border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50'
+                    : 'border-gray-200 text-black hover:bg-black hover:text-white hover:border-black'
                     }`}
                 >
                   {v.size}
@@ -136,11 +136,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="mt-4 space-y-1">
         <div className="flex justify-between items-start gap-2">
           <Link to={`/product/${product.id}`} state={{ background: location }} className="block flex-1 group/link">
-            <h3 className="text-base md:text-lg font-heading font-bold text-gray-900 group-hover/link:text-gray-600 transition-colors leading-tight">
+            <h3 className="text-base md:text-lg font-heading font-bold text-funky-dark group-hover/link:text-gray-600 transition-colors leading-tight">
               {product.name}
             </h3>
           </Link>
-          <p className="text-base md:text-lg font-bold font-mono text-gray-900 shrink-0">₹{product.price}</p>
+          <p className="text-base md:text-lg font-bold font-mono text-funky-dark shrink-0">₹{product.price}</p>
         </div>
 
         <p className="text-xs md:text-sm text-gray-500 font-medium truncate">{product.subtitle}</p>
