@@ -11,15 +11,6 @@ const slides = [
     buttonText: "Shop Now",
     buttonLink: "/shop",
     image: "https://images.unsplash.com/photo-1552874869-8132604971ca?q=80&w=1000&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    bgColor: "bg-[#DDEEFF]",
-    title: "Fresh styles\nfor everyone.",
-    subtitle: "Check out\nwhat's new!",
-    buttonText: "Shop Now",
-    buttonLink: "/shop",
-    image: "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=1000&auto=format&fit=crop",
   }
 ];
 
@@ -40,22 +31,34 @@ const Hero: React.FC = () => {
         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
       >
         {slides.map((slide) => (
-          <div key={slide.id} className={`w-full flex-shrink-0 min-h-[600px] md:min-h-[750px] flex items-center justify-center relative ${slide.bgColor}`}>
-            <div className="max-w-7xl mx-auto px-6 w-full h-full flex flex-col md:flex-row items-center justify-between">
+          <div key={slide.id} className={`w-full flex-shrink-0 min-h-[90vh] md:min-h-[750px] flex items-end md:items-center justify-center relative ${slide.bgColor}`}>
+            <div className="max-w-7xl mx-auto px-6 w-full h-full flex flex-col md:flex-row items-center justify-between pb-24 md:pb-0 pt-20 md:pt-0">
 
-              {/* Text Side */}
-              <div className="md:w-1/2 flex flex-col items-start z-10 pt-16 md:pt-0 pl-4 md:pl-12">
-                <h1 className="font-heading font-black text-6xl md:text-[7rem] text-funky-dark leading-[0.9] mb-10 whitespace-pre-line tracking-tight">
+              {/* Text Side & Content Wrapper */}
+              <div className="w-full md:w-1/2 flex flex-col items-center md:items-start z-20">
+
+                {/* Title - Order 1 on Mobile */}
+                <h1 className="order-1 font-heading font-black text-6xl md:text-[7rem] text-funky-dark leading-[0.9] text-center md:text-left mb-6 md:mb-10 whitespace-pre-line tracking-tight">
                   {slide.title}
                 </h1>
 
-                <div className="relative flex items-center">
-                  {/* Main Button */}
-                  <Link to={slide.buttonLink} className="bg-funky-dark text-white font-heading font-bold text-lg md:text-xl px-12 py-5 rounded-full hover:scale-105 transition-transform flex items-center gap-2 shadow-xl">
+                {/* Mobile Image - Order 2 - Visible md:hidden */}
+                {/* Placed between title and button on mobile */}
+                <div className="order-2 md:hidden w-full flex justify-center items-end my-4 h-[40vh]">
+                  <img
+                    src={slide.image}
+                    alt="Hero"
+                    className="h-full object-contain object-bottom drop-shadow-2xl"
+                  />
+                </div>
+
+                {/* Buttons - Order 3 on Mobile */}
+                <div className="order-3 relative flex items-center justify-center md:justify-start w-full">
+                  <Link to={slide.buttonLink} className="w-[85%] md:w-auto bg-funky-dark text-white font-heading font-bold text-lg md:text-xl px-12 py-5 rounded-full hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-xl">
                     {slide.buttonText} <ArrowRight size={24} />
                   </Link>
 
-                  {/* Handwritten Arrow & Text */}
+                  {/* Handwritten Arrow & Text (Desktop Only) */}
                   <div className="absolute left-[110%] top-1/2 -translate-y-1/2 w-48 hidden md:block group cursor-default">
                     <p className="font-heading font-bold text-funky-dark text-lg leading-tight mb-2 -rotate-6">
                       {slide.subtitle}
@@ -69,12 +72,12 @@ const Hero: React.FC = () => {
                 </div>
               </div>
 
-              {/* Image Side */}
-              <div className="md:w-1/2 h-full flex items-end justify-center md:justify-end relative mt-12 md:mt-0">
+              {/* Desktop Image - Hidden on Mobile */}
+              <div className="hidden md:flex md:w-1/2 h-full items-end justify-end relative mt-0">
                 <img
                   src={slide.image}
                   alt="Hero"
-                  className="relative z-10 max-h-[500px] md:max-h-[700px] object-contain object-bottom drop-shadow-2xl"
+                  className="relative z-10 max-h-[750px] object-contain object-bottom drop-shadow-2xl"
                 />
               </div>
             </div>

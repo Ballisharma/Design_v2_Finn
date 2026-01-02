@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import Hero from '../components/Hero';
+import SectionHeader from '../components/SectionHeader';
 import LogoTicker from '../components/LogoTicker';
+import ProductHero from '../components/ProductHero';
+import ShopHeader from '../components/ShopHeader';
 import ProductCard from '../components/ProductCard';
 import { useProducts } from '../context/ProductContext';
 import { Smile, ShieldCheck, Zap, Star, ArrowDown, Anchor, Activity, Wind, Quote } from 'lucide-react';
@@ -29,19 +32,18 @@ const Home: React.FC = () => {
     <div className="animate-fade-in bg-white">
       <Hero />
 
-
-
-      {/* Infinity Logo Slider */}
+      {/* Enhanced Logo Ticker */}
       <LogoTicker />
+
+      {/* Product Highlight Hero */}
+      <ProductHero />
+
+      {/* Shop Socks Section Header */}
+      <SectionHeader title="Shop Socks" />
 
       {/* Main Grid */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20" id="shop">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-12 gap-4">
-          <div>
-            <h2 className="font-heading font-black text-3xl md:text-4xl text-funky-dark">THE COLLECTION</h2>
-            <p className="text-gray-500 mt-2 font-body text-sm md:text-base">Browse our latest drops of happiness.</p>
-          </div>
-
+        <div className="flex flex-col md:flex-row justify-end items-end mb-8 md:mb-12 gap-4">
           <div className="flex flex-wrap gap-2">
             {filters.map(filter => (
               <button

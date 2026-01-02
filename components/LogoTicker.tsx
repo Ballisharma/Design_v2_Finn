@@ -1,34 +1,56 @@
 import React from 'react';
 
 const logos = [
-    { name: "The Dodo", type: "img", file: "https://logo.clearbit.com/thedodo.com" },
-    { name: "Forbes", type: "text", style: "font-serif font-black text-2xl md:text-3xl tracking-tighter" },
-    { name: "TRAVEL+LEISURE", type: "text", style: "font-serif font-bold text-lg md:text-xl tracking-widest uppercase" },
-    { name: "Great Pet", type: "text", style: "font-heading font-black text-xl md:text-2xl tracking-tight" },
-    { name: "The Dodo", type: "text", style: "font-heading font-black text-2xl md:text-3xl tracking-tight text-[#1C1C1E]" }, // Fallback text version
+    { name: "Vogue", style: "font-serif italic font-light text-3xl md:text-4xl tracking-wider" },
+    { name: "GQ", style: "font-serif font-black text-3xl md:text-4xl tracking-tighter" },
+    { name: "WIRED", style: "font-sans font-bold text-2xl md:text-3xl tracking-tight uppercase" },
+    { name: "Esquire", style: "font-serif italic font-medium text-2xl md:text-3xl tracking-wide" },
+    { name: "ELLE", style: "font-sans font-black text-3xl md:text-4xl tracking-widest" },
+    { name: "Hypebeast", style: "font-sans font-bold text-xl md:text-2xl tracking-tight uppercase" },
 ];
 
-// Using a mix of text styles to reliably mimic the logos without broken images
 const LogoTicker: React.FC = () => {
     return (
-        <div className="w-full bg-[#DDEEFF] py-10 border-y-0 overflow-hidden">
-            <div className="max-w-[100vw] mx-auto relative overflow-hidden">
-                <div className="flex gap-16 md:gap-24 w-max animate-infinite-scroll hover:[animation-play-state:paused] items-center">
-                    {[...logos, ...logos, ...logos, ...logos].map((logo, index) => (
-                        <div key={index} className="flex items-center justify-center opacity-80 hover:opacity-100 transition-all cursor-default select-none text-funky-dark mix-blend-multiply">
-                            {logo.name === "The Dodo" && index % 5 === 0 ? (
-                                // Attempting one reliable icon for variety, else text
-                                <div className="flex items-center gap-2 font-heading font-black text-2xl md:text-3xl tracking-tight">
-                                    <div className="w-8 h-8 rounded-full bg-[#1C1C1E] flex items-center justify-center text-white text-xs overflow-hidden">
-                                        <img src="https://logo.clearbit.com/thedodo.com" alt="" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
-                                    </div>
-                                    The Dodo
+        <div className="w-full bg-gradient-to-r from-gray-50 via-white to-gray-50 py-12 md:py-16 border-y border-gray-100 overflow-hidden">
+            <div className="relative">
+                {/* Subtle "As Featured In" text */}
+                <div className="text-center mb-6">
+                    <p className="text-xs md:text-sm font-mono uppercase tracking-widest text-gray-400 font-semibold">
+                        As Featured In
+                    </p>
+                </div>
+
+                {/* Scrolling logos container */}
+                <div className="relative overflow-hidden">
+                    {/* Gradient overlays for fade effect */}
+                    <div className="absolute left-0 top-0 bottom-0 w-24 md:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+                    <div className="absolute right-0 top-0 bottom-0 w-24 md:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+                    <div className="flex">
+                        {/* First set of logos */}
+                        <div className="flex shrink-0 gap-12 md:gap-16 lg:gap-20 animate-infinite-scroll items-center px-8">
+                            {logos.map((logo, index) => (
+                                <div
+                                    key={`set1-${index}`}
+                                    className="flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-default select-none text-gray-800 whitespace-nowrap"
+                                >
+                                    <span className={logo.style}>{logo.name}</span>
                                 </div>
-                            ) : (
-                                <span className={logo.style}>{logo.name}</span>
-                            )}
+                            ))}
                         </div>
-                    ))}
+
+                        {/* Duplicate set for seamless loop */}
+                        <div className="flex shrink-0 gap-12 md:gap-16 lg:gap-20 animate-infinite-scroll items-center px-8" aria-hidden="true">
+                            {logos.map((logo, index) => (
+                                <div
+                                    key={`set2-${index}`}
+                                    className="flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-default select-none text-gray-800 whitespace-nowrap"
+                                >
+                                    <span className={logo.style}>{logo.name}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
