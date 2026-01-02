@@ -11,6 +11,16 @@ import QuizSection from '../components/QuizSection';
 import { useProducts } from '../context/ProductContext';
 import { Smile, ShieldCheck, Zap, Star, ArrowDown, Anchor, Activity, Wind, Quote } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+};
 
 const Home: React.FC = () => {
   const { products, categories } = useProducts();
@@ -36,16 +46,44 @@ const Home: React.FC = () => {
       <Hero />
 
       {/* Enhanced Logo Ticker */}
-      <LogoTicker />
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
+        <LogoTicker />
+      </motion.div>
 
       {/* Product Highlight Hero */}
-      <ProductHero />
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
+        <ProductHero />
+      </motion.div>
 
       {/* Shop Socks Section Header */}
-      <SectionHeader title="Shop Socks" />
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
+        <SectionHeader title="Shop Socks" />
+      </motion.div>
 
       {/* Main Grid */}
-      <section className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20" id="shop">
+      <motion.section
+        className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20"
+        id="shop"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeInUp}
+      >
         <div className="flex flex-col md:flex-row justify-end items-end mb-8 md:mb-12 gap-4">
           <div className="flex flex-wrap gap-2">
             {filters.map(filter => (
@@ -93,25 +131,53 @@ const Home: React.FC = () => {
             <p className="text-gray-500">Try a different category!</p>
           </div>
         )}
-      </section>
+      </motion.section>
 
-      <SustainabilitySection />
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
+        <SustainabilitySection />
+      </motion.div>
 
       {/* Shop Best Sellers Section */}
-      <SectionHeader title="Shop Best Sellers" />
-      <section className="max-w-7xl mx-auto px-4 md:px-6 pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {products.slice(0, 3).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
+        <SectionHeader title="Shop Best Sellers" />
+        <section className="max-w-7xl mx-auto px-4 md:px-6 pb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {products.slice(0, 3).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+      </motion.div>
 
       {/* Quiz Section */}
-      <QuizSection />
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
+        <QuizSection />
+      </motion.div>
 
       {/* Happy Feet Section (Reviews) */}
-      <HappyFeetSection />
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={fadeInUp}
+      >
+        <HappyFeetSection />
+      </motion.div>
     </div>
   );
 };
