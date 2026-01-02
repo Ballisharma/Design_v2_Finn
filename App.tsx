@@ -49,7 +49,7 @@ const AppContent: React.FC = () => {
 
       {!background && <ScrollToTop />}
 
-      <main className="flex-grow pt-20">
+      <main className="flex-grow">
         <Routes location={background || location}>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<AllProducts />} />

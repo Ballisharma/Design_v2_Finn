@@ -1,65 +1,97 @@
-import React from 'react';
-import { ArrowRight, Star } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const slides = [
+  {
+    id: 1,
+    bgColor: "bg-[#FFD6E0]", // Matches the soft pink in the reference
+    title: "Hi! We love\n your feet.",
+    subtitle: "Find the right\npair for you!",
+    buttonText: "Shop Now",
+    buttonLink: "/shop",
+    image: "https://images.unsplash.com/photo-1552874869-8132604971ca?q=80&w=1000&auto=format&fit=crop",
+  },
+  {
+    id: 2,
+    bgColor: "bg-[#DDEEFF]",
+    title: "Fresh styles\nfor everyone.",
+    subtitle: "Check out\nwhat's new!",
+    buttonText: "Shop Now",
+    buttonLink: "/shop",
+    image: "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=1000&auto=format&fit=crop",
+  }
+];
 
 const Hero: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <section className="relative w-full pt-12 md:pt-0 min-h-[85vh] flex flex-col items-center justify-center overflow-hidden px-6 bg-funky-light">
-      
-      {/* Abstract Background Shapes */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-funky-yellow rounded-full blur-2xl opacity-50 animate-bounce-slow" />
-      <div className="absolute bottom-20 right-10 w-48 h-48 bg-funky-pink rounded-full blur-3xl opacity-40 animate-pulse" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-funky-blue/10 rounded-full blur-3xl -z-10" />
+    <section className="relative w-full overflow-hidden transition-colors duration-500 bg-white">
+      <div
+        className="w-full transition-transform duration-700 ease-in-out flex"
+        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+      >
+        {slides.map((slide) => (
+          <div key={slide.id} className={`w-full flex-shrink-0 min-h-[600px] md:min-h-[750px] flex items-center justify-center relative ${slide.bgColor}`}>
+            <div className="max-w-7xl mx-auto px-6 w-full h-full flex flex-col md:flex-row items-center justify-between">
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center z-10">
-        
-        {/* Text */}
-        <div className="text-center md:text-left space-y-6">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-funky-dark/10 shadow-sm mb-4">
-             <Star size={16} className="text-funky-yellow fill-funky-yellow" />
-             <span className="text-xs font-bold font-mono tracking-wider uppercase text-funky-dark">Fresh Drop: Neon Series</span>
-          </div>
-          
-          <h1 className="font-heading font-black text-5xl sm:text-6xl md:text-8xl leading-[0.9] text-funky-dark">
-            HAPPY <br/>
-            <span className="text-funky-blue">FEET,</span> <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-funky-pink to-funky-yellow">FUNKY</span> MOVES.
-          </h1>
-          
-          <p className="font-body text-xl text-gray-600 max-w-md mx-auto md:mx-0">
-            Life is too short for boring white socks. Step into a world of color, comfort, and unmatched vibes.
-          </p>
+              {/* Text Side */}
+              <div className="md:w-1/2 flex flex-col items-start z-10 pt-16 md:pt-0 pl-4 md:pl-12">
+                <h1 className="font-heading font-black text-6xl md:text-[7rem] text-funky-dark leading-[0.9] mb-10 whitespace-pre-line tracking-tight">
+                  {slide.title}
+                </h1>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start pt-4">
-            <button className="w-full sm:w-auto px-8 py-4 bg-funky-dark text-white font-heading font-bold rounded-xl hover:bg-funky-pink hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-2">
-              Shop All Socks <ArrowRight size={20} />
-            </button>
-            <button className="w-full sm:w-auto px-8 py-4 bg-white text-funky-dark border-2 border-funky-dark/10 font-heading font-bold rounded-xl hover:border-funky-dark hover:bg-funky-light transition-all">
-              View Bundles
-            </button>
-          </div>
-        </div>
+                <div className="relative flex items-center">
+                  {/* Main Button */}
+                  <Link to={slide.buttonLink} className="bg-funky-dark text-white font-heading font-bold text-lg md:text-xl px-12 py-5 rounded-full hover:scale-105 transition-transform flex items-center gap-2 shadow-xl">
+                    {slide.buttonText} <ArrowRight size={24} />
+                  </Link>
 
-        {/* Hero Image / Composition */}
-        <div className="relative">
-          <div className="relative z-10 transform md:rotate-6 hover:rotate-0 transition-transform duration-500">
-            <div className="bg-white p-4 rounded-3xl shadow-2xl border-4 border-funky-yellow">
-              <img 
-                src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1000&auto=format&fit=crop" 
-                alt="Colorful Socks" 
-                className="w-full h-auto rounded-2xl aspect-square object-cover"
-              />
-            </div>
-            
-            {/* Sticker Elements */}
-            <div className="absolute -top-6 -right-6 w-24 h-24 bg-funky-pink rounded-full flex items-center justify-center text-white font-heading font-black text-center text-sm transform rotate-12 shadow-lg border-4 border-white">
-              NEW <br/> ARRIVAL
+                  {/* Handwritten Arrow & Text */}
+                  <div className="absolute left-[110%] top-1/2 -translate-y-1/2 w-48 hidden md:block group cursor-default">
+                    <p className="font-heading font-bold text-funky-dark text-lg leading-tight mb-2 -rotate-6">
+                      {slide.subtitle}
+                    </p>
+                    <svg className="w-12 h-12 text-funky-dark -rotate-12" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M90,10 Q50,60 10,50" />
+                      <path d="M10,50 L25,40" />
+                      <path d="M10,50 L25,60" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Image Side */}
+              <div className="md:w-1/2 h-full flex items-end justify-center md:justify-end relative mt-12 md:mt-0">
+                <img
+                  src={slide.image}
+                  alt="Hero"
+                  className="relative z-10 max-h-[500px] md:max-h-[700px] object-contain object-bottom drop-shadow-2xl"
+                />
+              </div>
             </div>
           </div>
-          
-          {/* Background Card Offset */}
-          <div className="absolute top-0 left-0 w-full h-full bg-funky-blue rounded-3xl transform -rotate-6 -z-10 translate-y-4 translate-x-4 opacity-20"></div>
-        </div>
+        ))}
+      </div>
 
+      {/* Slide Indicators */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentSlide(index)}
+            className={`h-3 rounded-full transition-all duration-300 ${currentSlide === index ? 'bg-funky-dark w-8' : 'bg-funky-dark/20 w-3 hover:bg-funky-dark/40'
+              }`}
+          />
+        ))}
       </div>
     </section>
   );
