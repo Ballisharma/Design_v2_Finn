@@ -116,10 +116,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
   };
 
   // -------------------------
-  // MOBILE LAYOUT (Updated)
+  // MOBILE LAYOUT (v12 - Soft Pink Art Frame)
   // -------------------------
   const MobileLayout = () => (
-    <div className="bg-funky-light min-h-screen md:hidden flex flex-col relative pb-32">
+    <div className="bg-[#FFD6E0] min-h-screen md:hidden flex flex-col relative pb-32">
       {/* Mobile Header */}
       <div className="fixed top-0 left-0 w-full z-30 p-4 flex justify-between items-start pointer-events-none">
         {!isModal && (
@@ -128,39 +128,44 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
           </Link>
         )}
         {/* Price Tag Pill */}
-        <div className="bg-funky-yellow text-funky-dark font-black px-5 py-2.5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(7,59,76,1)] border-2 border-funky-dark ml-auto font-mono text-lg pointer-events-auto transform rotate-2">
+        <div className="bg-funky-yellow text-funky-dark font-black px-5 py-2.5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(22,19,69,1)] border-2 border-funky-dark ml-auto font-mono text-lg pointer-events-auto transform rotate-2">
           ₹{product.price}
         </div>
       </div>
 
-      {/* Full Screen Image Slider Area */}
+      {/* Product Image Area with Art Frame */}
       <div
-        className="h-[60vh] w-full relative bg-gray-200"
+        className="h-[55vh] w-full relative flex items-center justify-center pt-20 pb-8 px-6"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <img
-          src={product.images[activeImage]}
-          alt={product.name}
-          className="w-full h-full object-cover object-center transition-all duration-300"
-        />
+        {/* Art Frame Container */}
+        <div className="relative w-full max-w-[85%] aspect-square bg-white rounded-3xl shadow-[0_20px_60px_rgba(22,19,69,0.15)] p-3 transform -rotate-1">
+          <img
+            src={product.images[activeImage]}
+            alt={product.name}
+            className="w-full h-full object-cover object-center rounded-2xl transition-all duration-300"
+          />
 
-        {/* Gradient Overlay for text readability at the curve */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-funky-dark/10 pointer-events-none" />
+          {/* NEW! Decoration */}
+          <div className="absolute -top-3 -right-3 bg-funky-yellow text-funky-dark text-xs font-black px-3 py-1.5 rounded-full border-2 border-funky-dark shadow-md transform rotate-12">
+            NEW!
+          </div>
+        </div>
 
         {/* Mobile Navigation Arrows */}
         {product.images.length > 1 && (
           <>
             <button
               onClick={(e) => { e.stopPropagation(); if (activeImage > 0) setActiveImage(activeImage - 1); }}
-              className={`absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 backdrop-blur-md text-funky-dark hover:bg-white transition-all z-20 ${activeImage === 0 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+              className={`absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 backdrop-blur-md text-funky-dark hover:bg-white transition-all z-20 shadow-md ${activeImage === 0 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
             >
               <ChevronLeft size={24} />
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); if (activeImage < product.images.length - 1) setActiveImage(activeImage + 1); }}
-              className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 backdrop-blur-md text-funky-dark hover:bg-white transition-all z-20 ${activeImage === product.images.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+              className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 backdrop-blur-md text-funky-dark hover:bg-white transition-all z-20 shadow-md ${activeImage === product.images.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
             >
               <ChevronRight size={24} />
             </button>
@@ -168,12 +173,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
         )}
 
         {product.images.length > 1 && (
-          <div className="absolute bottom-12 left-0 w-full flex justify-center gap-2 z-20">
+          <div className="absolute bottom-4 left-0 w-full flex justify-center gap-2 z-20">
             {product.images.map((_, idx) => (
               <button
                 key={idx}
                 onClick={(e) => { e.stopPropagation(); setActiveImage(idx); }}
-                className={`h-1.5 rounded-full transition-all shadow-sm ${activeImage === idx ? 'w-6 bg-funky-yellow border border-funky-dark' : 'w-2 bg-white/80'}`}
+                className={`h-2 rounded-full transition-all shadow-sm ${activeImage === idx ? 'w-6 bg-funky-dark' : 'w-2 bg-funky-dark/30'}`}
               />
             ))}
           </div>
