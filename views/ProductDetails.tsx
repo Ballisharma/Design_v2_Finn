@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
-import { ArrowLeft, Star, Heart, Share2, Box, AlertTriangle, Minus, Plus, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Star, Heart, Share2, Box, AlertTriangle, Minus, Plus, ShoppingBag, ChevronLeft, ChevronRight, Leaf, MapPin } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 
 interface ProductDetailsProps {
@@ -468,6 +468,18 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
                   IN STOCK & READY TO SHIP
                 </p>
               )}
+            </div>
+
+            {/* Value Props - "Pill" Badges */}
+            <div className="flex flex-wrap gap-3 mt-4">
+              <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-1.5 text-sm font-bold text-funky-dark">
+                <Leaf size={16} fill="currentColor" className="text-funky-dark/80" />
+                <span>Organic</span>
+              </div>
+              <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-1.5 text-sm font-bold text-funky-dark">
+                <MapPin size={16} fill="currentColor" className="text-funky-dark/80" />
+                <span>Made in India</span>
+              </div>
             </div>
 
 
