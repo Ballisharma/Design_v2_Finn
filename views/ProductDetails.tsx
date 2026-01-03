@@ -369,12 +369,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
               <span className="bg-funky-blue/10 text-funky-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{product.category}</span>
             </div>
 
-            {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-heading font-black text-funky-dark leading-tight mb-2">{product.name}</h1>
-
-            {/* Price & Rating */}
-            <div className="flex items-center gap-4 mb-6">
-              <span className="text-3xl font-mono font-bold text-funky-dark">₹{product.price}</span>
+            {/* Title & Rating */}
+            <div className="mb-4">
+              <h1 className="text-4xl md:text-5xl font-heading font-black text-funky-dark leading-tight mb-2">{product.name}</h1>
               <div className="flex items-center gap-1 text-funky-yellow">
                 <Star size={18} fill="currentColor" />
                 <span className="text-funky-dark font-bold">4.9</span>
@@ -382,9 +379,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
               </div>
             </div>
 
+            {/* Price */}
+            <div className="mb-6">
+              <span className="text-4xl font-mono font-bold text-funky-dark">₹{product.price}</span>
+            </div>
+
             {/* Size Selector */}
             <div className="mb-6">
-              <p className="font-bold text-sm uppercase text-gray-500 mb-3">SELECT SIZE</p>
+              <p className="font-bold text-sm uppercase text-gray-500 mb-3">Size</p>
               <div className="flex gap-3 flex-wrap">
                 {product.variants.map((v) => (
                   <button
@@ -481,49 +483,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
               </div>
             </div>
 
-            {/* Reviews Section */}
-            <div className="border-t-2 border-dashed border-gray-200 pt-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-heading font-bold text-lg text-funky-dark">Customer Reviews</h3>
-                <div className="flex items-center gap-2">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} size={16} className="text-funky-yellow" fill="currentColor" />
-                    ))}
-                  </div>
-                  <span className="font-bold text-funky-dark">4.9</span>
-                  <span className="text-gray-400 text-sm">(128 reviews)</span>
-                </div>
-              </div>
 
-              {/* Sample Reviews */}
-              <div className="space-y-4 max-h-48 overflow-y-auto pr-2">
-                <div className="bg-funky-light/50 rounded-xl p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} size={12} className="text-funky-yellow" fill="currentColor" />
-                      ))}
-                    </div>
-                    <span className="font-bold text-sm text-funky-dark">Amazing Quality!</span>
-                  </div>
-                  <p className="text-sm text-gray-600">"Super comfy and the design is exactly as shown. Will definitely order more!"</p>
-                  <p className="text-xs text-gray-400 mt-2">— Priya M., Verified Buyer</p>
-                </div>
-                <div className="bg-funky-light/50 rounded-xl p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} size={12} className="text-funky-yellow" fill="currentColor" />
-                      ))}
-                    </div>
-                    <span className="font-bold text-sm text-funky-dark">Best socks ever!</span>
-                  </div>
-                  <p className="text-sm text-gray-600">"The organic cotton feels so soft. Perfect for all-day wear."</p>
-                  <p className="text-xs text-gray-400 mt-2">— Rahul K., Verified Buyer</p>
-                </div>
-              </div>
-            </div>
 
           </div>
         </div>
