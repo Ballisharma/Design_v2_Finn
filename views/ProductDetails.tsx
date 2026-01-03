@@ -446,8 +446,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
 
             <div className="border-t-2 border-dashed border-gray-200 pt-8 grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl mb-2">🧵</div>
-                <p className="text-xs font-bold uppercase text-gray-500">Premium<br />Cotton</p>
+                <div className="text-2xl mb-2">🌿</div>
+                <p className="text-xs font-bold uppercase text-gray-500">Organic<br />Cotton</p>
               </div>
               <div>
                 <div className="text-2xl mb-2">🇮🇳</div>
@@ -456,6 +456,50 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
               <div>
                 <div className="text-2xl mb-2">✨</div>
                 <p className="text-xs font-bold uppercase text-gray-500">Super<br />Funky</p>
+              </div>
+            </div>
+
+            {/* Reviews Section */}
+            <div className="border-t-2 border-dashed border-gray-200 pt-8 mt-8">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-heading font-bold text-lg text-funky-dark">Customer Reviews</h3>
+                <div className="flex items-center gap-2">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} size={16} className="text-funky-yellow" fill="currentColor" />
+                    ))}
+                  </div>
+                  <span className="font-bold text-funky-dark">4.9</span>
+                  <span className="text-gray-400 text-sm">(128 reviews)</span>
+                </div>
+              </div>
+
+              {/* Sample Reviews */}
+              <div className="space-y-4 max-h-48 overflow-y-auto pr-2">
+                <div className="bg-funky-light/50 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} size={12} className="text-funky-yellow" fill="currentColor" />
+                      ))}
+                    </div>
+                    <span className="font-bold text-sm text-funky-dark">Amazing Quality!</span>
+                  </div>
+                  <p className="text-sm text-gray-600">"Super comfy and the design is exactly as shown. Will definitely order more!"</p>
+                  <p className="text-xs text-gray-400 mt-2">— Priya M., Verified Buyer</p>
+                </div>
+                <div className="bg-funky-light/50 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} size={12} className="text-funky-yellow" fill="currentColor" />
+                      ))}
+                    </div>
+                    <span className="font-bold text-sm text-funky-dark">Best socks ever!</span>
+                  </div>
+                  <p className="text-sm text-gray-600">"The organic cotton feels so soft. Perfect for all-day wear."</p>
+                  <p className="text-xs text-gray-400 mt-2">— Rahul K., Verified Buyer</p>
+                </div>
               </div>
             </div>
 
