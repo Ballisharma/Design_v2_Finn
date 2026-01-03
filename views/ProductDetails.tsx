@@ -385,6 +385,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
               <span className="text-4xl font-mono font-bold text-funky-dark">₹{product.price}</span>
             </div>
 
+
+
+            {/* Description */}
+            <div className="prose prose-sm text-gray-600 font-body mb-6">
+              <p>{product.description}</p>
+            </div>
+
             {/* Size Selector */}
             <div className="mb-6">
               <p className="font-bold text-sm uppercase text-gray-500 mb-3">Size</p>
@@ -410,11 +417,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* Description */}
-            <div className="prose prose-sm text-gray-600 font-body mb-6">
-              <p>{product.description}</p>
             </div>
 
             {/* Quantity + Add to Cart (Full Width) */}
@@ -468,21 +470,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
               )}
             </div>
 
-            {/* Badges */}
-            <div className="border-t-2 border-dashed border-gray-200 pt-6 grid grid-cols-3 gap-4 text-center mb-6">
-              <div>
-                <div className="text-2xl mb-2">🌿</div>
-                <p className="text-xs font-bold uppercase text-gray-500">Organic<br />Cotton</p>
-              </div>
-              <div>
-                <div className="text-2xl mb-2">🇮🇳</div>
-                <p className="text-xs font-bold uppercase text-gray-500">Made in<br />India</p>
-              </div>
-              <div>
-                <div className="text-2xl mb-2">✨</div>
-                <p className="text-xs font-bold uppercase text-gray-500">Super<br />Funky</p>
-              </div>
-            </div>
+
 
 
 
