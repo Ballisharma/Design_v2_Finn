@@ -298,7 +298,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
   );
 
   // -------------------------
-  // DESKTOP LAYOUT (Existing)
+  // DESKTOP LAYOUT (Premium v2 - Single Image Carousel)
   // -------------------------
   const DesktopLayout = () => (
     <div className={`hidden md:block max-w-7xl mx-auto animate-fade-in`}>
@@ -312,14 +312,46 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-          {/* Images */}
-          <div className="space-y-4">
-            <div className="aspect-square w-full bg-funky-light rounded-3xl overflow-hidden border-4 border-transparent hover:border-funky-yellow transition-all relative">
+          {/* Single Large Image with Navigation */}
+          <div className="relative">
+            <div className="aspect-[3/4] w-full bg-funky-light rounded-3xl overflow-hidden relative group">
               <img
                 src={product.images[activeImage]}
                 alt={product.name}
                 className={`w-full h-full object-cover transition-opacity ${isTotallyOutOfStock ? 'opacity-50 grayscale' : ''}`}
               />
+
+              {/* Navigation Arrows */}
+              {product.images.length > 1 && (
+                <>
+                  <button
+                    onClick={() => setActiveImage((activeImage - 1 + product.images.length) % product.images.length)}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
+                  >
+                    <ChevronLeft size={24} className="text-funky-dark" />
+                  </button>
+                  <button
+                    onClick={() => setActiveImage((activeImage + 1) % product.images.length)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
+                  >
+                    <ChevronRight size={24} className="text-funky-dark" />
+                  </button>
+                </>
+              )}
+
+              {/* Image Indicators */}
+              {product.images.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                  {product.images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveImage(idx)}
+                      className={`w-2 h-2 rounded-full transition-all ${activeImage === idx ? 'bg-funky-dark w-6' : 'bg-white/60'}`}
+                    />
+                  ))}
+                </div>
+              )}
+
               {isTotallyOutOfStock && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="bg-black/80 text-white px-8 py-4 rounded-xl font-heading font-black text-3xl transform -rotate-12 border-4 border-white">
@@ -328,46 +360,31 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-4 gap-4">
-              {product.images.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveImage(idx)}
-                  className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${activeImage === idx ? 'border-funky-dark ring-2 ring-funky-dark/20' : 'border-gray-200 hover:border-funky-blue'}`}
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Info */}
-          <div className={`flex flex-col justify-center ${!isModal ? 'sticky top-24' : ''} h-fit`}>
-            <div className="space-y-2 mb-6">
-              <div className="flex justify-between items-start">
-                <span className="bg-funky-blue/10 text-funky-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{product.category}</span>
-                <div className="flex gap-4">
-                  <button className="p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors"><Heart size={20} /></button>
-                  <button className="p-2 hover:bg-blue-50 hover:text-blue-500 rounded-full transition-colors"><Share2 size={20} /></button>
-                </div>
-              </div>
-              <h1 className={`${isModal ? 'text-4xl md:text-5xl' : 'text-5xl md:text-6xl'} font-heading font-black text-funky-dark leading-tight`}>{product.name}</h1>
-              <p className="text-xl font-medium text-gray-500">{product.subtitle}</p>
+          <div className={`flex flex-col ${!isModal ? 'sticky top-24' : ''} h-fit`}>
+            {/* Category Tag */}
+            <div className="mb-2">
+              <span className="bg-funky-blue/10 text-funky-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{product.category}</span>
             </div>
 
-            <div className="flex items-center gap-4 mb-8 p-4 bg-funky-light rounded-xl w-fit">
+            {/* Title */}
+            <h1 className="text-4xl md:text-5xl font-heading font-black text-funky-dark leading-tight mb-2">{product.name}</h1>
+
+            {/* Price & Rating */}
+            <div className="flex items-center gap-4 mb-6">
               <span className="text-3xl font-mono font-bold text-funky-dark">₹{product.price}</span>
-              <div className="h-8 w-px bg-gray-300 mx-2"></div>
               <div className="flex items-center gap-1 text-funky-yellow">
-                <Star size={20} fill="currentColor" />
+                <Star size={18} fill="currentColor" />
                 <span className="text-funky-dark font-bold">4.9</span>
                 <span className="text-xs text-gray-400 font-medium ml-1">(128 reviews)</span>
               </div>
             </div>
 
-            {/* Desktop Size Selector */}
-            <div className="mb-8">
-              <p className="font-bold text-sm uppercase text-gray-500 mb-3">Select Size</p>
+            {/* Size Selector */}
+            <div className="mb-6">
+              <p className="font-bold text-sm uppercase text-gray-500 mb-3">SELECT SIZE</p>
               <div className="flex gap-3 flex-wrap">
                 {product.variants.map((v) => (
                   <button
@@ -392,14 +409,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
               </div>
             </div>
 
-            <div className="prose prose-lg text-gray-600 font-body mb-8">
+            {/* Description */}
+            <div className="prose prose-sm text-gray-600 font-body mb-6">
               <p>{product.description}</p>
             </div>
 
-            <div className="space-y-4 mb-12">
-              <div className="flex gap-4">
-                {/* Quantity Desktop */}
-                <div className="flex items-center bg-gray-50 rounded-xl border border-gray-200 px-2">
+            {/* Quantity + Add to Cart (Full Width) */}
+            <div className="space-y-3 mb-6">
+              <div className="flex gap-3">
+                {/* Quantity Selector */}
+                <div className="flex items-center bg-gray-50 rounded-xl border border-gray-200 px-1">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="p-3 text-gray-600 hover:text-funky-dark"
@@ -416,19 +435,21 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
                   </button>
                 </div>
 
+                {/* Full Width Add to Cart Button */}
                 <button
                   onClick={handleAddToCart}
                   disabled={isSizeOutOfStock}
-                  className={`flex-1 py-4 rounded-xl font-heading font-black text-lg shadow-xl uppercase tracking-widest transition-all duration-200 flex items-center justify-center gap-2
+                  className={`flex-1 py-4 rounded-xl font-heading font-black text-base shadow-xl uppercase tracking-widest transition-all duration-200 flex items-center justify-center gap-2
                     ${isSizeOutOfStock
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none'
-                      : 'bg-funky-dark text-white hover:bg-funky-pink hover:scale-[1.02] active:scale-[0.98] shadow-funky-pink/20'
+                      : 'bg-funky-dark text-white hover:bg-funky-pink hover:scale-[1.01] active:scale-[0.99] shadow-funky-pink/20'
                     }`}
                 >
-                  {isSizeOutOfStock ? 'Sold Out' : <>Add to Cart <ShoppingBag size={20} /></>}
+                  {isSizeOutOfStock ? 'Sold Out' : <>ADD TO CART <ShoppingBag size={20} /></>}
                 </button>
               </div>
 
+              {/* Stock Status */}
               {isSizeOutOfStock ? (
                 <p className="text-center text-sm font-bold text-red-500 flex items-center justify-center gap-2">
                   <Box size={16} /> Selected size is currently out of stock.
@@ -439,12 +460,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
                 </p>
               ) : (
                 <p className="text-center text-xs font-bold text-funky-green uppercase tracking-wide">
-                  In Stock & Ready to Ship
+                  IN STOCK & READY TO SHIP
                 </p>
               )}
             </div>
 
-            <div className="border-t-2 border-dashed border-gray-200 pt-8 grid grid-cols-3 gap-4 text-center">
+            {/* Badges */}
+            <div className="border-t-2 border-dashed border-gray-200 pt-6 grid grid-cols-3 gap-4 text-center mb-6">
               <div>
                 <div className="text-2xl mb-2">🌿</div>
                 <p className="text-xs font-bold uppercase text-gray-500">Organic<br />Cotton</p>
@@ -460,7 +482,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
             </div>
 
             {/* Reviews Section */}
-            <div className="border-t-2 border-dashed border-gray-200 pt-8 mt-8">
+            <div className="border-t-2 border-dashed border-gray-200 pt-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-heading font-bold text-lg text-funky-dark">Customer Reviews</h3>
                 <div className="flex items-center gap-2">
