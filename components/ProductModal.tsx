@@ -42,7 +42,7 @@ const ProductModal: React.FC = () => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 50 }}
         transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
-        className="relative w-full max-w-5xl max-h-[90vh] bg-white rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar-hide z-10 shadow-[0_25px_80px_rgba(0,0,0,0.25),0_0_40px_rgba(239,71,111,0.1)]"
+        className="relative w-full max-w-5xl max-h-[90vh] md:h-[85vh] bg-white rounded-3xl overflow-y-auto md:overflow-hidden custom-scrollbar-hide z-10 shadow-[0_25px_80px_rgba(0,0,0,0.25),0_0_40px_rgba(239,71,111,0.1)]"
       >
         {/* Premium Close Button */}
         <button

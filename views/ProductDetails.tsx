@@ -301,19 +301,19 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
   // DESKTOP LAYOUT (Premium v2 - Single Image Carousel)
   // -------------------------
   const DesktopLayout = () => (
-    <div className={`hidden md:block max-w-7xl mx-auto animate-fade-in`}>
+    <div className={`hidden md:block max-w-7xl mx-auto animate-fade-in ${isModal ? 'h-full' : ''}`}>
 
       {/* Main Details Section */}
-      <div className={`${isModal ? 'p-6 md:p-8' : 'px-6 py-12'}`}>
+      <div className={`${isModal ? 'p-6 md:p-8 h-full' : 'px-6 py-12'}`}>
         {!isModal && (
           <Link to="/" className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-funky-dark mb-8 transition-colors">
             <ArrowLeft size={20} className="mr-2" /> BACK TO SOCKS
           </Link>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+        <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 ${isModal ? 'h-full' : ''}`}>
           {/* Single Large Image with Navigation */}
-          <div className="relative">
+          <div className={`relative ${isModal ? 'h-full flex flex-col justify-center' : ''}`}>
             <div className="aspect-[3/4] w-full bg-funky-light rounded-3xl overflow-hidden relative group">
               <img
                 src={product.images[activeImage]}
@@ -363,7 +363,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
           </div>
 
           {/* Info */}
-          <div className={`flex flex-col ${!isModal ? 'sticky top-24' : ''} h-fit`}>
+          <div className={`flex flex-col ${!isModal ? 'sticky top-24 h-fit' : 'h-full overflow-y-auto custom-scrollbar pr-2'}`}>
             {/* Category Tag */}
             <div className="mb-2">
               <span className="bg-funky-blue/10 text-funky-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">{product.category}</span>
