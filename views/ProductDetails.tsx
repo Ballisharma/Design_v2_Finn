@@ -382,7 +382,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
 
             {/* Price */}
             <div className="mb-6">
-              <span className="text-4xl font-mono font-bold text-funky-dark">₹{product.price}</span>
+              <span className="text-4xl font-heading font-black text-funky-dark">₹{product.price}</span>
             </div>
 
 
