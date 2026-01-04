@@ -60,7 +60,7 @@ const Checkout: React.FC = () => {
           <Package size={48} className="text-gray-400" />
         </div>
         <h2 className="text-3xl font-black text-gray-900">Your cart is empty</h2>
-        <Link to="/" className="px-8 py-3 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700 transition-colors shadow-lg">
+        <Link to="/" className="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg">
           Start Shopping
         </Link>
       </div>
@@ -172,7 +172,7 @@ const Checkout: React.FC = () => {
             email: customer.email,
             contact: customer.phone,
           },
-          theme: { color: '#14B8A6' },
+          theme: { color: '#2563EB' }, // Changed to bright blue
           handler: async function (response: any) {
             try {
               await updateWooOrder(order.id, {
@@ -242,8 +242,8 @@ const Checkout: React.FC = () => {
 
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                <Lock size={24} className="text-teal-600" />
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <Lock size={24} className="text-blue-600" />
               </div>
               <div>
                 <h1 className="text-3xl md:text-4xl font-black text-gray-900">Secure Checkout</h1>
@@ -254,7 +254,7 @@ const Checkout: React.FC = () => {
             {/* Live indicators */}
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-full shadow-sm border border-gray-100">
-                <Users size={14} className="text-teal-600" />
+                <Users size={14} className="text-blue-600" />
                 <span className="font-medium">{viewerCount} viewing</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-full shadow-sm border border-gray-100">
@@ -273,8 +273,8 @@ const Checkout: React.FC = () => {
             {/* Contact Info */}
             <section className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-                <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
-                  <span className="text-teal-600 font-black text-sm">1</span>
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <span className="text-blue-600 font-black text-sm">1</span>
                 </div>
                 <h2 className="text-xl font-black text-gray-900">Contact Information</h2>
               </div>
@@ -292,7 +292,7 @@ const Checkout: React.FC = () => {
                       required
                       type="email"
                       placeholder="you@example.com"
-                      className={`w-full bg-white border-2 ${errors.email ? 'border-red-300' : customer.email && validateEmail(customer.email) ? 'border-green-300' : 'border-gray-200'} focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
+                      className={`w-full bg-white border-2 ${errors.email ? 'border-red-300' : customer.email && validateEmail(customer.email) ? 'border-green-300' : 'border-gray-200'} focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
                     />
                     {!errors.email && customer.email && validateEmail(customer.email) && (
                       <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500" size={20} />
@@ -314,7 +314,7 @@ const Checkout: React.FC = () => {
                       type="tel"
                       placeholder="98765 43210"
                       maxLength={10}
-                      className={`w-full bg-white border-2 ${errors.phone ? 'border-red-300' : customer.phone && validatePhone(customer.phone) ? 'border-green-300' : 'border-gray-200'} focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
+                      className={`w-full bg-white border-2 ${errors.phone ? 'border-red-300' : customer.phone && validatePhone(customer.phone) ? 'border-green-300' : 'border-gray-200'} focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
                     />
                     {!errors.phone && customer.phone && validatePhone(customer.phone) && (
                       <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500" size={20} />
@@ -328,8 +328,8 @@ const Checkout: React.FC = () => {
             {/* Shipping Address */}
             <section className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-                <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
-                  <span className="text-teal-600 font-black text-sm">2</span>
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <span className="text-blue-600 font-black text-sm">2</span>
                 </div>
                 <h2 className="text-xl font-black text-gray-900">Shipping Address</h2>
               </div>
@@ -337,7 +337,7 @@ const Checkout: React.FC = () => {
               <div className="space-y-4">
                 {/* PIN Code */}
                 <div>
-                  <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-wider">PIN Code <span className="text-teal-500 normal-case font-medium">(auto-fills city & state)</span></label>
+                  <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-wider">PIN Code <span className="text-blue-500 normal-case font-medium">(auto-fills city & state)</span></label>
                   <div className="relative">
                     <input
                       name="pincode"
@@ -348,11 +348,11 @@ const Checkout: React.FC = () => {
                       type="text"
                       placeholder="400001"
                       maxLength={6}
-                      className={`w-full bg-white border-2 ${errors.pincode ? 'border-red-300' : customer.pincode && validatePincode(customer.pincode) ? 'border-green-300' : 'border-gray-200'} focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
+                      className={`w-full bg-white border-2 ${errors.pincode ? 'border-red-300' : customer.pincode && validatePincode(customer.pincode) ? 'border-green-300' : 'border-gray-200'} focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
                     />
                     {isPinLoading && (
                       <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-teal-600 border-t-transparent"></div>
+                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-600 border-t-transparent"></div>
                       </div>
                     )}
                     {!isPinLoading && !errors.pincode && customer.pincode && validatePincode(customer.pincode) && (
@@ -374,7 +374,7 @@ const Checkout: React.FC = () => {
                         onChange={handleInputChange}
                         type="text"
                         placeholder="Mumbai"
-                        className="w-full bg-white border-2 border-gray-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base"
+                        className="w-full bg-white border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base"
                       />
                     </div>
                   </div>
@@ -389,7 +389,7 @@ const Checkout: React.FC = () => {
                         onChange={handleInputChange}
                         onBlur={handleBlur}
                         required
-                        className={`w-full bg-white border-2 ${errors.state ? 'border-red-300' : customer.state ? 'border-green-300' : 'border-gray-200'} focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base appearance-none pr-10`}
+                        className={`w-full bg-white border-2 ${errors.state ? 'border-red-300' : customer.state ? 'border-green-300' : 'border-gray-200'} focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base appearance-none pr-10`}
                       >
                         <option value="">Select State</option>
                         {INDIAN_STATES.map(state => (
@@ -417,7 +417,7 @@ const Checkout: React.FC = () => {
                     required
                     type="text"
                     placeholder="123 Happy Feet Street"
-                    className={`w-full bg-white border-2 ${errors.address ? 'border-red-300' : customer.address ? 'border-green-300' : 'border-gray-200'} focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
+                    className={`w-full bg-white border-2 ${errors.address ? 'border-red-300' : customer.address ? 'border-green-300' : 'border-gray-200'} focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
                   />
                   {errors.address && <p className="text-xs text-red-500 mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.address}</p>}
                 </div>
@@ -434,7 +434,7 @@ const Checkout: React.FC = () => {
                       required
                       type="text"
                       placeholder="John"
-                      className={`w-full bg-white border-2 ${errors.firstName ? 'border-red-300' : customer.firstName ? 'border-green-300' : 'border-gray-200'} focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
+                      className={`w-full bg-white border-2 ${errors.firstName ? 'border-red-300' : customer.firstName ? 'border-green-300' : 'border-gray-200'} focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
                     />
                   </div>
 
@@ -449,7 +449,7 @@ const Checkout: React.FC = () => {
                       required
                       type="text"
                       placeholder="Doe"
-                      className={`w-full bg-white border-2 ${errors.lastName ? 'border-red-300' : customer.lastName ? 'border-green-300' : 'border-gray-200'} focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
+                      className={`w-full bg-white border-2 ${errors.lastName ? 'border-red-300' : customer.lastName ? 'border-green-300' : 'border-gray-200'} focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
                     />
                   </div>
                 </div>
@@ -459,21 +459,21 @@ const Checkout: React.FC = () => {
             {/* Payment Info */}
             <section className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
               <div className="flex items-center gap-3 mb-6">
-                <CreditCard className="text-teal-600" size={24} />
+                <CreditCard className="text-blue-600" size={24} />
                 <h2 className="text-xl font-black text-gray-900">Secure Payment</h2>
               </div>
 
-              <div className="bg-teal-50 rounded-xl p-6 border border-teal-100">
+              <div className="bg-blue-50 rounded-xl p-6 border border-blue-100">
                 <div className="flex items-start gap-4">
-                  <ShieldCheck className="text-teal-600 flex-shrink-0 mt-1" size={32} />
+                  <ShieldCheck className="text-blue-600 flex-shrink-0 mt-1" size={32} />
                   <div>
                     <h3 className="font-bold text-gray-900 mb-1">Safe & Secure Checkout</h3>
                     <p className="text-sm text-gray-600 mb-4">Payments processed via Razorpay. UPI, Cards, NetBanking, and Wallets supported.</p>
                     <div className="flex flex-wrap gap-2">
-                      <span className="bg-white px-3 py-1 rounded-lg text-xs font-bold text-gray-700 border border-teal-200">UPI</span>
-                      <span className="bg-white px-3 py-1 rounded-lg text-xs font-bold text-gray-700 border border-teal-200">Cards</span>
-                      <span className="bg-white px-3 py-1 rounded-lg text-xs font-bold text-gray-700 border border-teal-200">NetBanking</span>
-                      <span className="bg-white px-3 py-1 rounded-lg text-xs font-bold text-gray-700 border border-teal-200">Wallets</span>
+                      <span className="bg-white px-3 py-1 rounded-lg text-xs font-bold text-gray-700 border border-blue-200">UPI</span>
+                      <span className="bg-white px-3 py-1 rounded-lg text-xs font-bold text-gray-700 border border-blue-200">Cards</span>
+                      <span className="bg-white px-3 py-1 rounded-lg text-xs font-bold text-gray-700 border border-blue-200">NetBanking</span>
+                      <span className="bg-white px-3 py-1 rounded-lg text-xs font-bold text-gray-700 border border-blue-200">Wallets</span>
                     </div>
                   </div>
                 </div>
@@ -512,7 +512,7 @@ const Checkout: React.FC = () => {
                 </div>
                 <div className="flex justify-between pt-3 border-t border-gray-200">
                   <span className="font-black text-lg">Total</span>
-                  <span className="font-black text-2xl text-teal-600">₹{cartTotal}</span>
+                  <span className="font-black text-2xl text-blue-600">₹{cartTotal}</span>
                 </div>
               </div>
 
@@ -520,7 +520,7 @@ const Checkout: React.FC = () => {
                 type="submit"
                 form="checkout-form"
                 disabled={isProcessing}
-                className="w-full mt-6 bg-teal-600 hover:bg-teal-700 text-white py-4 rounded-xl font-black text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isProcessing ? (
                   <span className="animate-pulse">Processing...</span>
@@ -556,12 +556,12 @@ const Checkout: React.FC = () => {
       <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 z-50 flex items-center gap-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
         <div className="flex-1">
           <span className="text-xs text-gray-500 block">Total</span>
-          <span className="text-xl font-black text-teal-600">₹{cartTotal}</span>
+          <span className="text-xl font-black text-blue-600">₹{cartTotal}</span>
         </div>
         <button
           onClick={() => (document.getElementById('checkout-form') as HTMLFormElement)?.requestSubmit()}
           disabled={isProcessing}
-          className="bg-teal-600 text-white px-8 py-3 rounded-xl font-black shadow-lg active:scale-95 transition-all"
+          className="bg-blue-600 text-white px-8 py-3 rounded-xl font-black shadow-lg active:scale-95 transition-all"
         >
           {isProcessing ? '...' : 'Pay Now'}
         </button>
