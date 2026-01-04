@@ -47,7 +47,7 @@ const ProductModal: React.FC = () => {
         {/* Premium Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 z-50 p-3 md:p-4 bg-funky-dark text-white rounded-full hover:bg-funky-pink hover:rotate-90 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110 border-4 border-white"
+          className="absolute top-4 left-4 z-50 p-3 md:p-4 bg-funky-dark text-white rounded-full hover:bg-funky-pink hover:rotate-90 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110 border-4 border-white"
         >
           <X size={24} />
         </button>

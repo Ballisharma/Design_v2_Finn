@@ -40,8 +40,8 @@ export const fetchWooCommerceProducts = async (): Promise<Product[]> => {
 
         const wooProducts = await response.json();
 
-        // Transform WooCommerce products to your Product type
-        return wooProducts.map((wooProduct: any) => transformWooProductToLocal(wooProduct));
+        // Transform WooCommerce products to your Product type (now async)
+        return await Promise.all(wooProducts.map((wooProduct: any) => transformWooProductToLocal(wooProduct)));
     } catch (error) {
         console.error('Error fetching WooCommerce products:', error);
         return [];
@@ -49,12 +49,66 @@ export const fetchWooCommerceProducts = async (): Promise<Product[]> => {
 };
 
 /**
+ * Fetch variations for a variable product
+ */
+const fetchProductVariations = async (productId: number): Promise<any[]> => {
+    try {
+        const url = `${WC_API_URL}/products/${productId}/variations?per_page=100`;
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': getAuthHeader(),
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to fetch variations for product ${productId}`);
+            return [];
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error(`Error fetching variations for product ${productId}:`, error);
+        return [];
+    }
+};
+
+/**
  * Transform WooCommerce product format to your local Product type
  */
-const transformWooProductToLocal = (wooProduct: any): Product => {
-    // If it's a variable product, the parent stock might be empty.
-    // In a real app, we'd fetch variations, but for now we rely on manage_stock being true.
-    const productStock = wooProduct.stock_quantity || 0;
+const transformWooProductToLocal = async (wooProduct: any): Promise<Product> => {
+    let variants = [];
+    let totalStock = 0;
+
+    // Check if it's a variable product
+    if (wooProduct.type === 'variable') {
+        // Fetch actual variations from WooCommerce
+        const variations = await fetchProductVariations(wooProduct.id);
+
+        if (variations.length > 0) {
+            variants = variations.map((variation: any) => {
+                const size = variation.attributes?.find((attr: any) => attr.name.toLowerCase().includes('size'))?.option || 'Free Size';
+                const stock = variation.stock_quantity || 0;
+                totalStock += stock;
+
+                return {
+                    size,
+                    stock
+                };
+            });
+        } else {
+            // Fallback to attributes if variations fetch fails
+            const sizeOptions = wooProduct.attributes?.find((attr: any) => attr.name === 'Size')?.options || [];
+            variants = sizeOptions.map((size: string) => ({
+                size,
+                stock: 0
+            }));
+        }
+    } else {
+        // Simple product - use parent stock
+        totalStock = wooProduct.stock_quantity || 0;
+        variants = [{ size: 'Free Size', stock: totalStock }];
+    }
 
     return {
         id: wooProduct.id.toString(),
@@ -69,11 +123,8 @@ const transformWooProductToLocal = (wooProduct: any): Product => {
         tags: wooProduct.tags?.map((tag: any) => tag.name) || [],
         isNew: wooProduct.featured || false,
         colorHex: wooProduct.attributes?.find((attr: any) => attr.name === 'Color')?.options?.[0] || '#000000',
-        stock: productStock,
-        variants: wooProduct.attributes?.find((attr: any) => attr.name === 'Size')?.options?.map((size: string) => ({
-            size,
-            stock: productStock // Default to parent stock if specific variation stock isn't fetched
-        })) || [{ size: 'Free Size', stock: productStock }]
+        stock: totalStock,
+        variants
     };
 };
 

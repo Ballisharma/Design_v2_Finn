@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
-import { ArrowLeft, Star, Heart, Share2, Box, AlertTriangle, Minus, Plus, ShoppingBag, ChevronLeft, ChevronRight, Leaf, MapPin } from 'lucide-react';
+import { ArrowLeft, Star, Heart, Share2, Box, AlertTriangle, Minus, Plus, ShoppingBag, ChevronLeft, ChevronRight, Leaf, MapPin, Tag } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 
 interface ProductDetailsProps {
@@ -128,20 +128,20 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
           </Link>
         )}
         {/* Price Tag Pill */}
-        <div className="bg-funky-yellow text-funky-dark font-black px-5 py-2.5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(22,19,69,1)] border-2 border-funky-dark ml-auto font-mono text-lg pointer-events-auto transform rotate-2">
+        <div className="bg-funky-yellow text-funky-dark font-black px-5 py-2.5 rounded-2xl shadow-[4px_4px_0px_0px_rgba(22,19,69,1)] border-2 border-funky-dark ml-auto font-heading text-xl pointer-events-auto transform rotate-2">
           ₹{product.price}
         </div>
       </div>
 
       {/* Product Image Area with Art Frame */}
       <div
-        className="h-[55vh] w-full relative flex items-center justify-center pt-20 pb-8 px-6"
+        className="h-[65vh] w-full relative flex items-center justify-center pt-14 pb-2 px-3"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
         {/* Art Frame Container */}
-        <div className="relative w-full max-w-[85%] aspect-square bg-white rounded-3xl shadow-[0_20px_60px_rgba(22,19,69,0.15)] p-3 transform -rotate-1">
+        <div className="relative w-full max-w-[98%] aspect-[3/4] bg-white rounded-3xl shadow-[0_20px_60px_rgba(22,19,69,0.15)] p-3 transform -rotate-1">
           <img
             src={product.images[activeImage]}
             alt={product.name}
@@ -186,7 +186,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
       </div>
 
       {/* Rounded Card Overlay */}
-      <div className="flex-1 bg-white rounded-t-[2.5rem] -mt-8 relative z-10 px-6 pt-10 pb-24 shadow-[0_-10px_40px_rgba(0,0,0,0.15)] border-t border-white/50">
+      <div className="flex-1 bg-white rounded-t-[2.5rem] -mt-8 relative z-10 px-6 pt-10 shadow-[0_-10px_40px_rgba(0,0,0,0.15)] border-t border-white/50">
 
         {/* Pull Handle Visual */}
         <div className="w-16 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
@@ -235,16 +235,48 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
           </div>
         </div>
 
-        {/* Additional Info Pills */}
-        <div className="grid grid-cols-2 gap-3 mb-8">
-          <div className="bg-green-50 p-3 rounded-xl border border-green-100 flex items-center gap-2">
-            <span className="text-lg">🌿</span>
-            <span className="text-xs font-bold text-green-700">Organic Cotton</span>
-          </div>
-          <div className="bg-blue-50 p-3 rounded-xl border border-blue-100 flex items-center gap-2">
-            <span className="text-lg">🇮🇳</span>
-            <span className="text-xs font-bold text-blue-700">Made in India</span>
-          </div>
+        {/* Additional Info Pills - Dynamic from product.tags */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {product.tags && product.tags.length > 0 ? (
+            product.tags.map((tag, index) => {
+              // Determine icon and color based on tag content
+              let bgColor = 'bg-gray-50';
+              let borderColor = 'border-gray-100';
+              let textColor = 'text-gray-700';
+              let emoji = '🏷️';
+
+              if (tag.toLowerCase().includes('organic')) {
+                bgColor = 'bg-green-50';
+                borderColor = 'border-green-100';
+                textColor = 'text-green-700';
+                emoji = '🌿';
+              } else if (tag.toLowerCase().includes('india')) {
+                bgColor = 'bg-blue-50';
+                borderColor = 'border-blue-100';
+                textColor = 'text-blue-700';
+                emoji = '🇮🇳';
+              }
+
+              return (
+                <div key={index} className={`${bgColor} p-3 rounded-xl border ${borderColor} flex items-center gap-2 flex-1 min-w-[120px]`}>
+                  <span className="text-lg">{emoji}</span>
+                  <span className={`text-xs font-bold ${textColor}`}>{tag}</span>
+                </div>
+              );
+            })
+          ) : (
+            // Fallback if no tags exist
+            <>
+              <div className="bg-green-50 p-3 rounded-xl border border-green-100 flex items-center gap-2 flex-1">
+                <span className="text-lg">🌿</span>
+                <span className="text-xs font-bold text-green-700">Organic Cotton</span>
+              </div>
+              <div className="bg-blue-50 p-3 rounded-xl border border-blue-100 flex items-center gap-2 flex-1">
+                <span className="text-lg">🇮🇳</span>
+                <span className="text-xs font-bold text-blue-700">Made in India</span>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Mobile Cross-sell */}
@@ -314,7 +346,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
         <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 ${isModal ? 'h-full' : ''}`}>
           {/* Single Large Image with Navigation */}
           <div className={`relative ${isModal ? 'h-full flex flex-col justify-center' : ''}`}>
-            <div className="aspect-[3/4] w-full bg-funky-light rounded-3xl overflow-hidden relative group">
+            <div className={`${isModal ? 'h-full w-full' : 'aspect-[3/4] w-full'} bg-funky-light rounded-3xl overflow-hidden relative group`}>
               <img
                 src={product.images[activeImage]}
                 alt={product.name}
@@ -346,7 +378,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
                     <button
                       key={idx}
                       onClick={() => setActiveImage(idx)}
-                      className={`w-2 h-2 rounded-full transition-all ${activeImage === idx ? 'bg-funky-dark w-6' : 'bg-white/60'}`}
+                      className={`h-2 rounded-full transition-all ${activeImage === idx ? 'bg-funky-dark w-6' : 'bg-white/60'}`}
                     />
                   ))}
                 </div>
@@ -470,16 +502,33 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
               )}
             </div>
 
-            {/* Value Props - "Pill" Badges */}
-            <div className="flex flex-wrap gap-3 mt-4">
-              <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-1.5 text-sm font-bold text-funky-dark">
-                <Leaf size={16} fill="currentColor" className="text-funky-dark/80" />
-                <span>Organic</span>
-              </div>
-              <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-1.5 text-sm font-bold text-funky-dark">
-                <MapPin size={16} fill="currentColor" className="text-funky-dark/80" />
-                <span>Made in India</span>
-              </div>
+            {/* Badges - Dynamic from CMS */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {product.tags && product.tags.length > 0 ? (
+                product.tags.map((tag, index) => {
+                  let Icon = Tag;
+                  if (tag.toLowerCase().includes('organic')) Icon = Leaf;
+                  if (tag.toLowerCase().includes('india')) Icon = MapPin;
+
+                  return (
+                    <div key={index} className="flex items-center gap-2 bg-gray-100 text-gray-800 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide">
+                      <Icon size={14} className="text-funky-dark" />
+                      {tag}
+                    </div>
+                  );
+                })
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 bg-gray-100 text-gray-800 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide">
+                    <Leaf size={14} className="text-funky-dark" />
+                    Organic
+                  </div>
+                  <div className="flex items-center gap-2 bg-gray-100 text-gray-800 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide">
+                    <MapPin size={14} className="text-funky-dark" />
+                    Made in India
+                  </div>
+                </>
+              )}
             </div>
 
 
