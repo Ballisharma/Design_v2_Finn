@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { ProductProvider } from './context/ProductContext';
 import { UserProvider } from './context/UserContext';
@@ -172,9 +172,9 @@ const App: React.FC = () => {
     <UserProvider>
       <ProductProvider>
         <CartProvider>
-          <HashRouter>
+          <BrowserRouter>
             <AppContent />
-          </HashRouter>
+          </BrowserRouter>
         </CartProvider>
       </ProductProvider>
     </UserProvider>
