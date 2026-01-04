@@ -401,10 +401,10 @@ const SeaUrchinLP: React.FC = () => {
                             <img src="/images/sea_urchin_pink_ugc_bookshelf_1767531439585.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
                             <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@plant_mom</div>
                         </div>
-                        {/* UGC 4: Coffee Table */}
+                        {/* UGC 4: Green Hand Glow (Night) */}
                         <div className="aspect-[4/5] rounded-xl overflow-hidden relative group">
-                            <img src="/images/sea_urchin_green_ugc_coffee_table_1767531455084.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
-                            <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@design_daily</div>
+                            <img src="/images/sea_urchin_green_hand_holding_glow_1767532697411.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Green Lamp Night Glow" />
+                            <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@night_vibes</div>
                         </div>
                         {/* UGC 5: Nightstand (New! The 5th element) */}
                         <div className="aspect-[4/5] rounded-xl overflow-hidden relative group md:col-span-1 col-span-2">
