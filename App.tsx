@@ -8,6 +8,7 @@ import CartDrawer from './components/CartDrawer';
 import ProductModal from './components/ProductModal';
 import WordPressSyncPanel from './components/WordPressSyncPanel';
 import DebugPanel from './components/DebugPanel';
+import GTMRouteTracker from './components/GTMRouteTracker';
 import { Instagram, Facebook, Twitter, Linkedin, Heart, Loader2 } from 'lucide-react';
 
 // Lazy load views for better initial performance
@@ -51,6 +52,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col font-body text-funky-dark bg-white selection:bg-funky-yellow selection:text-funky-dark">
+      <GTMRouteTracker />
       <Navbar onOpenCart={() => setIsCartOpen(true)} />
 
       {!background && <ScrollToTop />}
