@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star } from 'lucide-react';
+import { getOptimizedImageProps } from '../utils/imageOptimization';
 
 const HappyFeetSection: React.FC = () => {
     const reviews = [
@@ -34,9 +35,11 @@ const HappyFeetSection: React.FC = () => {
                 {/* Left Side - Image */}
                 <div className="relative h-[500px] lg:h-auto">
                     <img
-                        src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop"
-                        alt="Happy customer with stylish socks"
-                        loading="lazy"
+                        {...getOptimizedImageProps(
+                            'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop',
+                            'Happy customer with stylish socks',
+                            { sizes: '(max-width: 1024px) 100vw, 50vw' }
+                        )}
                         className="absolute inset-0 w-full h-full object-cover"
                     />
                     {/* Overlay to subtly darken/tint if needed */}

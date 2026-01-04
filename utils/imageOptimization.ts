@@ -105,31 +105,50 @@ export interface OptimizedImageProps {
     className?: string;
 }
 
+export interface ImageOptimizationOptions {
+    priority?: boolean; // Set fetchPriority to high
+    sizes?: string; // Custom sizes attribute
+    type?: 'hero' | 'product' | 'thumbnail' | 'full';
+    className?: string;
+}
+
 /**
- * Get optimized image props
+ * Get optimized image props - supports two signatures:
+ * 1. Object style: getOptimizedImageProps({ src, alt, type, eager })
+ * 2. Function style: getOptimizedImageProps(src, alt, options)
  */
-export const getOptimizedImageProps = ({
-    src,
-    alt,
-    type = 'product',
-    eager = false,
-    className = ''
-}: OptimizedImageProps) => {
+export function getOptimizedImageProps(props: OptimizedImageProps): any;
+export function getOptimizedImageProps(src: string, alt: string, options?: ImageOptimizationOptions): any;
+export function getOptimizedImageProps(
+    srcOrProps: string | OptimizedImageProps,
+    alt?: string,
+    options?: ImageOptimizationOptions
+): any {
+    // Determine which signature was used
+    const isObjectStyle = typeof srcOrProps === 'object';
+
+    const src = isObjectStyle ? srcOrProps.src : srcOrProps;
+    const altText = isObjectStyle ? srcOrProps.alt : alt!;
+    const eager = isObjectStyle ? (srcOrProps.eager ?? false) : (options?.priority ?? false);
+    const customSizes = isObjectStyle ? undefined : options?.sizes;
+    const type = isObjectStyle ? (srcOrProps.type ?? 'product') : (options?.type ?? 'product');
+    const className = isObjectStyle ? (srcOrProps.className ?? '') : (options?.className ?? '');
+
     const srcSet = generateSrcSet(src);
-    const sizes = getResponsiveSizes(type);
+    const sizes = customSizes || getResponsiveSizes(type);
     const optimizedSrc = getImageFormat(src);
 
     return {
         src: optimizedSrc,
         srcSet,
         sizes,
-        alt,
+        alt: altText,
         loading: eager ? ('eager' as const) : ('lazy' as const),
         decoding: 'async' as const,
-        className,
+        ...(className && { className }),
         ...(eager && { fetchPriority: 'high' as const })
     };
-};
+}
 
 export default {
     generateSrcSet,

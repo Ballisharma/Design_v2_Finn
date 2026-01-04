@@ -1,11 +1,20 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+      visualizer({
+        open: false,
+        filename: 'dist/stats.html',
+        gzipSize: true,
+        brotliSize: true
+      })
+    ],
     build: {
       outDir: 'dist',
       emptyOutDir: true

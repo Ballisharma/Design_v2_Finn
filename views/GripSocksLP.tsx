@@ -3,6 +3,7 @@ import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { Star, ShieldCheck, Zap, Anchor, ChevronDown, Check, ArrowRight, Flame, Trophy, Sparkles, X, Package, Leaf, Footprints, Microscope, Dumbbell, Activity, Gem, Droplets, Layers, Shirt, Maximize, Wind, Feather, CheckCircle2, Truck } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getOptimizedImageProps } from '../utils/imageOptimization';
 
 const GripSocksLP: React.FC = () => {
    const { products } = useProducts();
@@ -122,18 +123,22 @@ const GripSocksLP: React.FC = () => {
                      <div className="grid grid-cols-2 h-[400px] md:h-[550px] gap-1 rounded-[2rem] overflow-hidden">
                         <div className="relative bg-gray-100 overflow-hidden group-hover:flex-[1.1] transition-all duration-700 ease-out">
                            <img
-                              src={blackImg}
+                              {...getOptimizedImageProps(blackImg, 'Black Grip Sock', {
+                                 priority: true,
+                                 sizes: '(max-width: 768px) 50vw, 25vw'
+                              })}
                               className="w-full h-full object-cover scale-[1.01] hover:scale-110 transition-transform duration-700"
-                              alt="Black Grip Sock"
                            />
                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
                            <span className="absolute bottom-6 left-6 z-20 text-white font-heading font-black text-2xl uppercase tracking-widest drop-shadow-md">Midnight</span>
                         </div>
                         <div className="relative bg-gray-100 overflow-hidden group-hover:flex-[1.1] transition-all duration-700 ease-out">
                            <img
-                              src={greyImg}
+                              {...getOptimizedImageProps(greyImg, 'Grey Grip Sock', {
+                                 priority: true,
+                                 sizes: '(max-width: 768px) 50vw, 25vw'
+                              })}
                               className="w-full h-full object-cover scale-[1.01] hover:scale-110 transition-transform duration-700"
-                              alt="Grey Grip Sock"
                            />
                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
                            <span className="absolute bottom-6 right-6 z-20 text-white font-heading font-black text-2xl uppercase tracking-widest drop-shadow-md">Slate</span>
@@ -223,7 +228,12 @@ const GripSocksLP: React.FC = () => {
                   {/* Center Image */}
                   <div className="relative w-full max-w-sm aspect-[3/4] rounded-full border border-gray-200 p-3 bg-white shadow-2xl">
                      <div className="w-full h-full bg-funky-light rounded-full overflow-hidden relative shadow-inner">
-                        <img src={blackImg} loading="lazy" decoding="async" className="w-full h-full object-cover transform scale-110" alt="Anatomy" />
+                        <img
+                           {...getOptimizedImageProps(blackImg, 'Anatomy', {
+                              sizes: '(max-width: 768px) 100vw, 33vw'
+                           })}
+                           className="w-full h-full object-cover transform scale-110"
+                        />
                         {/* Overlay pointers */}
                         <div className="absolute top-1/4 left-1/4 w-8 h-8 bg-funky-yellow border-4 border-white rounded-full animate-ping opacity-75"></div>
                         <div className="absolute top-1/4 left-1/4 w-8 h-8 bg-funky-yellow border-4 border-white rounded-full flex items-center justify-center z-10 shadow-lg"><span className="text-xs font-black text-funky-dark">1</span></div>
@@ -469,12 +479,13 @@ const GripSocksLP: React.FC = () => {
                      {/* Dynamic Product Image */}
                      <div className="w-full aspect-square bg-gray-50 rounded-2xl mb-6 overflow-hidden border border-gray-100 relative group">
                         <img
-                           src={activeTab === 'black' ? blackImg : greyImg}
-                           alt="Selected Sock"
-                           loading="lazy"
-                           decoding="async"
-                           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                        />
+                         {...getOptimizedImageProps(
+                            activeTab === 'black' ? blackImg : greyImg,
+                            'Selected Sock',
+                            { sizes: '(max-width: 768px) 100vw, 33vw' }
+                         )}
+                         className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                      />
                      </div>
 
                      <div className="bg-gray-50 rounded-2xl p-4 mb-4 text-center border border-gray-100">
@@ -502,10 +513,20 @@ const GripSocksLP: React.FC = () => {
                         {/* Visual Stack of 2 Socks */}
                         <div className="relative w-full aspect-square mb-6 mt-6 group">
                            <div className="absolute top-0 right-0 w-[75%] h-[75%] rounded-[1.5rem] overflow-hidden border border-gray-100 shadow-md z-10 bg-white transform rotate-3 group-hover:rotate-6 transition-transform duration-500">
-                              <img src={greyImg} className="w-full h-full object-cover" alt="Grey" />
+                              <img
+                                 {...getOptimizedImageProps(greyImg, 'Grey', {
+                                    sizes: '(max-width: 768px) 75vw, 25vw'
+                                 })}
+                                 className="w-full h-full object-cover"
+                              />
                            </div>
                            <div className="absolute bottom-0 left-0 w-[75%] h-[75%] rounded-[1.5rem] overflow-hidden border border-gray-100 shadow-xl z-20 bg-white transform -rotate-3 group-hover:-rotate-6 transition-transform duration-500">
-                              <img src={blackImg} className="w-full h-full object-cover" alt="Black" />
+                              <img
+                                 {...getOptimizedImageProps(blackImg, 'Black', {
+                                    sizes: '(max-width: 768px) 75vw, 25vw'
+                                 })}
+                                 className="w-full h-full object-cover"
+                              />
                            </div>
                         </div>
 
@@ -532,11 +553,31 @@ const GripSocksLP: React.FC = () => {
                   <div className="bg-gradient-to-b from-funky-blue to-blue-600 p-6 rounded-[2rem] border border-white/20 shadow-2xl text-white flex flex-col hover:-translate-y-1 transition-transform duration-300">
                      {/* Grid of 4 Socks */}
                      <div className="grid grid-cols-2 gap-3 mb-6">
-                        <img src={blackImg} className="rounded-2xl border-2 border-white/20 aspect-square object-cover" alt="b1" />
-                        <img src={greyImg} className="rounded-2xl border-2 border-white/20 aspect-square object-cover" alt="g1" />
-                        <img src={greyImg} className="rounded-2xl border-2 border-white/20 aspect-square object-cover" alt="g2" />
-                        <img src={blackImg} className="rounded-2xl border-2 border-white/20 aspect-square object-cover" alt="b2" />
-                     </div>
+                      <img
+                         {...getOptimizedImageProps(blackImg, 'Black Sock', {
+                            sizes: '(max-width: 768px) 45vw, 12vw'
+                         })}
+                         className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
+                      />
+                      <img
+                         {...getOptimizedImageProps(greyImg, 'Grey Sock', {
+                            sizes: '(max-width: 768px) 45vw, 12vw'
+                         })}
+                         className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
+                      />
+                      <img
+                         {...getOptimizedImageProps(greyImg, 'Grey Sock', {
+                            sizes: '(max-width: 768px) 45vw, 12vw'
+                         })}
+                         className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
+                      />
+                      <img
+                         {...getOptimizedImageProps(blackImg, 'Black Sock', {
+                            sizes: '(max-width: 768px) 45vw, 12vw'
+                         })}
+                         className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
+                      />
+                   </div>
 
                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-4 text-center border border-white/20">
                         <h3 className="font-heading font-black text-2xl text-white mb-1">THE SQUAD</h3>
