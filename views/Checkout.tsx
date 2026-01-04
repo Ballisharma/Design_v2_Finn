@@ -255,7 +255,7 @@ const Checkout: React.FC = () => {
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-full shadow-sm border border-gray-100">
                 <Users size={14} className="text-blue-600" />
-                <span className="font-medium">{viewerCount} viewing</span>
+                <span className="font-medium">{viewerCount} checking out right now</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-full shadow-sm border border-gray-100">
                 <TrendingUp size={14} className="text-orange-500" />
@@ -489,7 +489,7 @@ const Checkout: React.FC = () => {
               <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
                 {items.map(item => (
                   <div key={item.cartId} className="flex gap-3">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                    <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
                       <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
