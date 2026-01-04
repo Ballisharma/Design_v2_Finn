@@ -80,24 +80,12 @@ export const syncProducts = async (direction: SyncDirection = 'bidirectional'): 
  */
 export const getMergedProducts = async (force: boolean = false): Promise<Product[]> => {
     try {
-        // Try to get cached WooCommerce products
-        const cached = localStorage.getItem('woo_products');
-        const lastSync = localStorage.getItem('last_sync');
-
-        // Check if cache is fresh (less than 1 minute old)
-        const isCacheFresh = lastSync &&
-            (Date.now() - new Date(lastSync).getTime()) < 1 * 60 * 1000;
-
-        if (cached && isCacheFresh && !force) {
-            console.log('📦 Using cached WooCommerce products');
-            return JSON.parse(cached);
-        }
-
-        // Fetch fresh data from WooCommerce
-        console.log('🔄 Fetching fresh products from WooCommerce...');
-        const wooProducts = await fetchWooCommerceProducts();
+        // Use the optimized fetchWooCommerceProducts with built-in caching
+        console.log(force ? '🔄 Force fetching products...' : '📦 Getting products (cache-aware)...');
+        const wooProducts = await fetchWooCommerceProducts(force);
 
         if (wooProducts.length > 0) {
+            // Also update localStorage for backward compatibility
             localStorage.setItem('woo_products', JSON.stringify(wooProducts));
             localStorage.setItem('last_sync', new Date().toISOString());
             return wooProducts;
@@ -154,7 +142,10 @@ export const syncStockAfterPurchase = async (
  * Force a full sync (useful for manual refresh)
  */
 export const forceFullSync = async (): Promise<SyncResult> => {
-    // Clear cache to force fresh fetch
+    // Clear all caches (both IndexedDB and localStorage)
+    const { clearWooCommerceCache } = await import('./wordpressAPI');
+    await clearWooCommerceCache();
+
     localStorage.removeItem('woo_products');
     localStorage.removeItem('last_sync');
 

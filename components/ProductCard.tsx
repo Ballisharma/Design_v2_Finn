@@ -75,8 +75,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Link to={`/product/${product.id}`} state={{ background: location }} className="block h-full">
             <img
               src={product.images[0]}
+              srcSet={`
+                ${product.images[0]}?w=400 400w,
+                ${product.images[0]}?w=600 600w,
+                ${product.images[0]}?w=800 800w
+              `}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               alt={product.name}
               loading="lazy"
+              decoding="async"
               className={`h-full w-full object-cover object-center transition-transform duration-700 ease-out ${!isOutOfStock && 'group-hover:scale-105'} ${isOutOfStock ? 'grayscale' : ''}`}
             />
           </Link>
