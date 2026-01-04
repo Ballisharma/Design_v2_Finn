@@ -119,6 +119,7 @@ const AppContent: React.FC = () => {
               <ul className="space-y-4 opacity-80 font-medium">
                 <li><Link to="/shop" className="hover:text-funky-yellow transition-colors hover:translate-x-1 inline-block">All Products</Link></li>
                 <li><Link to="/grip-socks" className="hover:text-funky-yellow transition-colors hover:translate-x-1 inline-block text-funky-pink font-bold">★ Grip Series</Link></li>
+                <li><Link to="/sea-urchin-lamp" className="hover:text-funky-yellow transition-colors hover:translate-x-1 inline-block text-orange-400 font-bold">★ Sea Urchin Lamp</Link></li>
                 <li><Link to="/shop" className="hover:text-funky-yellow transition-colors hover:translate-x-1 inline-block">New Arrivals</Link></li>
                 <li><Link to="/shop" className="hover:text-funky-yellow transition-colors hover:translate-x-1 inline-block">Gift Boxes</Link></li>
               </ul>
