@@ -33,6 +33,11 @@ const Checkout: React.FC = () => {
     state: user?.billing?.state || ''
   });
 
+  // Validation errors
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isPinLoading, setIsPinLoading] = useState(false);
+
+
   // Update form when user changes
   useEffect(() => {
     if (user?.billing) {
