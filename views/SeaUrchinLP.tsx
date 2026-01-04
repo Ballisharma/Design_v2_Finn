@@ -12,18 +12,20 @@ const SeaUrchinLP: React.FC = () => {
     const [activeImage, setActiveImage] = useState(0);
 
     // Images 
+    // Images 
     const images = {
         Pink: [
-            '/images/sea_urchin_pink_cozy_lifestyle_1767531244368.png', // New Cozy Lifestyle Main
-            '/images/uploaded_image_1_1767520309296.jpg', // Pink Main (Real)
-            '/images/uploaded_image_2_1767520309296.jpg', // Group (Real)
-            '/images/uploaded_image_4_1767520309296.jpg', // Top View (Real)
+            '/images/sea_urchin_pink_cozy_lifestyle_1767531244368.png',
+            '/images/sea_urchin_pink_ugc_hand_holding_1767531291802.png',
+            '/images/sea_urchin_pink_macro_corrected_1767532237235.png',
+            '/images/sea_urchin_pink_glow_physics_corrected_1767532268682.png',
+            '/images/sea_urchin_pink_mirror_selfie_ugc_1767532909153.png'
         ],
         Green: [
-            '/images/sea_urchin_green_minimalist_desk_1767531261509.png', // New Minimalist Lifestyle Main
-            '/images/uploaded_image_0_1767520309296.jpg', // Green Main (Real)
-            '/images/uploaded_image_3_1767520309296.jpg', // Green Detail (Real)
-            '/images/uploaded_image_2_1767520309296.jpg', // Group (Real)
+            '/images/sea_urchin_green_minimalist_desk_1767531261509.png',
+            '/images/sea_urchin_green_hand_holding_daylight_1767532714940.png',
+            '/images/sea_urchin_green_base_detail_corrected_1767532251788.png',
+            '/images/sea_urchin_green_ugc_bedroom_messy_1767531310351.png'
         ]
     };
 
@@ -96,7 +98,7 @@ const SeaUrchinLP: React.FC = () => {
                     <div className="order-1 lg:order-2 relative group mx-auto w-full max-w-[90%] md:max-w-md lg:max-w-none">
                         <div className="relative aspect-[4/5] md:aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl border-[6px] border-white ring-1 ring-gray-100 bg-gray-100 transition-transform duration-700 ease-out hover:scale-[1.01]">
                             <img
-                                src={currentImages[0]}
+                                src={currentImages[activeImage]}
                                 alt="Sea Urchin Lamp"
                                 className="w-full h-full object-cover"
                             />
