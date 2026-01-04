@@ -16,6 +16,7 @@ const AllProducts = React.lazy(() => import('./views/AllProducts'));
 const GripSocksLP = React.lazy(() => import('./views/GripSocksLP'));
 const SeaUrchinLP = React.lazy(() => import('./views/SeaUrchinLP'));
 const SeaUrchinLPHighConvert = React.lazy(() => import('./views/SeaUrchinLP_HighConvert'));
+const YogaSocksLP = React.lazy(() => import('./views/YogaSocksLP'));
 const ProductDetails = React.lazy(() => import('./views/ProductDetails'));
 const Checkout = React.lazy(() => import('./views/Checkout'));
 const About = React.lazy(() => import('./views/About'));
@@ -66,6 +67,7 @@ const AppContent: React.FC = () => {
             <Route path="/grip-socks" element={<GripSocksLP />} />
             <Route path="/sea-urchin-lamp" element={<SeaUrchinLP />} />
             <Route path="/sea-urchin-lamp-v2" element={<SeaUrchinLPHighConvert />} />
+            <Route path="/yoga-grip-socks" element={<YogaSocksLP />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/about" element={<About />} />
