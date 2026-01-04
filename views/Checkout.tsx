@@ -366,20 +366,17 @@ const Checkout: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                   {/* City */}
                   <div>
-                    <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-wider">City</label>
+                    <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-wider">City <span className="text-gray-300 normal-case font-medium">(optional)</span></label>
                     <div className="relative">
                       <input
                         name="city"
                         value={customer.city}
                         onChange={handleInputChange}
-                        onBlur={handleBlur}
-                        required
                         type="text"
                         placeholder="Mumbai"
-                        className={`w-full bg-white border-2 ${errors.city ? 'border-red-300' : customer.city ? 'border-green-300' : 'border-gray-200'} focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base`}
+                        className="w-full bg-white border-2 border-gray-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-100 rounded-xl px-4 py-3 font-medium outline-none transition-all text-base"
                       />
                     </div>
-                    {errors.city && <p className="text-xs text-red-500 mt-1 flex items-center gap-1"><AlertCircle size={12} />{errors.city}</p>}
                   </div>
 
                   {/* State */}
