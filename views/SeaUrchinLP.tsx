@@ -14,11 +14,13 @@ const SeaUrchinLP: React.FC = () => {
     // Images 
     const images = {
         Pink: [
+            '/images/sea_urchin_pink_cozy_lifestyle_1767531244368.png', // New Cozy Lifestyle Main
             '/images/uploaded_image_1_1767520309296.jpg', // Pink Main (Real)
             '/images/uploaded_image_2_1767520309296.jpg', // Group (Real)
             '/images/uploaded_image_4_1767520309296.jpg', // Top View (Real)
         ],
         Green: [
+            '/images/sea_urchin_green_minimalist_desk_1767531261509.png', // New Minimalist Lifestyle Main
             '/images/uploaded_image_0_1767520309296.jpg', // Green Main (Real)
             '/images/uploaded_image_3_1767520309296.jpg', // Green Detail (Real)
             '/images/uploaded_image_2_1767520309296.jpg', // Group (Real)
@@ -306,76 +308,81 @@ const SeaUrchinLP: React.FC = () => {
                 </div>
             </section>
 
-            {/* Mobile Scrollable Testimonials */}
-            <section className="py-12 bg-gray-50 overflow-hidden">
-                <div className="text-center mb-8 px-6">
-                    <h2 className="font-black text-3xl text-gray-900 mb-2">500+ Homes Glow Brighter</h2>
-                    <p className="text-sm text-gray-600">Join the community of happy customers.</p>
-                </div>
+            {/* SOCIAL PROOF MEGA SECTION */}
+            <section className="py-12 bg-white">
+                <div className="max-w-7xl mx-auto px-6">
 
-                <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-6 pb-6 -mr-6 md:justify-center scrollbar-hide">
-                    {/* Review 1 */}
-                    <div className="snap-center shrink-0 w-80 bg-white p-5 rounded-3xl shadow-md">
-                        <div className="aspect-video bg-gray-100 rounded-xl mb-4 overflow-hidden">
-                            <img src="/images/sea_urchin_pink_real_v2_1767520483897.png" className="w-full h-full object-cover" alt="Pink Lamp" />
+                    {/* Header */}
+                    <div className="text-center mb-10">
+                        <span className="text-pink-500 font-bold tracking-widest text-xs uppercase mb-2 block">As Seen On Social</span>
+                        <h2 className="font-black text-3xl md:text-5xl text-gray-900 mb-4">Going Viral</h2>
+                        <p className="text-gray-500 max-w-md mx-auto">See why thousands are obsessed with this glow.</p>
+                    </div>
+
+                    {/* 1. VIDEO THUMBNAILS (Reels/TikToks) */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        {/* Video 1: Pink Reel */}
+                        <div className="md:col-start-2 aspect-[9/16] rounded-2xl overflow-hidden relative group shadow-lg cursor-pointer">
+                            <img src="/images/sea_urchin_pink_reel_thumbnail_1767531576991.png" className="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="Instagram Reel" />
+                            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                                <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/50">
+                                    <div className="ml-1 w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent"></div>
+                                </div>
+                            </div>
+                            <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur px-2 py-1 rounded text-white text-[10px] font-bold flex items-center gap-1">
+                                <Instagram size={10} /> 142k views
+                            </div>
                         </div>
-                        <div className="flex text-amber-500 mb-2">
-                            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
-                        </div>
-                        <h4 className="font-bold text-base mb-1">"Better than expected"</h4>
-                        <p className="text-gray-600 text-xs leading-relaxed mb-4">
-                            "Skeptical about the pink, but it's stunning. The light is so soft, perfect for winding down."
-                        </p>
-                        <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
-                            <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center font-bold text-pink-600 text-xs">S</div>
-                            <div>
-                                <p className="font-bold text-xs">Sarah J.</p>
-                                <p className="text-[10px] text-gray-400">Bought Coral Pink</p>
+
+                        {/* Video 2: Green TikTok */}
+                        <div className="aspect-[9/16] rounded-2xl overflow-hidden relative group shadow-lg cursor-pointer">
+                            <img src="/images/sea_urchin_green_tiktok_thumbnail_1767531596501.png" className="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="TikTok Trend" />
+                            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                                <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/50">
+                                    <div className="ml-1 w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent"></div>
+                                </div>
+                            </div>
+                            <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur px-2 py-1 rounded text-white text-[10px] font-bold flex items-center gap-1">
+                                <span className="font-black">TikTok</span> 84k views
                             </div>
                         </div>
                     </div>
 
-                    {/* Review 2 */}
-                    <div className="snap-center shrink-0 w-80 bg-white p-5 rounded-3xl shadow-md">
-                        <div className="aspect-video bg-gray-100 rounded-xl mb-4 overflow-hidden">
-                            <img src="/images/sea_urchin_green_real_v2_1767520501537.png" className="w-full h-full object-cover" alt="Green Lamp" />
+                    {/* 2. AUTHENTIC UGC GRID */}
+                    <div className="flex items-center gap-4 mb-8 mt-12">
+                        <div className="h-px bg-gray-100 flex-1"></div>
+                        <h2 className="text-xl font-bold text-gray-400 uppercase tracking-widest text-xs">Community Snaps</h2>
+                        <div className="h-px bg-gray-100 flex-1"></div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                        {/* UGC 1: Hand Holding */}
+                        <div className="aspect-[4/5] rounded-xl overflow-hidden relative group">
+                            <img src="/images/sea_urchin_pink_ugc_hand_holding_1767531291802.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
+                            <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@sarah_reads</div>
                         </div>
-                        <div className="flex text-amber-500 mb-2">
-                            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
+                        {/* UGC 2: Messy Bed */}
+                        <div className="aspect-[4/5] rounded-xl overflow-hidden relative group">
+                            <img src="/images/sea_urchin_green_ugc_bedroom_messy_1767531310351.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
+                            <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@morning_mood</div>
                         </div>
-                        <h4 className="font-bold text-base mb-1">"Office vibe upgrade"</h4>
-                        <p className="text-gray-600 text-xs leading-relaxed mb-4">
-                            "Got the green one for my workspace. Adds such a nice earthy vibe. Highly recommend!"
-                        </p>
-                        <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
-                            <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center font-bold text-green-600 text-xs">R</div>
-                            <div>
-                                <p className="font-bold text-xs">Rahul M.</p>
-                                <p className="text-[10px] text-gray-400">Bought Ocean Green</p>
-                            </div>
+                        {/* UGC 3: Bookshelf */}
+                        <div className="aspect-[4/5] rounded-xl overflow-hidden relative group">
+                            <img src="/images/sea_urchin_pink_ugc_bookshelf_1767531439585.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
+                            <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@plant_mom</div>
+                        </div>
+                        {/* UGC 4: Coffee Table */}
+                        <div className="aspect-[4/5] rounded-xl overflow-hidden relative group">
+                            <img src="/images/sea_urchin_green_ugc_coffee_table_1767531455084.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
+                            <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@design_daily</div>
+                        </div>
+                        {/* UGC 5: Nightstand (New! The 5th element) */}
+                        <div className="aspect-[4/5] rounded-xl overflow-hidden relative group md:col-span-1 col-span-2">
+                            <img src="/images/sea_urchin_pink_ugc_nightstand_real_1767531471526.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
+                            <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@nightowl_vibes</div>
                         </div>
                     </div>
 
-                    {/* Review 3 */}
-                    <div className="snap-center shrink-0 w-80 bg-white p-5 rounded-3xl shadow-md">
-                        <div className="aspect-video bg-gray-100 rounded-xl mb-4 overflow-hidden">
-                            <img src="/images/sea_urchin_lifestyle_real_v2_1767520552575.png" className="w-full h-full object-cover" alt="Lifestyle" />
-                        </div>
-                        <div className="flex text-amber-500 mb-2">
-                            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
-                        </div>
-                        <h4 className="font-bold text-base mb-1">"Perfect Gift"</h4>
-                        <p className="text-gray-600 text-xs leading-relaxed mb-4">
-                            "Bought two for my sister. The packaging was secure and they arrived in 2 days."
-                        </p>
-                        <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
-                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600 text-xs">A</div>
-                            <div>
-                                <p className="font-bold text-xs">Aditi K.</p>
-                                <p className="text-[10px] text-gray-400">Verified Buyer</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </section>
 
