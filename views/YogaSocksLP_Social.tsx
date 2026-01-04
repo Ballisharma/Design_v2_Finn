@@ -310,32 +310,118 @@ const YogaSocksLP_Social: React.FC = () => {
                 </div>
             </section>
 
-            {/* Final CTA */}
-            <section className="py-16 px-4 bg-gray-50">
-                <div className="max-w-2xl mx-auto text-center">
-                    <h2 className="font-black text-3xl md:text-5xl text-gray-900 mb-6">
-                        Ready to Transform Your Practice?
-                    </h2>
+            {/* Final Social Push - Visual CTA */}
+            <section className="py-16 px-4 bg-white">
+                <div className="max-w-5xl mx-auto">
 
-                    <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200 mb-8">
-                        <div className="flex items-baseline justify-center gap-3 mb-4">
-                            <span className="text-5xl font-black text-teal-600">₹499</span>
-                            <span className="text-xl text-gray-400 line-through">₹799</span>
+                    {/* Customer Photos Grid */}
+                    <div className="text-center mb-8">
+                        <div className="flex items-center justify-center -space-x-4 mb-4">
+                            {[1, 5, 9, 16, 20, 23, 30, 35].map(img => (
+                                <img
+                                    key={img}
+                                    src={`https://i.pravatar.cc/80?img=${img}`}
+                                    className="w-12 h-12 rounded-full border-4 border-white object-cover shadow-md"
+                                    alt="Customer"
+                                />
+                            ))}
                         </div>
-                        <p className="text-gray-600 mb-6">Limited stock • Free shipping • 30-day guarantee</p>
-
-                        <button
-                            onClick={handleBuyNow}
-                            className="w-full bg-teal-600 hover:bg-teal-700 text-white py-5 rounded-xl font-black text-xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-3"
-                        >
-                            Get Your Grip Socks
-                            <ShoppingCart size={24} />
-                        </button>
+                        <p className="text-gray-600 font-medium">
+                            Join <span className="font-bold text-teal-600">12,847 yogis</span> who upgraded their practice this month
+                        </p>
                     </div>
 
-                    <p className="text-sm text-gray-500">
-                        Join 12,847+ yogis who have already upgraded their practice
-                    </p>
+                    {/* Main CTA Card */}
+                    <div className="bg-gradient-to-br from-teal-50 to-white rounded-3xl p-8 md:p-12 border-2 border-teal-200 shadow-2xl relative overflow-hidden">
+
+                        {/* Scarcity Badge */}
+                        <div className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold animate-pulse flex items-center gap-2">
+                            <span className="relative flex h-3 w-3">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                            </span>
+                            Only 7 Left
+                        </div>
+
+                        <div className="text-center mb-8">
+                            <h2 className="font-black text-3xl md:text-5xl text-gray-900 mb-4">
+                                Your Turn to Experience It
+                            </h2>
+                            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                                Same socks trusted by thousands of yogis across India. Same unbeatable grip. Same risk-free guarantee.
+                            </p>
+                        </div>
+
+                        {/* Pricing */}
+                        <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xl mb-6">
+                            <div className="flex items-center justify-center gap-6 mb-6">
+                                <div className="text-center">
+                                    <div className="text-gray-400 text-sm line-through mb-1">Regular Price</div>
+                                    <div className="text-3xl text-gray-300 line-through font-bold">₹799</div>
+                                </div>
+                                <div className="text-4xl font-black text-gray-300">→</div>
+                                <div className="text-center">
+                                    <div className="text-teal-600 text-sm font-bold mb-1 flex items-center gap-2 justify-center">
+                                        <CheckCircle2 size={16} />
+                                        Today Only
+                                    </div>
+                                    <div className="text-5xl md:text-6xl text-teal-600 font-black">₹499</div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6 text-sm">
+                                <div className="flex items-center justify-center gap-2 bg-green-50 text-green-700 p-3 rounded-lg font-bold">
+                                    <CheckCircle2 size={16} />
+                                    Free Shipping
+                                </div>
+                                <div className="flex items-center justify-center gap-2 bg-blue-50 text-blue-700 p-3 rounded-lg font-bold">
+                                    <CheckCircle2 size={16} />
+                                    30-Day Returns
+                                </div>
+                                <div className="flex items-center justify-center gap-2 bg-purple-50 text-purple-700 p-3 rounded-lg font-bold">
+                                    <CheckCircle2 size={16} />
+                                    1-Year Warranty
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={handleBuyNow}
+                                className="w-full bg-teal-600 hover:bg-teal-700 text-white py-6 rounded-xl font-black text-xl md:text-2xl shadow-2xl hover:shadow-3xl transition-all transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 relative overflow-hidden group"
+                            >
+                                <span className="relative z-10">Yes, I Want Better Grip!</span>
+                                <ShoppingCart size={28} className="relative z-10" />
+                                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                            </button>
+                        </div>
+
+                        {/* Trust Footer */}
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-sm text-gray-600">
+                            <div className="flex items-center gap-2">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" className="h-6 opacity-50" alt="Visa" />
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" className="h-6 opacity-50" alt="Mastercard" />
+                                <span className="text-xs font-medium">Secure SSL Checkout</span>
+                            </div>
+                            <div className="hidden md:block w-px h-4 bg-gray-300"></div>
+                            <div className="text-xs font-medium">🔒 Your payment info is safe</div>
+                        </div>
+                    </div>
+
+                    {/* Final Social Proof */}
+                    <div className="mt-8 text-center">
+                        <div className="inline-flex items-center gap-3 bg-gray-50 px-6 py-4 rounded-full border border-gray-200">
+                            <div className="flex -space-x-2">
+                                {[1, 2, 3].map(i => (
+                                    <Star key={i} size={20} fill="#F59E0B" className="text-amber-500" />
+                                ))}
+                            </div>
+                            <div className="text-sm">
+                                <span className="font-bold text-gray-900">4.9/5</span>
+                                <span className="text-gray-500"> from </span>
+                                <span className="font-bold text-gray-900">3,241 verified reviews</span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
