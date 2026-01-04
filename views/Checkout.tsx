@@ -86,6 +86,7 @@ const Checkout: React.FC = () => {
       case 'firstName':
       case 'lastName':
       case 'address':
+      case 'city':
       case 'state':
         return !value.trim() ? 'This field is required' : '';
       default:
