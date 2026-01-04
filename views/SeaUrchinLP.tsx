@@ -15,8 +15,8 @@ const SeaUrchinLP: React.FC = () => {
     // Images 
     const images = {
         Pink: [
-            '/images/sea_urchin_pink_cozy_lifestyle_1767531244368.png',
             '/images/sea_urchin_pink_ugc_hand_holding_1767531291802.png',
+            '/images/sea_urchin_pink_cozy_lifestyle_1767531244368.png',
             '/images/sea_urchin_pink_macro_corrected_1767532237235.png',
             '/images/sea_urchin_pink_glow_physics_corrected_1767532268682.png',
             '/images/sea_urchin_pink_mirror_selfie_ugc_1767532909153.png'
