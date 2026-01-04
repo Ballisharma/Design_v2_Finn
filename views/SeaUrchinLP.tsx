@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
-import { Star, ArrowRight, ShieldCheck, Sun, Leaf, Gift, Truck, ChevronDown, Plus, Minus, CheckCircle2, Flame, Trophy, Package, Heart } from 'lucide-react';
+import { Star, ArrowRight, ShieldCheck, Sun, Leaf, Gift, Truck, ChevronDown, Plus, Minus, CheckCircle2, Flame, Trophy, Package, Heart, Instagram } from 'lucide-react';
 
 const SeaUrchinLP: React.FC = () => {
     const { addToCart } = useCart();
