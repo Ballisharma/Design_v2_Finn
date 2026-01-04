@@ -515,7 +515,7 @@ const SeaUrchinLP: React.FC = () => {
                                             className={`relative p-3 rounded-xl border-2 transition-all duration-200 text-left flex items-center gap-3 ${selectedColor === 'Pink' ? 'border-gray-900 bg-gray-50 ring-1 ring-gray-900' : 'border-gray-200 bg-white hover:border-gray-300'}`}
                                         >
                                             <div className="w-14 h-14 rounded-lg bg-gray-100 shrink-0 overflow-hidden relative">
-                                                <img src="/images/uploaded_image_1_1767520309296.jpg" className="w-full h-full object-cover" />
+                                                <img src="/images/sea_urchin_pink_cozy_lifestyle_1767531244368.png" className="w-full h-full object-cover" />
                                                 {selectedColor === 'Pink' && <div className="absolute inset-0 bg-black/10" />}
                                             </div>
                                             <div className="flex-1">
@@ -536,7 +536,7 @@ const SeaUrchinLP: React.FC = () => {
                                             className={`relative p-3 rounded-xl border-2 transition-all duration-200 text-left flex items-center gap-3 ${selectedColor === 'Green' ? 'border-gray-900 bg-gray-50 ring-1 ring-gray-900' : 'border-gray-200 bg-white hover:border-gray-300'}`}
                                         >
                                             <div className="w-14 h-14 rounded-lg bg-gray-100 shrink-0 overflow-hidden relative">
-                                                <img src="/images/uploaded_image_0_1767520309296.jpg" className="w-full h-full object-cover" />
+                                                <img src="/images/sea_urchin_green_minimalist_desk_1767531261509.png" className="w-full h-full object-cover" />
                                                 {selectedColor === 'Green' && <div className="absolute inset-0 bg-black/10" />}
                                             </div>
                                             <div className="flex-1">
