@@ -253,9 +253,9 @@ const YogaSocksLP: React.FC = () => {
                         {[1, 2, 3, 4, 5, 6].map(i => (
                             <div key={i} className="aspect-square rounded-xl overflow-hidden relative group">
                                 <img
-                                    src={`https://images.unsplash.com/photo-${1540206395 - ${i * 100}}-d09e9a5bb3cb?w=600&h=600&fit=crop`}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                alt="Customer photo"
+                                    src={`https://images.unsplash.com/photo-${1540206395 - i * 100}-d09e9a5bb3cb?w=600&h=600&fit=crop`}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    alt="Customer photo"
                                 />
                                 <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold opacity-80">@yogi_flow_{i}</div>
                             </div>
