@@ -23,21 +23,44 @@ const AllProducts: React.FC = () => {
     return grouped;
   }, [products, categories]);
 
+  // Sort categories by product count (descending)
+  const sortedCategories = useMemo(() => {
+    return [...categories].sort((a, b) => {
+      const countA = productsByCategory[a]?.length || 0;
+      const countB = productsByCategory[b]?.length || 0;
+      return countB - countA;
+    });
+  }, [categories, productsByCategory]);
+
   return (
     <div className="min-h-screen bg-[#f7f7f7] animate-fade-in">
-      {/* Header Section */}
-      <div className="bg-white pt-32 pb-16 px-6 text-center">
-        <h1 className="font-heading font-black text-5xl md:text-7xl text-[#131B3E] mb-4">
-          Our Products
-        </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-          Browse our complete collection of premium socks designed for comfort and style.
-        </p>
+      {/* Header Section with Background Image */}
+      <div className="relative w-full h-[400px] flex flex-col justify-center items-center text-center px-6 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop"
+            alt="Jumplings Socks Collection"
+            className="w-full h-full object-cover"
+          />
+          {/* Dark Overlay for Text Readability */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 max-w-4xl mx-auto space-y-4">
+          <h1 className="font-heading font-black text-5xl md:text-7xl text-white tracking-tight drop-shadow-lg">
+            Our Products
+          </h1>
+          <p className="text-gray-100 max-w-2xl mx-auto text-lg md:text-xl font-medium drop-shadow-md">
+            Browse our complete collection of premium socks designed for comfort and style.
+          </p>
+        </div>
       </div>
 
       {/* Category Sections */}
       <div className="pb-20">
-        {categories.map((category, index) => {
+        {sortedCategories.map((category, index) => {
           const categoryProducts = productsByCategory[category];
 
           if (!categoryProducts || categoryProducts.length === 0) {
