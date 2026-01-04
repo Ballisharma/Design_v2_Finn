@@ -221,12 +221,42 @@ const SeaUrchinLP: React.FC = () => {
                                 <li className="flex items-center gap-2 font-bold text-gray-700 text-sm"><CheckCircle2 size={16} className="text-green-500" /> Romantic dinner setting</li>
                             </ul>
                         </div>
-                        <div className="order-1 md:order-2 relative">
-                            <img
-                                src="/images/uploaded_image_4_1767520309296.jpg"
-                                className="rounded-[1.5rem] shadow-xl w-full border-4 border-white"
-                                alt="Top view light pattern"
-                            />
+                        <div className="order-1 md:order-2 relative grid grid-cols-2 gap-3">
+                            {/* Main Glow Shot */}
+                            <div className="col-span-2 relative group overflow-hidden rounded-2xl shadow-xl">
+                                <img
+                                    src="/images/sea_urchin_pink_glow_physics_corrected_1767532268682.png"
+                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                    alt="Ambient Glow Pattern"
+                                />
+                                <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur px-3 py-1 rounded-lg text-white text-xs font-bold">
+                                    ✨ Light Pattern
+                                </div>
+                            </div>
+
+                            {/* Macro Texture */}
+                            <div className="relative group overflow-hidden rounded-2xl shadow-lg aspect-square">
+                                <img
+                                    src="/images/sea_urchin_pink_macro_corrected_1767532237235.png"
+                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                    alt="Natural Shell Texture"
+                                />
+                                <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur px-3 py-1 rounded-lg text-white text-xs font-bold">
+                                    🐚 Shell Detail
+                                </div>
+                            </div>
+
+                            {/* Base Detail */}
+                            <div className="relative group overflow-hidden rounded-2xl shadow-lg aspect-square">
+                                <img
+                                    src="/images/sea_urchin_green_base_detail_corrected_1767532251788.png"
+                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                                    alt="Wooden Base Construction"
+                                />
+                                <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur px-3 py-1 rounded-lg text-white text-xs font-bold">
+                                    🪵 Solid Wood
+                                </div>
+                            </div>
                         </div>
                     </div>
 
