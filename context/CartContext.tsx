@@ -4,7 +4,7 @@ import { useProducts } from './ProductContext';
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product, quantity?: number, selectedSize?: string) => void;
+  addToCart: (product: Product, quantity?: number, selectedSize?: string, source?: 'landing-page' | 'store' | 'other', landingPageName?: string) => void;
   removeFromCart: (cartId: string) => void;
   updateQuantity: (cartId: string, quantity: number) => void;
   clearCart: () => void;
@@ -34,7 +34,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.setItem('jumplings_cart', JSON.stringify(items));
   }, [items]);
 
-  const addToCart = (product: Product, quantity = 1, selectedSize?: string) => {
+  const addToCart = (product: Product, quantity = 1, selectedSize?: string, source: 'landing-page' | 'store' | 'other' = 'store', landingPageName?: string) => {
     if (!selectedSize) {
       alert("Please select a size.");
       return;
@@ -70,7 +70,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               ...product,
               cartId: `${product.id}-${selectedSize}-${Date.now()}`,
               quantity: remainingSpace,
-              selectedSize
+              selectedSize,
+              source,
+              landingPageName
             }];
           }
         }
@@ -87,7 +89,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         ...product,
         cartId: `${product.id}-${selectedSize}-${Date.now()}`,
         quantity,
-        selectedSize
+        selectedSize,
+        source,
+        landingPageName
       }];
     });
   };

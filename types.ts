@@ -26,4 +26,6 @@ export interface CartItem extends Product {
   cartId: string;
   quantity: number;
   selectedSize: string; // Size is now mandatory
+  source?: 'landing-page' | 'store' | 'other'; // Track where item was added from
+  landingPageName?: string; // e.g., "Sea Urchin Lamp", "Grip Socks"
 }

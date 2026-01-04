@@ -44,7 +44,7 @@ const GripSocksLP: React.FC = () => {
    const handleBuySingle = () => {
       const product = activeTab === 'black' ? blackSock : greySock;
       if (product) {
-         addToCart(product, 1, 'Free Size');
+         addToCart(product, 1, 'Free Size', 'landing-page', 'Grip Socks');
          showToast();
       }
    };
@@ -479,13 +479,13 @@ const GripSocksLP: React.FC = () => {
                      {/* Dynamic Product Image */}
                      <div className="w-full aspect-square bg-gray-50 rounded-2xl mb-6 overflow-hidden border border-gray-100 relative group">
                         <img
-                         {...getOptimizedImageProps(
-                            activeTab === 'black' ? blackImg : greyImg,
-                            'Selected Sock',
-                            { sizes: '(max-width: 768px) 100vw, 33vw' }
-                         )}
-                         className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                      />
+                           {...getOptimizedImageProps(
+                              activeTab === 'black' ? blackImg : greyImg,
+                              'Selected Sock',
+                              { sizes: '(max-width: 768px) 100vw, 33vw' }
+                           )}
+                           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                        />
                      </div>
 
                      <div className="bg-gray-50 rounded-2xl p-4 mb-4 text-center border border-gray-100">
@@ -553,31 +553,31 @@ const GripSocksLP: React.FC = () => {
                   <div className="bg-gradient-to-b from-funky-blue to-blue-600 p-6 rounded-[2rem] border border-white/20 shadow-2xl text-white flex flex-col hover:-translate-y-1 transition-transform duration-300">
                      {/* Grid of 4 Socks */}
                      <div className="grid grid-cols-2 gap-3 mb-6">
-                      <img
-                         {...getOptimizedImageProps(blackImg, 'Black Sock', {
-                            sizes: '(max-width: 768px) 45vw, 12vw'
-                         })}
-                         className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
-                      />
-                      <img
-                         {...getOptimizedImageProps(greyImg, 'Grey Sock', {
-                            sizes: '(max-width: 768px) 45vw, 12vw'
-                         })}
-                         className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
-                      />
-                      <img
-                         {...getOptimizedImageProps(greyImg, 'Grey Sock', {
-                            sizes: '(max-width: 768px) 45vw, 12vw'
-                         })}
-                         className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
-                      />
-                      <img
-                         {...getOptimizedImageProps(blackImg, 'Black Sock', {
-                            sizes: '(max-width: 768px) 45vw, 12vw'
-                         })}
-                         className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
-                      />
-                   </div>
+                        <img
+                           {...getOptimizedImageProps(blackImg, 'Black Sock', {
+                              sizes: '(max-width: 768px) 45vw, 12vw'
+                           })}
+                           className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
+                        />
+                        <img
+                           {...getOptimizedImageProps(greyImg, 'Grey Sock', {
+                              sizes: '(max-width: 768px) 45vw, 12vw'
+                           })}
+                           className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
+                        />
+                        <img
+                           {...getOptimizedImageProps(greyImg, 'Grey Sock', {
+                              sizes: '(max-width: 768px) 45vw, 12vw'
+                           })}
+                           className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
+                        />
+                        <img
+                           {...getOptimizedImageProps(blackImg, 'Black Sock', {
+                              sizes: '(max-width: 768px) 45vw, 12vw'
+                           })}
+                           className="rounded-2xl border-2 border-white/20 aspect-square object-cover"
+                        />
+                     </div>
 
                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-4 text-center border border-white/20">
                         <h3 className="font-heading font-black text-2xl text-white mb-1">THE SQUAD</h3>

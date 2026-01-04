@@ -3,7 +3,7 @@ import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import { Star, ArrowRight, ShieldCheck, Sun, Leaf, Gift, Truck, ChevronDown, Plus, Minus, CheckCircle2, Flame, Trophy, Package, Heart, Instagram } from 'lucide-react';
 
-const SeaUrchinLP: React.FC = () => {
+const SeaUrchinLP_HighConvert: React.FC = () => {
     const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
     const [timeLeft, setTimeLeft] = useState(15 * 60);
@@ -85,7 +85,7 @@ const SeaUrchinLP: React.FC = () => {
             {/* Urgency Bar */}
             <div className="sticky top-0 z-50 bg-gradient-to-r from-orange-500 to-red-500 text-white text-center py-2 px-4 text-xs font-bold flex justify-center items-center gap-2 shadow-lg">
                 <Flame size={14} className="animate-pulse" />
-                <span>Only <span className="underline">12 Left</span> | Ends: <span className="bg-white/20 px-1.5 py-0.5 rounded font-mono">{formatTime(timeLeft)}</span></span>
+                <span><span className="underline">Restock Batch #4</span> Almost Gone | Next Drop: March 2026</span>
             </div>
 
             {/* Hero Section */}
@@ -136,16 +136,16 @@ const SeaUrchinLP: React.FC = () => {
                     {/* Text (Mobile: Second) */}
                     <div className="space-y-5 text-center lg:text-left order-2 lg:order-1 pt-2 lg:pt-0">
                         <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide">
-                            <CheckCircle2 size={12} /> New Colors Available
+                            <CheckCircle2 size={12} /> Viral "Dopamine Decor" Essential
                         </div>
 
                         <h1 className="font-heading font-black text-4xl md:text-5xl lg:text-7xl leading-[1.1] text-gray-900 tracking-tight">
-                            The Glow That <br className="hidden md:block" />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">Steals The Show.</span>
+                            Stop Coming Home to <br className="hidden md:block" />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">Harsh Lighting.</span>
                         </h1>
 
                         <p className="text-gray-600 font-medium max-w-md mx-auto lg:mx-0 leading-relaxed text-sm md:text-lg">
-                            Viral Sea Urchin Lamp. Now in <span className="text-pink-500 font-bold">Coral Pink</span> & <span className="text-green-600 font-bold">Ocean Green</span>.
+                            Switch on <span className="text-orange-500 font-bold">Golden Hour</span>. Handcrafted from real, sustainable shells. Designed to calm your mind and cozy up your sanctuary instantly.
                         </p>
 
                         <div className="flex flex-col gap-4 justify-center lg:justify-start items-center pt-2">
@@ -153,7 +153,7 @@ const SeaUrchinLP: React.FC = () => {
                                 onClick={scrollToOffer}
                                 className="w-full md:w-auto px-10 py-4 bg-gray-900 text-white font-bold text-lg rounded-full shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 group"
                             >
-                                Pick Your Color <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+                                Get The Viral Glow <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
                             </button>
 
                             <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100 scale-90 origin-center md:scale-100">
@@ -168,7 +168,7 @@ const SeaUrchinLP: React.FC = () => {
                                     <div className="flex text-amber-500 text-[10px]">
                                         {[1, 2, 3, 4, 5].map(i => <Star key={i} size={10} fill="currentColor" />)}
                                     </div>
-                                    <span className="text-xs font-bold text-gray-600">Loved by 1,200+</span>
+                                    <span className="text-xs font-bold text-gray-600">Why 15,000+ Rooms Glow</span>
                                 </div>
                             </div>
                         </div>
@@ -179,7 +179,7 @@ const SeaUrchinLP: React.FC = () => {
             {/* Social Proof - Horizontal Scroll on Mobile */}
             <section className="bg-white py-10 border-b border-gray-100">
                 <div className="max-w-7xl mx-auto pl-4 md:px-6">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 text-center md:text-left">Trending on Home Decor Feeds</p>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 text-center md:text-left">The Internet's New Obsession</p>
 
                     {/* Horizontal Scroll Container */}
                     <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mr-4 pr-8 md:grid md:grid-cols-4 md:mr-0 md:pr-0 md:pb-0 scrollbar-hide">
@@ -213,14 +213,14 @@ const SeaUrchinLP: React.FC = () => {
                             <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center text-pink-500 mb-4">
                                 <Sun size={24} />
                             </div>
-                            <h3 className="font-heading font-black text-3xl mb-3 text-gray-900">Magical Ambient Light</h3>
+                            <h3 className="font-heading font-black text-3xl mb-3 text-gray-900">Your Daily Dose of Serotonin</h3>
                             <p className="text-gray-600 leading-relaxed mb-4 text-sm md:text-base">
-                                Unlike harsh LED strips, this lamp emits a diffused, amber glow. It filters through the natural pores of the sea urchin shell, creating a mesmerizing pattern on your walls.
+                                Harsh LEDs increase cortisol. Our natural shell diffusion mimics the calming 2700K spectrum of a sunset, signaling your brain that it's finally time to decompress.
                             </p>
                             <ul className="space-y-2">
-                                <li className="flex items-center gap-2 font-bold text-gray-700 text-sm"><CheckCircle2 size={16} className="text-green-500" /> Perfect for reading nooks</li>
-                                <li className="flex items-center gap-2 font-bold text-gray-700 text-sm"><CheckCircle2 size={16} className="text-green-500" /> Calming night light</li>
-                                <li className="flex items-center gap-2 font-bold text-gray-700 text-sm"><CheckCircle2 size={16} className="text-green-500" /> Romantic dinner setting</li>
+                                <li className="flex items-center gap-2 font-bold text-gray-700 text-sm"><CheckCircle2 size={16} className="text-green-500" /> ❌ No Blue Light (Sleep Friendly)</li>
+                                <li className="flex items-center gap-2 font-bold text-gray-700 text-sm"><CheckCircle2 size={16} className="text-green-500" /> ✅ Instant "Cozy Mode" Switch</li>
+                                <li className="flex items-center gap-2 font-bold text-gray-700 text-sm"><CheckCircle2 size={16} className="text-green-500" /> 🕯️ Flameless Candle Aesthetic</li>
                             </ul>
                         </div>
                         <div className="order-1 md:order-2 relative grid grid-cols-2 gap-3">
@@ -232,7 +232,7 @@ const SeaUrchinLP: React.FC = () => {
                                     alt="Ambient Glow Pattern"
                                 />
                                 <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur px-3 py-1 rounded-lg text-white text-xs font-bold">
-                                    ✨ Light Pattern
+                                    ✨ Anxiety Relief
                                 </div>
                             </div>
 
@@ -244,7 +244,7 @@ const SeaUrchinLP: React.FC = () => {
                                     alt="Natural Shell Texture"
                                 />
                                 <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur px-3 py-1 rounded-lg text-white text-xs font-bold">
-                                    🐚 Shell Detail
+                                    🐚 Real Shell
                                 </div>
                             </div>
 
@@ -269,10 +269,10 @@ const SeaUrchinLP: React.FC = () => {
                         <div className="space-y-6 md:space-y-8 order-1 md:order-2">
                             <div>
                                 <h3 className="font-heading font-black text-3xl md:text-5xl text-gray-900 leading-tight mb-4">
-                                    Choose Your <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">Atmosphere.</span>
+                                    Curate Your <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">Safe Space.</span>
                                 </h3>
                                 <p className="text-gray-600 text-base md:text-lg leading-relaxed">
-                                    Each color tells a different story. Select a variant below to see the transformation.
+                                    Every color shifts the energy of the room. Choose your sanctuary's new mood below.
                                 </p>
                             </div>
 
@@ -289,7 +289,7 @@ const SeaUrchinLP: React.FC = () => {
                                         </div>
                                         <div>
                                             <h4 className={`font-bold text-base md:text-lg ${selectedColor === 'Pink' ? 'text-pink-900' : 'text-gray-900'}`}>Coral Pink</h4>
-                                            <p className="text-xs md:text-sm text-gray-500">Soft, romantic amber glow.</p>
+                                            <p className="text-xs md:text-sm text-gray-500">Dreamy, romantic, fairytale vibes.</p>
                                         </div>
                                     </div>
                                     <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center ${selectedColor === 'Pink' ? 'border-pink-500 bg-pink-500' : 'border-gray-300'}`}>
@@ -308,7 +308,7 @@ const SeaUrchinLP: React.FC = () => {
                                         </div>
                                         <div>
                                             <h4 className={`font-bold text-base md:text-lg ${selectedColor === 'Green' ? 'text-green-900' : 'text-gray-900'}`}>Ocean Green</h4>
-                                            <p className="text-xs md:text-sm text-gray-500">Fresh, calming nature tones.</p>
+                                            <p className="text-xs md:text-sm text-gray-500">Grounded, forest-bathing calmness.</p>
                                         </div>
                                     </div>
                                     <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center ${selectedColor === 'Green' ? 'border-green-500 bg-green-500' : 'border-gray-300'}`}>
@@ -331,7 +331,7 @@ const SeaUrchinLP: React.FC = () => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                                 <div className="absolute bottom-6 left-6 text-white">
                                     <p className="text-xs font-bold uppercase tracking-widest mb-1 opacity-80">Currently Viewing</p>
-                                    <h4 className="text-2xl font-black">{selectedColor} Mood</h4>
+                                    <h4 className="text-2xl font-black">{selectedColor} Sanctuary</h4>
                                 </div>
                             </div>
                         </div>
@@ -347,8 +347,8 @@ const SeaUrchinLP: React.FC = () => {
                     {/* Header */}
                     <div className="text-center mb-10">
                         <span className="text-pink-500 font-bold tracking-widest text-xs uppercase mb-2 block">As Seen On Social</span>
-                        <h2 className="font-black text-3xl md:text-5xl text-gray-900 mb-4">Going Viral</h2>
-                        <p className="text-gray-500 max-w-md mx-auto">See why thousands are obsessed with this glow.</p>
+                        <h2 className="font-black text-3xl md:text-5xl text-gray-900 mb-4">Why It's Everywhere</h2>
+                        <p className="text-gray-500 max-w-md mx-auto">See why thousands are replacing their harsh lamps with this glow.</p>
                     </div>
 
                     {/* 1. VIDEO THUMBNAILS (Reels/TikToks) */}
@@ -383,7 +383,7 @@ const SeaUrchinLP: React.FC = () => {
                     {/* 2. AUTHENTIC UGC GRID */}
                     <div className="flex items-center gap-4 mb-8 mt-12">
                         <div className="h-px bg-gray-100 flex-1"></div>
-                        <h2 className="text-xl font-bold text-gray-400 uppercase tracking-widest text-xs">Community Snaps</h2>
+                        <h2 className="text-xl font-bold text-gray-400 uppercase tracking-widest text-xs">Community Sanctuaries</h2>
                         <div className="h-px bg-gray-100 flex-1"></div>
                     </div>
 
@@ -423,7 +423,7 @@ const SeaUrchinLP: React.FC = () => {
                 <div className="max-w-6xl mx-auto bg-white rounded-[2.5rem] p-6 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-orange-100/50 relative">
                     {/* Floating Badge */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-2 rounded-full font-bold shadow-lg text-sm md:text-base flex items-center gap-2 animate-pulse">
-                        <Flame size={16} fill="white" /> Selling Fast! 7 Lamps remaining
+                        <Flame size={16} fill="white" /> Batch Selling Out: 7 Left
                     </div>
 
                     <div className="grid lg:grid-cols-12 gap-10 mt-6">
@@ -485,7 +485,7 @@ const SeaUrchinLP: React.FC = () => {
                                     Handcrafted Sea Urchin Lamp
                                 </h2>
                                 <p className="text-gray-500 text-sm md:text-base mb-4">
-                                    Artisan-made from real natural shells. Creates a warm, soothing ambiance perfect for relaxation.
+                                    Ethically sourced shell. Artisan made. The perfect nightly ritual to signal your brain it's time to rest.
                                 </p>
 
                                 {/* Price Block */}
@@ -505,7 +505,7 @@ const SeaUrchinLP: React.FC = () => {
                                 {/* Variant Selector */}
                                 <div>
                                     <div className="flex justify-between items-center mb-3">
-                                        <span className="font-bold text-gray-900 text-sm">Select Edition</span>
+                                        <span className="font-bold text-gray-900 text-sm">Select Your Vibe</span>
                                         <Link to="/contact" className="text-xs text-orange-500 font-bold underline">Need help deciding?</Link>
                                     </div>
                                     <div className="grid grid-cols-2 gap-3">
@@ -523,10 +523,10 @@ const SeaUrchinLP: React.FC = () => {
                                                     <span className="font-bold text-gray-900 text-sm">Coral Pink</span>
                                                     {selectedColor === 'Pink' && <CheckCircle2 size={16} fill="black" className="text-white" />}
                                                 </div>
-                                                <span className="text-xs text-gray-500">Warm & Romantic</span>
+                                                <span className="text-xs text-gray-500">Intimacy & Warmth</span>
                                             </div>
                                             <div className="absolute -top-2.5 left-4 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-                                                BEST SELLER
+                                                MOST VIRAL
                                             </div>
                                         </button>
 
@@ -544,7 +544,7 @@ const SeaUrchinLP: React.FC = () => {
                                                     <span className="font-bold text-gray-900 text-sm">Ocean Green</span>
                                                     {selectedColor === 'Green' && <CheckCircle2 size={16} fill="black" className="text-white" />}
                                                 </div>
-                                                <span className="text-xs text-gray-500">Fresh & Calming</span>
+                                                <span className="text-xs text-gray-500">Focus & Calm</span>
                                             </div>
                                         </button>
                                     </div>
@@ -570,14 +570,14 @@ const SeaUrchinLP: React.FC = () => {
                                     onClick={handleAddToCart}
                                     className="w-full py-5 bg-gray-900 text-white font-bold text-xl rounded-xl shadow-xl hover:bg-black hover:shadow-2xl active:scale-[0.98] transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
                                 >
-                                    <span className="relative z-10 transition-transform group-hover:-translate-y-0.5">Add to Cart - ₹{1299}</span>
+                                    <span className="relative z-10 transition-transform group-hover:-translate-y-0.5">Secure My Lamp - ₹1,299</span>
                                     <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                                     <ArrowRight className="group-hover:translate-x-1 transition-transform relative z-10" />
                                 </button>
 
                                 <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
                                     <ShieldCheck size={14} className="text-green-600" />
-                                    <span>30-Day Money Back Guarantee</span>
+                                    <span>30-Day Happiness Guarantee</span>
                                     <span className="h-4 w-px bg-gray-300 mx-2"></span>
                                     <span>Secure SSL Checkout</span>
                                 </div>
@@ -618,4 +618,4 @@ const SeaUrchinLP: React.FC = () => {
     );
 };
 
-export default SeaUrchinLP;
+export default SeaUrchinLP_HighConvert;
