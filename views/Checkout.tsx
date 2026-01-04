@@ -2,9 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductContext';
 import { useUser } from '../context/UserContext';
-import { ArrowLeft, CreditCard, Truck, ShieldCheck, Gift } from 'lucide-react';
+import { ArrowLeft, CreditCard, Truck, ShieldCheck, Gift, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createWooOrder, updateWooOrder, RAZORPAY_KEY_ID } from '../utils/wordpress';
+import {
+  INDIAN_STATES,
+  validatePincode,
+  validatePhone,
+  validateEmail,
+  fetchPincodeDetails
+} from '../utils/indianAddressValidation';
 
 const Checkout: React.FC = () => {
   const { items, subtotal, shippingCost, cartTotal, clearCart } = useCart();
@@ -54,8 +61,67 @@ const Checkout: React.FC = () => {
     );
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomer({ ...customer, [e.target.name]: e.target.value });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setCustomer({ ...customer, [name]: value });
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  // Validate individual field
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'email':
+        return !validateEmail(value) ? 'Please enter a valid email address' : '';
+      case 'phone':
+        return !validatePhone(value) ? 'Enter valid 10-digit mobile number (6/7/8/9 XXXXX XXXXX)' : '';
+      case 'pincode':
+        return !validatePincode(value) ? 'Enter valid 6-digit PIN code' : '';
+      case 'firstName':
+      case 'lastName':
+      case 'address':
+      case 'city':
+      case 'state':
+        return !value.trim() ? 'This field is required' : '';
+      default:
+        return '';
+    }
+  };
+
+  // Handle field blur for validation
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
+  };
+
+  // Handle PIN code with auto-fill
+  const handlePincodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const pin = e.target.value.replace(/\D/g, '').slice(0, 6);
+    setCustomer(prev => ({ ...prev, pincode: pin }));
+
+    if (errors.pincode) {
+      setErrors(prev => ({ ...prev, pincode: '' }));
+    }
+
+    // Auto-fill city/state if valid PIN
+    if (validatePincode(pin)) {
+      setIsPinLoading(true);
+      const details = await fetchPincodeDetails(pin);
+      setIsPinLoading(false);
+
+      if (details) {
+        setCustomer(prev => ({
+          ...prev,
+          city: details.city,
+          state: details.state
+        }));
+        // Clear city/state errors if auto-filled
+        setErrors(prev => ({ ...prev, city: '', state: '' }));
+      }
+    }
   };
 
   // Pre-load Razorpay SDK
@@ -71,6 +137,22 @@ const Checkout: React.FC = () => {
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate all fields before submitting
+    const newErrors: Record<string, string> = {};
+    Object.keys(customer).forEach(key => {
+      const error = validateField(key, customer[key as keyof typeof customer]);
+      if (error) newErrors[key] = error;
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // Scroll to first error
+      const firstErrorField = Object.keys(newErrors)[0];
+      document.getElementsByName(firstErrorField)[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
     setIsProcessing(true);
     console.log("💳 Processing Order...");
 
@@ -185,11 +267,42 @@ const Checkout: React.FC = () => {
               <form id="checkout-form" onSubmit={handlePayment} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
                   <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest ml-1">Email Address</label>
-                  <input name="email" value={customer.email} onChange={handleInputChange} required type="email" placeholder="you@example.com" className="w-full bg-white border border-gray-100 focus:border-funky-dark focus:ring-4 focus:ring-funky-dark/5 rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm" />
+                  <div className="relative">
+                    <input
+                      name="email"
+                      value={customer.email}
+                      onChange={handleInputChange}
+                      onBlur={handleBlur}
+                      required
+                      type="email"
+                      placeholder="you@example.com"
+                      className={`w-full bg-white border ${errors.email ? 'border-red-300 focus:border-red-500' : 'border-gray-100 focus:border-funky-dark'} focus:ring-4 ${errors.email ? 'focus:ring-red-100' : 'focus:ring-funky-dark/5'} rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm`}
+                    />
+                    {!errors.email && customer.email && validateEmail(customer.email) && (
+                      <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500" size={20} />
+                    )}
+                  </div>
+                  {errors.email && <p className="text-xs text-red-500 mt-1 ml-1 flex items-center gap-1"><AlertCircle size={12} />{errors.email}</p>}
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest ml-1">Phone Number</label>
-                  <input name="phone" value={customer.phone} onChange={handleInputChange} required type="tel" placeholder="+91 98765 43210" className="w-full bg-white border border-gray-100 focus:border-funky-dark focus:ring-4 focus:ring-funky-dark/5 rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm" />
+                  <div className="relative">
+                    <input
+                      name="phone"
+                      value={customer.phone}
+                      onChange={handleInputChange}
+                      onBlur={handleBlur}
+                      required
+                      type="tel"
+                      placeholder="98765 43210"
+                      maxLength={10}
+                      className={`w-full bg-white border ${errors.phone ? 'border-red-300 focus:border-red-500' : 'border-gray-100 focus:border-funky-dark'} focus:ring-4 ${errors.phone ? 'focus:ring-red-100' : 'focus:ring-funky-dark/5'} rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm`}
+                    />
+                    {!errors.phone && customer.phone && validatePhone(customer.phone) && (
+                      <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500" size={20} />
+                    )}
+                  </div>
+                  {errors.phone && <p className="text-xs text-red-500 mt-1 ml-1 flex items-center gap-1"><AlertCircle size={12} />{errors.phone}</p>}
                 </div>
                 <div>
                   <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest ml-1">First Name</label>
@@ -203,17 +316,78 @@ const Checkout: React.FC = () => {
                   <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest ml-1">Address</label>
                   <input name="address" value={customer.address} onChange={handleInputChange} required type="text" placeholder="123 Happy Feet St" className="w-full bg-white border border-gray-100 focus:border-funky-dark focus:ring-4 focus:ring-funky-dark/5 rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm" />
                 </div>
+                <div className="md:col-span-2">
+                  <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest ml-1">PIN Code <span className="text-gray-300">(will auto-fill city & state)</span></label>
+                  <div className="relative">
+                    <input
+                      name="pincode"
+                      value={customer.pincode}
+                      onChange={handlePincodeChange}
+                      onBlur={handleBlur}
+                      required
+                      type="text"
+                      placeholder="400001"
+                      maxLength={6}
+                      className={`w-full bg-white border ${errors.pincode ? 'border-red-300 focus:border-red-500' : 'border-gray-100 focus:border-funky-dark'} focus:ring-4 ${errors.pincode ? 'focus:ring-red-100' : 'focus:ring-funky-dark/5'} rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm`}
+                    />
+                    {isPinLoading && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-funky-blue">
+                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-funky-blue border-t-transparent"></div>
+                      </div>
+                    )}
+                    {!isPinLoading && !errors.pincode && customer.pincode && validatePincode(customer.pincode) && (
+                      <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500" size={20} />
+                    )}
+                  </div>
+                  {errors.pincode && <p className="text-xs text-red-500 mt-1 ml-1 flex items-center gap-1"><AlertCircle size={12} />{errors.pincode}</p>}
+                  {!errors.pincode && <p className="text-[10px] text-gray-400 mt-1 ml-1">6-digit PIN code</p>}
+                </div>
                 <div>
                   <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest ml-1">City</label>
-                  <input name="city" value={customer.city} onChange={handleInputChange} required type="text" placeholder="Sockville" className="w-full bg-white border border-gray-100 focus:border-funky-dark focus:ring-4 focus:ring-funky-dark/5 rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm" />
+                  <div className="relative">
+                    <input
+                      name="city"
+                      value={customer.city}
+                      onChange={handleInputChange}
+                      onBlur={handleBlur}
+                      required
+                      type="text"
+                      placeholder="Mumbai"
+                      className={`w-full bg-white border ${errors.city ? 'border-red-300 focus:border-red-500' : 'border-gray-100 focus:border-funky-dark'} focus:ring-4 ${errors.city ? 'focus:ring-red-100' : 'focus:ring-funky-dark/5'} rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm`}
+                    />
+                    {!errors.city && customer.city && (
+                      <CheckCircle2 className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500" size={20} />
+                    )}
+                  </div>
+                  {errors.city && <p className="text-xs text-red-500 mt-1 ml-1 flex items-center gap-1"><AlertCircle size={12} />{errors.city}</p>}
                 </div>
                 <div>
                   <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest ml-1">State</label>
-                  <input name="state" value={customer.state} onChange={handleInputChange} required type="text" placeholder="State" className="w-full bg-white border border-gray-100 focus:border-funky-dark focus:ring-4 focus:ring-funky-dark/5 rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm" />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest ml-1">PIN Code</label>
-                  <input name="pincode" value={customer.pincode} onChange={handleInputChange} required type="text" placeholder="100001" className="w-full bg-white border border-gray-100 focus:border-funky-dark focus:ring-4 focus:ring-funky-dark/5 rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all placeholder:text-gray-200 text-lg shadow-sm" />
+                  <div className="relative">
+                    <select
+                      name="state"
+                      value={customer.state}
+                      onChange={handleInputChange}
+                      onBlur={handleBlur}
+                      required
+                      className={`w-full bg-white border ${errors.state ? 'border-red-300 focus:border-red-500' : 'border-gray-100 focus:border-funky-dark'} focus:ring-4 ${errors.state ? 'focus:ring-red-100' : 'focus:ring-funky-dark/5'} rounded-2xl px-6 py-4 md:py-5 font-bold outline-none transition-all text-lg shadow-sm appearance-none`}
+                    >
+                      <option value="">Select State</option>
+                      {INDIAN_STATES.map(state => (
+                        <option key={state} value={state}>{state}</option>
+                      ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                      {!errors.state && customer.state ? (
+                        <CheckCircle2 className="text-green-500" size={20} />
+                      ) : (
+                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                  {errors.state && <p className="text-xs text-red-500 mt-1 ml-1 flex items-center gap-1"><AlertCircle size={12} />{errors.state}</p>}
                 </div>
               </form>
             </section>
