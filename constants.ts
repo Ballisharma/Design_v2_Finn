@@ -10,6 +10,7 @@ export const PRODUCTS: Product[] = [
     price: 299,
     currency: 'INR',
     category: 'Grip Socks',
+    categories: ['Grip Socks', 'Best Seller', 'Yoga'],
     images: [
       'https://images.unsplash.com/photo-1596707328151-61472554d32e?q=80&w=1000&auto=format&fit=crop', // Placeholder until user uploads
       'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=1000&auto=format&fit=crop',
@@ -31,6 +32,7 @@ export const PRODUCTS: Product[] = [
     price: 299,
     currency: 'INR',
     category: 'Grip Socks',
+    categories: ['Grip Socks'],
     images: [
       'https://images.unsplash.com/photo-1621213233215-0b043b23c21c?q=80&w=1000&auto=format&fit=crop', // Placeholder until user uploads
     ],
@@ -50,6 +52,7 @@ export const PRODUCTS: Product[] = [
     price: 399,
     currency: 'INR',
     category: 'Crew',
+    categories: ['Crew', 'Patterned'],
     images: [
       'https://images.unsplash.com/photo-1631557022137-b2eb6a6d653a?q=80&w=1000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1586350971171-84552199db3e?q=80&w=1000&auto=format&fit=crop',
@@ -72,6 +75,7 @@ export const PRODUCTS: Product[] = [
     price: 349,
     currency: 'INR',
     category: 'Ankle',
+    categories: ['Ankle', 'Patterned'],
     images: [
       'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=1000&auto=format&fit=crop',
@@ -92,6 +96,7 @@ export const PRODUCTS: Product[] = [
     price: 449,
     currency: 'INR',
     category: 'Crew',
+    categories: ['Crew', 'Neon'],
     images: [
       'https://images.unsplash.com/photo-1582966772652-132d30718c34?q=80&w=1000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1533659828870-95ee305cee3e?q=80&w=1000&auto=format&fit=crop',
@@ -114,6 +119,7 @@ export const PRODUCTS: Product[] = [
     price: 399,
     currency: 'INR',
     category: 'Ankle',
+    categories: ['Ankle', 'Foodie'],
     images: [
       'https://images.unsplash.com/photo-1628153303724-c155d81b2413?q=80&w=1000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1620799140408-ed5341cd2431?q=80&w=1000&auto=format&fit=crop',
@@ -134,6 +140,7 @@ export const PRODUCTS: Product[] = [
     price: 499,
     currency: 'INR',
     category: 'Crew',
+    categories: ['Crew', 'Patterned'],
     images: [
       'https://images.unsplash.com/photo-1588640751993-8d6556b68a86?q=80&w=1000&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1504198358623-6e7f1695cd3f?q=80&w=1000&auto=format&fit=crop',

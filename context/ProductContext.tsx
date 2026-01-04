@@ -97,9 +97,19 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
       getMergedProducts().then((mergedProducts: Product[]) => {
         if (mergedProducts.length > 0) {
           setProducts(mergedProducts);
-          // Extract unique categories from products
-          const wpCategories = Array.from(new Set(mergedProducts.map((p: Product) => p.category)));
-          if (wpCategories.length > 0) setCategories(wpCategories as string[]);
+          // Extract unique categories from products (checking all assigned categories)
+          const allCategories = new Set<string>();
+          mergedProducts.forEach((p: Product) => {
+            if (p.categories && p.categories.length > 0) {
+              p.categories.forEach(c => allCategories.add(c));
+            } else if (p.category) {
+              allCategories.add(p.category);
+            }
+          });
+
+          if (allCategories.size > 0) {
+            setCategories(Array.from(allCategories));
+          }
         } else {
           console.warn("No products found in WordPress or API failed. Using local data.");
         }

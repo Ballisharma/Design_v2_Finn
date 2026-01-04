@@ -15,7 +15,9 @@ const AllProducts: React.FC = () => {
     const grouped: Record<string, typeof products> = {};
 
     categories.forEach(category => {
-      grouped[category] = products.filter(p => p.category === category);
+      grouped[category] = products.filter(p =>
+        p.categories ? p.categories.includes(category) : p.category === category
+      );
     });
 
     return grouped;

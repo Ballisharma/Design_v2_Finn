@@ -11,7 +11,8 @@ export interface Product {
   description: string;
   price: number;
   currency: string;
-  category: string;
+  category: string; // Primary category for display
+  categories: string[]; // All assigned categories from WP
   images: string[];
   tags: string[];
   isNew?: boolean;
