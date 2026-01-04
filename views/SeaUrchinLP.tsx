@@ -22,10 +22,10 @@ const SeaUrchinLP: React.FC = () => {
             '/images/sea_urchin_pink_mirror_selfie_ugc_1767532909153.png'
         ],
         Green: [
-            '/images/sea_urchin_green_minimalist_desk_1767531261509.png',
             '/images/sea_urchin_green_hand_holding_daylight_1767532714940.png',
             '/images/sea_urchin_green_base_detail_corrected_1767532251788.png',
-            '/images/sea_urchin_green_ugc_bedroom_messy_1767531310351.png'
+            '/images/sea_urchin_green_ugc_bedroom_messy_1767531310351.png',
+            '/images/sea_urchin_green_minimalist_desk_1767531261509.png'
         ]
     };
 
