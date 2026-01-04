@@ -496,9 +496,9 @@ const Checkout: React.FC = () => {
                       <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-sm leading-tight mb-1">{item.name}</h3>
-                      <p className="text-xs text-gray-500">Qty: {item.quantity} · {item.selectedSize}</p>
-                      <p className="font-bold text-sm mt-1">₹{item.price * item.quantity}</p>
+                      <h3 className="font-black text-base leading-tight mb-1">{item.name}</h3>
+                      <p className="text-sm text-gray-500 mb-2">Qty: {item.quantity} · {item.selectedSize}</p>
+                      <p className="font-black text-xl text-blue-600">₹{item.price * item.quantity}</p>
                     </div>
                   </div>
                 ))}
