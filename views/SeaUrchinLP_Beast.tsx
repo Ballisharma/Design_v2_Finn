@@ -21,10 +21,10 @@ const DISCOUNT = 62;
 
 // Generated Asset Paths (Beast Mode)
 const IMAGES = {
-    hero: '/Users/shyamkarnani/.gemini/antigravity/brain/8757db46-4867-42ca-8beb-1ab81bd49fcf/sea_urchin_hero_beast_1767599539073.png',
-    texture: '/Users/shyamkarnani/.gemini/antigravity/brain/8757db46-4867-42ca-8beb-1ab81bd49fcf/sea_urchin_texture_detail_1767599556185.png',
-    lifestyle: '/Users/shyamkarnani/.gemini/antigravity/brain/8757db46-4867-42ca-8beb-1ab81bd49fcf/sea_urchin_lifestyle_cozy_1767599572369.png',
-    tech: '/Users/shyamkarnani/.gemini/antigravity/brain/8757db46-4867-42ca-8beb-1ab81bd49fcf/sea_urchin_exploded_diagram_1767599591066.png'
+    hero: '/images/beast/hero.png',
+    texture: '/images/beast/texture.png',
+    lifestyle: '/images/beast/lifestyle.png',
+    tech: '/images/beast/tech.png'
 };
 
 const SeaUrchinLP_Beast: React.FC = () => {
