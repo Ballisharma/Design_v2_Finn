@@ -4,6 +4,8 @@ import { useCart } from '../context/CartContext';
 import { Star, ShieldCheck, Zap, Anchor, ChevronDown, Check, ArrowRight, Flame, Trophy, Sparkles, X, Package, Leaf, Footprints, Microscope, Dumbbell, Activity, Gem, Droplets, Layers, Shirt, Maximize, Wind, Feather, CheckCircle2, Truck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getOptimizedImageProps } from '../utils/imageOptimization';
+import SEO from '../components/SEO';
+import { generateProductSchema, generateBreadcrumbSchema } from '../utils/structuredData';
 
 const GripSocksLP: React.FC = () => {
    const { products } = useProducts();
@@ -71,8 +73,38 @@ const GripSocksLP: React.FC = () => {
       setTimeout(() => banner.remove(), 2500);
    };
 
+   // Structured data for grip socks landing page
+   const structuredData = blackSock ? [
+      generateProductSchema({
+         id: blackSock.id,
+         name: 'Premium Grip Socks for Yoga & Pilates',
+         description: 'Ultra-cushioned grip socks with Terry Loop Tech to absorb sweat and prevent slips. Perfect for yoga, pilates, barre, and dance.',
+         price: 299,
+         currency: 'INR',
+         image: blackImg,
+         category: 'Grip Socks',
+         brand: 'Jumplings',
+         sku: blackSock.id,
+         stock: blackSock.stock,
+         rating: 4.9,
+         reviewCount: 200,
+      }),
+      generateBreadcrumbSchema([
+         { name: 'Home', url: 'https://jumplings.in/' },
+         { name: 'Grip Socks', url: 'https://jumplings.in/grip-socks' }
+      ])
+   ] : [];
+
    return (
       <div className="animate-fade-in bg-white min-h-screen font-body text-funky-dark overflow-x-hidden">
+         <SEO
+            title="Premium Grip Socks for Yoga & Pilates | Jumplings - Anti-Slip, Terry Cushioned"
+            description="Shop India's best grip socks with Nano-Grip™ technology. Terry loop cushioning, anti-slip silicone nodes. Perfect for yoga, pilates, barre. Free shipping. 30-day guarantee."
+            keywords="grip socks, yoga socks, pilates socks, anti-slip socks, non-slip socks, barre socks, grip socks india, best grip socks, yoga grip socks"
+            image={blackImg}
+            type="product"
+            structuredData={structuredData}
+         />
 
          {/* 1. URGENCY BAR */}
          <div className="relative z-30 bg-funky-pink text-white text-center py-2.5 px-4 text-xs font-bold font-mono tracking-widest uppercase shadow-sm flex justify-center items-center gap-3">

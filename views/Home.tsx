@@ -8,6 +8,8 @@ import ProductCard from '../components/ProductCard';
 import SustainabilitySection from '../components/SustainabilitySection';
 import HappyFeetSection from '../components/HappyFeetSection';
 import QuizSection from '../components/QuizSection';
+import SEO from '../components/SEO';
+import { generateOrganizationSchema, generateWebsiteSchema, generateBreadcrumbSchema } from '../utils/structuredData';
 import { useProducts } from '../context/ProductContext';
 import { Smile, ShieldCheck, Zap, Star, Anchor, Activity, Wind, Quote } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -25,8 +27,24 @@ const fadeInUp = {
 const Home: React.FC = () => {
   const { products, categories } = useProducts();
 
+  // Structured data for homepage
+  const structuredData = [
+    generateOrganizationSchema(),
+    generateWebsiteSchema(),
+    generateBreadcrumbSchema([
+      { name: 'Home', url: 'https://jumplings.in/' }
+    ])
+  ];
+
   return (
     <div className="animate-fade-in bg-white">
+      <SEO
+        title="Jumplings | Premium Funky Socks & Accessories Made in India"
+        description="Discover Jumplings' collection of premium grip socks, yoga socks, and funky accessories. Designed for comfort and style. Made in India with organic materials. Shop now!"
+        keywords="premium socks, grip socks, yoga socks, pilates socks, funky socks, made in india, organic cotton socks, non-slip socks, jumplings"
+        type="website"
+        structuredData={structuredData}
+      />
       <Hero />
 
       {/* Enhanced Logo Ticker */}

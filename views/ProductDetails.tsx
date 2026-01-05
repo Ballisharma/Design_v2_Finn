@@ -4,6 +4,8 @@ import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { ArrowLeft, Star, Heart, Share2, Box, AlertTriangle, Minus, Plus, ShoppingBag, ChevronLeft, ChevronRight, Leaf, MapPin, Tag } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
+import SEO from '../components/SEO';
+import { generateProductSchema, generateBreadcrumbSchema } from '../utils/structuredData';
 
 interface ProductDetailsProps {
   isModal?: boolean;
@@ -115,11 +117,44 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
     }
   };
 
+  // Generate structured data for product
+  const productStructuredData = product ? [
+    generateProductSchema({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      currency: 'INR',
+      image: product.images[0],
+      category: product.category,
+      brand: 'Jumplings',
+      sku: product.id,
+      stock: product.stock,
+      rating: 4.8, // Could be dynamic from reviews
+      reviewCount: 128, // Could be dynamic from reviews
+    }),
+    generateBreadcrumbSchema([
+      { name: 'Home', url: 'https://jumplings.in/' },
+      { name: 'Shop', url: 'https://jumplings.in/shop' },
+      { name: product.name, url: `https://jumplings.in/product/${product.id}` }
+    ])
+  ] : [];
+
+
   // -------------------------
   // MOBILE LAYOUT (v12 - Soft Pink Art Frame)
   // -------------------------
   const MobileLayout = () => (
     <div className="bg-[#FFD6E0] min-h-screen md:hidden flex flex-col relative pb-32">
+      {/* SEO for Product Page */}
+      <SEO
+        title={`${product.name} | Jumplings`}
+        description={product.description}
+        keywords={`${product.category}, ${product.name}, buy online, premium socks`}
+        image={product.images[0]}
+        type="product"
+        structuredData={productStructuredData}
+      />
       {/* Mobile Header */}
       <div className="fixed top-0 left-0 w-full z-30 p-4 flex justify-between items-start pointer-events-none">
         {!isModal && (

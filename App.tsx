@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { CartProvider } from './context/CartContext';
 import { ProductProvider } from './context/ProductContext';
 import { UserProvider } from './context/UserContext';
@@ -179,15 +180,17 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <UserProvider>
-      <ProductProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
-        </CartProvider>
-      </ProductProvider>
-    </UserProvider>
+    <HelmetProvider>
+      <UserProvider>
+        <ProductProvider>
+          <CartProvider>
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </CartProvider>
+        </ProductProvider>
+      </UserProvider>
+    </HelmetProvider>
   );
 };
 

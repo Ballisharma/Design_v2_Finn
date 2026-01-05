@@ -1,6 +1,8 @@
 import React, { useMemo, useEffect } from 'react';
 import { useProducts } from '../context/ProductContext';
 import ProductCard from '../components/ProductCard';
+import SEO from '../components/SEO';
+import { generateCollectionPageSchema, generateBreadcrumbSchema } from '../utils/structuredData';
 
 const AllProducts: React.FC = () => {
   const { products, categories } = useProducts();
@@ -32,8 +34,28 @@ const AllProducts: React.FC = () => {
     });
   }, [categories, productsByCategory]);
 
+  // Structured data
+  const structuredData = [
+    generateCollectionPageSchema(
+      'All Products - Jumplings',
+      'Browse our complete collection of premium socks including grip socks, yoga socks, and more.',
+      'https://jumplings.in/shop'
+    ),
+    generateBreadcrumbSchema([
+      { name: 'Home', url: 'https://jumplings.in/' },
+      { name: 'Shop', url: 'https://jumplings.in/shop' }
+    ])
+  ];
+
   return (
     <div className="min-h-screen bg-[#f7f7f7] animate-fade-in">
+      <SEO
+        title="Shop All Products | Jumplings Premium Socks & Accessories"
+        description="Browse our complete collection of premium socks. Find grip socks for yoga and pilates, funky everyday socks, and more. Comfortable, stylish, and sustainable. Made in India."
+        keywords="buy socks online, shop grip socks, yoga socks, pilates socks, premium socks india"
+        type="website"
+        structuredData={structuredData}
+      />
       {/* Header Section with Background Image */}
       <div className="relative w-full h-[400px] flex flex-col justify-center items-center text-center px-6 overflow-hidden">
         {/* Background Image */}

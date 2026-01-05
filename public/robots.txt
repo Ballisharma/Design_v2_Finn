@@ -1,0 +1,17 @@
+# Jumplings Robots.txt
+# https://jumplings.in/robots.txt
+
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Disallow admin, account, and debug routes
+Disallow: /admin/
+Disallow: /account
+Disallow: /checkout
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+
+# Sitemap location
+Sitemap: https://jumplings.in/sitemap.xml
