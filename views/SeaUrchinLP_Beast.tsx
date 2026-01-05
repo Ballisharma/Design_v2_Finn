@@ -13,6 +13,8 @@ import {
     User,
     AlertCircle
 } from 'lucide-react';
+import SEO from '../components/SEO';
+import { generateProductSchema, generateBreadcrumbSchema } from '../utils/structuredData';
 
 // Pricing Configuration
 const PRICE = 1499;
@@ -68,6 +70,33 @@ const SeaUrchinLP_Beast: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-[#050505] text-gray-100 font-sans selection:bg-amber-500 selection:text-black">
+            <SEO
+                title="Sea Urchin Lamp (Pro Edition) | Masterpiece Wooden Art Lamp"
+                description="The Sea Urchin Lamp Pro Edition. Precision lemon-cut birch plywood with zero-flicker 2700K ambient glow. A masterpiece of engineering and art for your home."
+                keywords="sea urchin lamp, wooden lamp, laser cut lamp, birch plywood lamp, ambient lighting, art lamp, premium home decor"
+                image={IMAGES.hero}
+                type="product"
+                structuredData={[
+                    generateProductSchema({
+                        id: 'sea-urchin-lamp-beast',
+                        name: 'Sea Urchin Lamp (Pro Edition)',
+                        description: 'Pro Edition Sea Urchin Lamp. Precision laser-cut birch plywood with zero-flicker ambient glow.',
+                        price: PRICE,
+                        currency: 'INR',
+                        image: IMAGES.hero,
+                        category: 'Lamps',
+                        brand: 'Jumplings',
+                        sku: 'sea-urchin-lamp-beast',
+                        stock: 50,
+                        rating: 4.9,
+                        reviewCount: 1240
+                    }),
+                    generateBreadcrumbSchema([
+                        { name: 'Home', url: 'https://jumplings.in/' },
+                        { name: 'Sea Urchin Lamp', url: 'https://jumplings.in/sea-urchin-lamp' }
+                    ])
+                ]}
+            />
 
             {/* 1. Urgency Top Bar */}
             <div className="bg-amber-600 text-black font-bold text-xs md:text-sm py-2 px-4 text-center tracking-wide uppercase flex justify-center items-center gap-2">

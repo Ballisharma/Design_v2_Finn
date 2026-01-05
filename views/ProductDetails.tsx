@@ -438,7 +438,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
 
             {/* Title & Rating */}
             <div className="mb-4">
-              <h1 className="text-4xl md:text-5xl font-heading font-black text-funky-dark leading-tight mb-2">{product.name}</h1>
+              <h2 className="text-4xl md:text-5xl font-heading font-black text-funky-dark leading-tight mb-2">{product.name}</h2>
               <div className="flex items-center gap-1.5">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star key={star} size={18} className="text-funky-yellow" fill="currentColor" />

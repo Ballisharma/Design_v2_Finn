@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import { Star, ArrowRight, ShieldCheck, Sun, Leaf, Gift, Truck, ChevronDown, Plus, Minus, CheckCircle2, Flame, Trophy, Package, Heart, Instagram } from 'lucide-react';
+import SEO from '../components/SEO';
+import { generateProductSchema, generateBreadcrumbSchema } from '../utils/structuredData';
 
 const SeaUrchinLP: React.FC = () => {
     const { addToCart } = useCart();
@@ -81,6 +83,33 @@ const SeaUrchinLP: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white text-gray-900 font-sans pb-24 md:pb-0">
+            <SEO
+                title="Sea Urchin Lamp - Coral Pink & Ocean Green | Jumplings"
+                description="The viral Sea Urchin Lamp, now available in Coral Pink and Ocean Green. Handcrafted sustainable shell lamp for the perfect ambient glow."
+                keywords="sea urchin lamp, pink lamp, green lamp, aesthetic bedroom decor, dopamine decor, jumplings lamp"
+                image={currentImages[0]}
+                type="product"
+                structuredData={[
+                    generateProductSchema({
+                        id: `sea-urchin-lamp-${selectedColor.toLowerCase()}`,
+                        name: `Sea Urchin Lamp - ${selectedColor}`,
+                        description: 'Handcrafted from natural materials with a warm amber glow. Available in Coral Pink and Ocean Green.',
+                        price: 1299,
+                        currency: 'INR',
+                        image: currentImages[0],
+                        category: 'Lamps',
+                        brand: 'Jumplings',
+                        sku: `sea-urchin-lamp-${selectedColor.toLowerCase()}`,
+                        stock: 50,
+                        rating: 4.8,
+                        reviewCount: 3241
+                    }),
+                    generateBreadcrumbSchema([
+                        { name: 'Home', url: 'https://jumplings.in/' },
+                        { name: 'Sea Urchin Lamp', url: 'https://jumplings.in/sea-urchin-lamp' }
+                    ])
+                ]}
+            />
 
             {/* Urgency Bar */}
             <div className="sticky top-0 z-50 bg-gradient-to-r from-orange-500 to-red-500 text-white text-center py-2 px-4 text-xs font-bold flex justify-center items-center gap-2 shadow-lg">

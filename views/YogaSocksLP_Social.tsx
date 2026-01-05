@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { Star, ShoppingCart, Instagram, CheckCircle2, TrendingUp, Users, Award, Clock } from 'lucide-react';
+import SEO from '../components/SEO';
+import { generateProductSchema, generateBreadcrumbSchema } from '../utils/structuredData';
 
 const YogaSocksLP_Social: React.FC = () => {
     const { addToCart } = useCart();
@@ -115,6 +117,33 @@ const YogaSocksLP_Social: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white text-gray-900 font-sans">
+            <SEO
+                title="Yoga Grip Socks | As Seen On Social - Jumplings"
+                description="Join 12,000+ yogis using the most viral grip socks on Instagram. Premium non-slip traction for yoga and pilates. Rated 4.9/5."
+                keywords="viral yoga socks, instagram yoga socks, best grip socks reviews, jumplings yoga socks, pilates socks india"
+                image="https://images.unsplash.com/photo-1596707328151-61472554d32e?w=800"
+                type="product"
+                structuredData={[
+                    generateProductSchema({
+                        id: 'yoga-socks-social',
+                        name: 'Yoga Grip Socks (Viral Edition)',
+                        description: 'Premium yoga grip socks trusted by 12,847+ yogis. Superior traction and comfort.',
+                        price: 499,
+                        currency: 'INR',
+                        image: 'https://images.unsplash.com/photo-1596707328151-61472554d32e?w=800',
+                        category: 'Yoga Accessories',
+                        brand: 'Jumplings',
+                        sku: 'yoga-socks-social',
+                        stock: 50,
+                        rating: 4.9,
+                        reviewCount: 3241
+                    }),
+                    generateBreadcrumbSchema([
+                        { name: 'Home', url: 'https://jumplings.in/' },
+                        { name: 'Yoga Socks Viral', url: 'https://jumplings.in/yoga-socks-social' }
+                    ])
+                ]}
+            />
 
             {/* Sticky Floating CTA */}
             <div className="fixed bottom-6 right-6 z-50 hidden md:block">

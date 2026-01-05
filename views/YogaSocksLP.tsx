@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { Star, ArrowRight, ShieldCheck, Flame, CheckCircle2, Truck, Package, Heart, Instagram, Zap, Wind, Layers, Droplets, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
+import { generateProductSchema, generateBreadcrumbSchema } from '../utils/structuredData';
 
 const YogaSocksLP: React.FC = () => {
     const { addToCart } = useCart();
@@ -57,6 +59,33 @@ const YogaSocksLP: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white text-gray-900 font-sans pb-24 md:pb-0">
+            <SEO
+                title="Premium Yoga Grip Socks | Anti-Slip & Breathable - Jumplings"
+                description="Stop slipping during your practice. Premium cotton yoga grip socks with strategic silicone dots for superior traction. Trusted by 50,000+ yogis."
+                keywords="yoga socks, grip socks, pilates socks, non-slip socks, anti-slip yoga socks, best grip socks india, cotton yoga socks"
+                image="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1000&fit=crop"
+                type="product"
+                structuredData={[
+                    generateProductSchema({
+                        id: 'yoga-socks-generic',
+                        name: 'Premium Yoga Grip Socks',
+                        description: 'Premium yoga grip socks with enhanced traction for better stability during practice. Breathable cotton blend with silicone grip dots.',
+                        price: 499,
+                        currency: 'INR',
+                        image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=1000&fit=crop',
+                        category: 'Yoga Accessories',
+                        brand: 'Jumplings',
+                        sku: 'yoga-socks-lp',
+                        stock: 50,
+                        rating: 4.8,
+                        reviewCount: 12000
+                    }),
+                    generateBreadcrumbSchema([
+                        { name: 'Home', url: 'https://jumplings.in/' },
+                        { name: 'Yoga Grip Socks', url: 'https://jumplings.in/yoga-socks' }
+                    ])
+                ]}
+            />
 
             {/* Urgency Bar */}
             <div className="sticky top-0 z-50 bg-gradient-to-r from-orange-500 to-red-500 text-white text-center py-2 px-4 text-xs font-bold flex justify-center items-center gap-2 shadow-lg">

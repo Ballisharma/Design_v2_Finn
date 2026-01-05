@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 import { Star, ArrowRight, ShieldCheck, Sun, Leaf, Gift, Truck, ChevronDown, Plus, Minus, CheckCircle2, Flame, Trophy, Package, Heart, Instagram } from 'lucide-react';
+import SEO from '../components/SEO';
+import { generateProductSchema, generateBreadcrumbSchema } from '../utils/structuredData';
 
 const SeaUrchinLP_HighConvert: React.FC = () => {
     const { addToCart } = useCart();
@@ -81,6 +83,33 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white text-gray-900 font-sans pb-24 md:pb-0">
+            <SEO
+                title="Viral Sea Urchin Lamp | Golden Hour Aesthetics - Jumplings"
+                description="Switch on Golden Hour. The viral handcrafted lamp that replaces harsh LEDs with a soothing, anxiety-reducing amber glow. As seen on TikTok."
+                keywords="viral lamp, sea urchin lamp, golden hour lamp, anxiety relief lamp, cozy bedroom decor, tiktok lamp"
+                image={currentImages[0]}
+                type="product"
+                structuredData={[
+                    generateProductSchema({
+                        id: `sea-urchin-lamp-v2-${selectedColor.toLowerCase()}`,
+                        name: `Sea Urchin Lamp (Viral Edition) - ${selectedColor}`,
+                        description: 'The viral lamp that replaces harsh LEDs with soothing golden hour light. Handcrafted sustainable shell.',
+                        price: 1299,
+                        currency: 'INR',
+                        image: currentImages[0],
+                        category: 'Lamps',
+                        brand: 'Jumplings',
+                        sku: `sea-urchin-lamp-v2-${selectedColor.toLowerCase()}`,
+                        stock: 50,
+                        rating: 4.9,
+                        reviewCount: 15000
+                    }),
+                    generateBreadcrumbSchema([
+                        { name: 'Home', url: 'https://jumplings.in/' },
+                        { name: 'Sea Urchin Lamp V2', url: 'https://jumplings.in/sea-urchin-lamp-v2' }
+                    ])
+                ]}
+            />
 
             {/* Urgency Bar */}
             <div className="sticky top-0 z-50 bg-gradient-to-r from-orange-500 to-red-500 text-white text-center py-2 px-4 text-xs font-bold flex justify-center items-center gap-2 shadow-lg">
