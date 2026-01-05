@@ -17,6 +17,7 @@ const AllProducts = React.lazy(() => import('./views/AllProducts'));
 const GripSocksLP = React.lazy(() => import('./views/GripSocksLP'));
 const SeaUrchinLP = React.lazy(() => import('./views/SeaUrchinLP'));
 const SeaUrchinLPHighConvert = React.lazy(() => import('./views/SeaUrchinLP_HighConvert'));
+const SeaUrchinLP_Beast = React.lazy(() => import('./views/SeaUrchinLP_Beast'));
 const YogaSocksLP = React.lazy(() => import('./views/YogaSocksLP'));
 const YogaSocksLP_Social = React.lazy(() => import('./views/YogaSocksLP_Social'));
 const ProductDetails = React.lazy(() => import('./views/ProductDetails'));
