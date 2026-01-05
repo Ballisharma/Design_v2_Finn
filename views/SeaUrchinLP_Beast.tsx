@@ -29,7 +29,7 @@ const IMAGES = {
 
 const SeaUrchinLP_Beast: React.FC = () => {
     const navigate = useNavigate();
-    const { dispatch } = useCart();
+    const { addToCart } = useCart();
     const [timeLeft, setTimeLeft] = useState(14 * 60 + 59); // 15 mins countdown
 
     useEffect(() => {
@@ -46,17 +46,18 @@ const SeaUrchinLP_Beast: React.FC = () => {
     };
 
     const handleAddToCart = () => {
-        dispatch({
-            type: 'ADD_ITEM',
-            payload: {
-                id: 'sea-urchin-lamp-beast',
-                name: 'Sea Urchin Lamp (Pro Edition)',
-                price: PRICE,
-                image: IMAGES.hero,
-                quantity: 1,
-                selectedSize: 'Standard',
-            },
-        });
+        const product = {
+            id: 'sea-urchin-lamp-beast',
+            name: 'Sea Urchin Lamp (Pro Edition)',
+            price: PRICE,
+            images: [IMAGES.hero],
+            description: 'Pro Edition Sea Urchin Lamp',
+            category: 'Lamps',
+            stock: 50,
+            variants: [{ size: 'Standard', stock: 50 }]
+        };
+
+        addToCart(product, 1, 'Standard', 'landing-page', 'SeaUrchinLP_Beast');
         navigate('/checkout');
     };
 
