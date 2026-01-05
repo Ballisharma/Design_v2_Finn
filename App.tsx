@@ -71,6 +71,7 @@ const AppContent: React.FC = () => {
             <Route path="/grip-socks" element={<GripSocksLP />} />
             <Route path="/sea-urchin-lamp" element={<SeaUrchinLP />} />
             <Route path="/sea-urchin-lamp-v2" element={<SeaUrchinLPHighConvert />} />
+            <Route path="/sea-urchin-beast" element={<SeaUrchinLP_Beast />} />
             <Route path="/yoga-grip-socks" element={<YogaSocksLP />} />
             <Route path="/yoga-socks-social" element={<YogaSocksLP_Social />} />
             <Route path="/product/:id" element={<ProductDetails />} />
