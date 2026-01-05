@@ -49,15 +49,20 @@ const SeaUrchinLP_Beast: React.FC = () => {
         const product = {
             id: 'sea-urchin-lamp-beast',
             name: 'Sea Urchin Lamp (Pro Edition)',
+            subtitle: 'Limited Beast Mode Edition',
+            slug: 'sea-urchin-lamp-beast',
             price: PRICE,
+            currency: 'INR',
             images: [IMAGES.hero],
             description: 'Pro Edition Sea Urchin Lamp',
             category: 'Lamps',
+            categories: ['Lamps', 'Premium'],
+            tags: ['Beast Mode', 'Limited'],
             stock: 50,
             variants: [{ size: 'Standard', stock: 50 }]
         };
 
-        addToCart(product, 1, 'Standard', 'landing-page', 'SeaUrchinLP_Beast');
+        addToCart(product as any, 1, 'Standard', 'landing-page', 'SeaUrchinLP_Beast');
         navigate('/checkout');
     };
 
