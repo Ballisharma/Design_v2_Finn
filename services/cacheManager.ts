@@ -145,11 +145,12 @@ export const CacheKeys = {
 };
 
 // Cache TTL constants (in milliseconds)
+// Optimized for production - longer caching reduces API calls
 export const CacheTTL = {
-    products: 5 * 60 * 1000, // 5 minutes
-    variations: 10 * 60 * 1000, // 10 minutes
-    short: 2 * 60 * 1000, // 2 minutes
-    long: 30 * 60 * 1000, // 30 minutes
+    products: 15 * 60 * 1000,     // 15 minutes (was 5)
+    variations: 30 * 60 * 1000,   // 30 minutes (was 10)
+    short: 5 * 60 * 1000,         // 5 minutes (was 2)
+    long: 60 * 60 * 1000,         // 60 minutes (was 30)
 };
 
 export default cacheManager;
