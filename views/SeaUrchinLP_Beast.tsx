@@ -23,10 +23,10 @@ const DISCOUNT = 62;
 
 // Generated Asset Paths (Beast Mode)
 const IMAGES = {
-    hero: '/images/beast/hero.png',
-    texture: '/images/beast/texture.png',
-    lifestyle: '/images/beast/lifestyle.png',
-    tech: '/images/beast/tech.png'
+    hero: '/images/beast/hero.webp',
+    texture: '/images/beast/texture.webp',
+    lifestyle: '/images/beast/lifestyle.webp',
+    tech: '/images/beast/tech.webp'
 };
 
 const SeaUrchinLP_Beast: React.FC = () => {
