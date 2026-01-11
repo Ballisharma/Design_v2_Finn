@@ -249,6 +249,7 @@ const Admin: React.FC = () => {
         price: Number(formData.price),
         currency: 'INR',
         category: formData.category,
+        categories: [formData.category],
         images: finalImages,
         tags: ['New Arrival'],
         isNew: formData.isNew,
@@ -738,10 +739,10 @@ const Admin: React.FC = () => {
 
                     {/* Total Stock Badge */}
                     <div className={`flex items-center gap-1 px-2 py-1 rounded-md border ${product.stock === 0
-                        ? 'bg-red-50 border-red-100 text-red-600'
-                        : product.stock < 10
-                          ? 'bg-yellow-50 border-yellow-100 text-yellow-700'
-                          : 'bg-green-50 border-green-100 text-green-700'
+                      ? 'bg-red-50 border-red-100 text-red-600'
+                      : product.stock < 10
+                        ? 'bg-yellow-50 border-yellow-100 text-yellow-700'
+                        : 'bg-green-50 border-green-100 text-green-700'
                       }`}>
                       <Box size={12} />
                       <span className="text-xs font-bold font-mono">
