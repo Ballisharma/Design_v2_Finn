@@ -7,12 +7,10 @@ const WP_URL = import.meta.env.VITE_WORDPRESS_URL || import.meta.env.VITE_URL ||
 // (Public key, safe for frontend)
 export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_RyG0ZXrWONWBho';
 
-// Use full WordPress URL for public GET requests (products, read-only)
+// Use full WordPress URL for all API requests
+// CORS is handled by WordPress CORS plugin
 const WP_API_URL_PUBLIC = `${WP_URL}/wp-json/wc/v3`;
-
-// Use nginx proxy path for authenticated POST/PUT requests (orders, customers)
-// The proxy adds authentication headers automatically
-const WP_API_URL_AUTH = '/wp-json/wc/v3';
+const WP_API_URL_AUTH = `${WP_URL}/wp-json/wc/v3`;
 
 // Helper for Auth Header (Secure Proxy handles this now for API calls)
 const getAuthHeader = () => {
