@@ -4,9 +4,8 @@ import { cacheManager, CacheKeys, CacheTTL } from './cacheManager';
 // WordPress/WooCommerce API Configuration
 const WP_URL = import.meta.env.VITE_WORDPRESS_URL || 'https://admin.jumplings.in';
 
-// Use relative path - handled by Vite Proxy in DEV and Nginx in PROD
-// Authentication is securely handled by the server proxy (Nginx).
-const WC_API_URL = '/wp-json/wc/v3';
+// Use full WordPress URL directly (bypass nginx proxy for now)
+const WC_API_URL = `${WP_URL}/wp-json/wc/v3`;
 
 // Create Basic Auth header (Secure Proxy handles this now)
 const getAuthHeader = () => {
