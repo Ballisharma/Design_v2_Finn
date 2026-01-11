@@ -6,6 +6,7 @@ import { ArrowLeft, Star, Heart, Share2, Box, AlertTriangle, Minus, Plus, Shoppi
 import ProductCard from '../components/ProductCard';
 import SEO from '../components/SEO';
 import { generateProductSchema, generateBreadcrumbSchema } from '../utils/structuredData';
+import { analytics } from '../services/analytics';
 
 interface ProductDetailsProps {
   isModal?: boolean;
@@ -59,6 +60,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ isModal = false }) => {
       window.scrollTo(0, 0);
     }
   }, [id, isModal]);
+
+  // Track View Item
+  useEffect(() => {
+    if (product) {
+      analytics.trackViewItem(product);
+    }
+  }, [product]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);

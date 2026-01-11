@@ -12,6 +12,7 @@ import {
   validateEmail,
   fetchPincodeDetails
 } from '../utils/indianAddressValidation';
+import { analytics } from '../services/analytics';
 
 const Checkout: React.FC = () => {
   const { items, subtotal, shippingCost, cartTotal, clearCart } = useCart();
@@ -192,6 +193,9 @@ const Checkout: React.FC = () => {
                 navigate('/login');
                 alert("Payment Successful! Check your email to set a password.");
               }
+
+              // Track Purchase
+              analytics.trackPurchase(order.id, cartTotal, shippingCost, items);
             } catch (err: any) {
               console.error("Payment sync failed:", err);
               alert(`Payment received, but order update failed: ${err.message}`);

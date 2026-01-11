@@ -3,6 +3,7 @@ import { X, Minus, Plus, Trash2, ArrowRight, ShoppingBag, Truck, Star, Flame, Sh
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../context/ProductContext';
 import { useNavigate } from 'react-router-dom';
+import { analytics } from '../services/analytics';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -37,6 +38,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   };
 
   const handleCheckout = () => {
+    // Track Begin Checkout
+    analytics.trackBeginCheckout(items, cartTotal);
     onClose();
     navigate('/checkout');
   };

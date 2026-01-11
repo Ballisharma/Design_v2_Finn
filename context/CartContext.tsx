@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Product, CartItem } from '../types';
 import { useProducts } from './ProductContext';
+import { analytics } from '../services/analytics';
 
 interface CartContextType {
   items: CartItem[];
@@ -84,6 +85,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           item.cartId === existing.cartId ? { ...item, quantity: item.quantity + quantity } : item
         );
       }
+
+      // Track Add to Cart
+      analytics.trackAddToCart(product, quantity, selectedSize);
 
       return [...prev, {
         ...product,
