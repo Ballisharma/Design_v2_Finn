@@ -5,8 +5,10 @@
 
 echo "🖼️  Converting images to WebP..."
 
-# Find all Sea Urchin PNGs
-find public/images -name "*sea_urchin*.png" | while read file; do
+# Find all PNG/JPG images in public/images (recursive)
+find public/images -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) | while read file; do
+    # Skip if it's already a .tmp file or metadata
+    if [[ "$file" == *".tmp"* ]]; then continue; fi
     filename=$(basename "$file")
     name="${filename%.*}"
     dir=$(dirname "$file")

@@ -17,17 +17,17 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
     // Images 
     const images = {
         Pink: [
-            '/images/sea_urchin_pink_ugc_hand_holding_1767531291802.png',
-            '/images/sea_urchin_pink_cozy_lifestyle_1767531244368.png',
-            '/images/sea_urchin_pink_macro_corrected_1767532237235.png',
-            '/images/sea_urchin_pink_glow_physics_corrected_1767532268682.png',
-            '/images/sea_urchin_pink_mirror_selfie_ugc_1767532909153.png'
+            '/images/sea_urchin_pink_ugc_hand_holding_1767531291802.webp',
+            '/images/sea_urchin_pink_cozy_lifestyle_1767531244368.webp',
+            '/images/sea_urchin_pink_macro_corrected_1767532237235.webp',
+            '/images/sea_urchin_pink_glow_physics_corrected_1767532268682.webp',
+            '/images/sea_urchin_pink_mirror_selfie_ugc_1767532909153.webp'
         ],
         Green: [
-            '/images/sea_urchin_green_hand_holding_daylight_1767532714940.png',
-            '/images/sea_urchin_green_base_detail_corrected_1767532251788.png',
-            '/images/sea_urchin_green_ugc_bedroom_messy_1767531310351.png',
-            '/images/sea_urchin_green_minimalist_desk_1767531261509.png'
+            '/images/sea_urchin_green_hand_holding_daylight_1767532714940.webp',
+            '/images/sea_urchin_green_base_detail_corrected_1767532251788.webp',
+            '/images/sea_urchin_green_ugc_bedroom_messy_1767531310351.webp',
+            '/images/sea_urchin_green_minimalist_desk_1767531261509.webp'
         ]
     };
 
@@ -213,19 +213,19 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
                     {/* Horizontal Scroll Container */}
                     <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mr-4 pr-8 md:grid md:grid-cols-4 md:mr-0 md:pr-0 md:pb-0 scrollbar-hide">
                         <div className="snap-center shrink-0 w-64 md:w-auto aspect-square rounded-2xl overflow-hidden relative group">
-                            <img src="/images/sea_urchin_pink_real_v2_1767520483897.png" className="w-full h-full object-cover" alt="Customer Photo" />
+                            <img src="/images/sea_urchin_pink_real_v2_1767520483897.webp" className="w-full h-full object-cover" alt="Customer Photo" />
                             <div className="absolute bottom-3 left-3 text-white text-xs font-bold flex items-center gap-1 drop-shadow-md"><Heart size={10} fill="white" /> 2.4k</div>
                         </div>
                         <div className="snap-center shrink-0 w-64 md:w-auto aspect-square rounded-2xl overflow-hidden relative group">
-                            <img src="/images/sea_urchin_green_real_v2_1767520501537.png" className="w-full h-full object-cover" alt="Customer Photo" />
+                            <img src="/images/sea_urchin_green_real_v2_1767520501537.webp" className="w-full h-full object-cover" alt="Customer Photo" />
                             <div className="absolute bottom-3 left-3 text-white text-xs font-bold flex items-center gap-1 drop-shadow-md"><Heart size={10} fill="white" /> 1.8k</div>
                         </div>
                         <div className="snap-center shrink-0 w-64 md:w-auto aspect-square rounded-2xl overflow-hidden relative group">
-                            <img src="/images/uploaded_image_2_1767520309296.jpg" className="w-full h-full object-cover" alt="Customer Photo" />
+                            <img src="/images/uploaded_image_2_1767520309296.webp" className="w-full h-full object-cover" alt="Customer Photo" />
                             <div className="absolute bottom-3 left-3 text-white text-xs font-bold flex items-center gap-1 drop-shadow-md"><Heart size={10} fill="white" /> 4.1k</div>
                         </div>
                         <div className="snap-center shrink-0 w-64 md:w-auto aspect-square rounded-2xl overflow-hidden relative group">
-                            <img src="/images/sea_urchin_lifestyle_real_v2_1767520552575.png" className="w-full h-full object-cover" alt="Customer Photo" />
+                            <img src="/images/sea_urchin_lifestyle_real_v2_1767520552575.webp" className="w-full h-full object-cover" alt="Customer Photo" />
                             <div className="absolute bottom-3 left-3 text-white text-xs font-bold flex items-center gap-1 drop-shadow-md"><Heart size={10} fill="white" /> 3.2k</div>
                         </div>
                     </div>
@@ -256,7 +256,7 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
                             {/* Main Glow Shot */}
                             <div className="col-span-2 relative group overflow-hidden rounded-2xl shadow-xl">
                                 <img
-                                    src="/images/sea_urchin_pink_glow_physics_corrected_1767532268682.png"
+                                    src="/images/sea_urchin_pink_glow_physics_corrected_1767532268682.webp"
                                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                                     alt="Ambient Glow Pattern"
                                 />
@@ -268,7 +268,7 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
                             {/* Macro Texture */}
                             <div className="relative group overflow-hidden rounded-2xl shadow-lg aspect-square">
                                 <img
-                                    src="/images/sea_urchin_pink_macro_corrected_1767532237235.png"
+                                    src="/images/sea_urchin_pink_macro_corrected_1767532237235.webp"
                                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                                     alt="Natural Shell Texture"
                                 />
@@ -280,7 +280,7 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
                             {/* Base Detail */}
                             <div className="relative group overflow-hidden rounded-2xl shadow-lg aspect-square">
                                 <img
-                                    src="/images/sea_urchin_green_base_detail_corrected_1767532251788.png"
+                                    src="/images/sea_urchin_green_base_detail_corrected_1767532251788.webp"
                                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                                     alt="Wooden Base Construction"
                                 />
@@ -384,7 +384,7 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                         {/* Video 1: Pink Reel */}
                         <div className="md:col-start-2 aspect-[9/16] rounded-2xl overflow-hidden relative group shadow-lg cursor-pointer">
-                            <img src="/images/sea_urchin_pink_reel_thumbnail_1767531576991.png" className="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="Instagram Reel" />
+                            <img src="/images/sea_urchin_pink_reel_thumbnail_1767531576991.webp" className="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="Instagram Reel" />
                             <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                                 <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/50">
                                     <div className="ml-1 w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent"></div>
@@ -397,7 +397,7 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
 
                         {/* Video 2: Green TikTok */}
                         <div className="aspect-[9/16] rounded-2xl overflow-hidden relative group shadow-lg cursor-pointer">
-                            <img src="/images/sea_urchin_green_tiktok_thumbnail_1767531596501.png" className="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="TikTok Trend" />
+                            <img src="/images/sea_urchin_green_tiktok_thumbnail_1767531596501.webp" className="w-full h-full object-cover group-hover:scale-105 transition-transform" alt="TikTok Trend" />
                             <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                                 <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/50">
                                     <div className="ml-1 w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent"></div>
@@ -419,27 +419,27 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                         {/* UGC 1: Hand Holding */}
                         <div className="aspect-[4/5] rounded-xl overflow-hidden relative group">
-                            <img src="/images/sea_urchin_pink_ugc_hand_holding_1767531291802.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
+                            <img src="/images/sea_urchin_pink_ugc_hand_holding_1767531291802.webp" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
                             <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@sarah_reads</div>
                         </div>
                         {/* UGC 2: Messy Bed */}
                         <div className="aspect-[4/5] rounded-xl overflow-hidden relative group">
-                            <img src="/images/sea_urchin_green_ugc_bedroom_messy_1767531310351.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
+                            <img src="/images/sea_urchin_green_ugc_bedroom_messy_1767531310351.webp" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
                             <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@morning_mood</div>
                         </div>
                         {/* UGC 3: Bookshelf */}
                         <div className="aspect-[4/5] rounded-xl overflow-hidden relative group">
-                            <img src="/images/sea_urchin_pink_ugc_bookshelf_1767531439585.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
+                            <img src="/images/sea_urchin_pink_ugc_bookshelf_1767531439585.webp" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
                             <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@plant_mom</div>
                         </div>
                         {/* UGC 4: Green Hand Glow (Night) */}
                         <div className="aspect-[4/5] rounded-xl overflow-hidden relative group">
-                            <img src="/images/sea_urchin_green_hand_holding_glow_1767532697411.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Green Lamp Night Glow" />
+                            <img src="/images/sea_urchin_green_hand_holding_glow_1767532697411.webp" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Green Lamp Night Glow" />
                             <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@night_vibes</div>
                         </div>
                         {/* UGC 5: Nightstand (New! The 5th element) */}
                         <div className="aspect-[4/5] rounded-xl overflow-hidden relative group md:col-span-1 col-span-2">
-                            <img src="/images/sea_urchin_pink_ugc_nightstand_real_1767531471526.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
+                            <img src="/images/sea_urchin_pink_ugc_nightstand_real_1767531471526.webp" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Customer Photo" />
                             <div className="absolute bottom-2 left-2 text-white text-[10px] font-bold flex items-center gap-1 opacity-80">@nightowl_vibes</div>
                         </div>
                     </div>
@@ -544,7 +544,7 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
                                             className={`relative p-3 rounded-xl border-2 transition-all duration-200 text-left flex items-center gap-3 ${selectedColor === 'Pink' ? 'border-gray-900 bg-gray-50 ring-1 ring-gray-900' : 'border-gray-200 bg-white hover:border-gray-300'}`}
                                         >
                                             <div className="w-14 h-14 rounded-lg bg-gray-100 shrink-0 overflow-hidden relative">
-                                                <img src="/images/sea_urchin_pink_cozy_lifestyle_1767531244368.png" className="w-full h-full object-cover" />
+                                                <img src="/images/sea_urchin_pink_cozy_lifestyle_1767531244368.webp" className="w-full h-full object-cover" />
                                                 {selectedColor === 'Pink' && <div className="absolute inset-0 bg-black/10" />}
                                             </div>
                                             <div className="flex-1">
@@ -565,7 +565,7 @@ const SeaUrchinLP_HighConvert: React.FC = () => {
                                             className={`relative p-3 rounded-xl border-2 transition-all duration-200 text-left flex items-center gap-3 ${selectedColor === 'Green' ? 'border-gray-900 bg-gray-50 ring-1 ring-gray-900' : 'border-gray-200 bg-white hover:border-gray-300'}`}
                                         >
                                             <div className="w-14 h-14 rounded-lg bg-gray-100 shrink-0 overflow-hidden relative">
-                                                <img src="/images/sea_urchin_green_minimalist_desk_1767531261509.png" className="w-full h-full object-cover" />
+                                                <img src="/images/sea_urchin_green_minimalist_desk_1767531261509.webp" className="w-full h-full object-cover" />
                                                 {selectedColor === 'Green' && <div className="absolute inset-0 bg-black/10" />}
                                             </div>
                                             <div className="flex-1">
