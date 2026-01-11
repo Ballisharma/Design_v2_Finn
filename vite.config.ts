@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/wp-json': {
-          target: env.VITE_WORDPRESS_URL || 'https://jumplings.in',
+          target: env.VITE_WORDPRESS_URL || 'https://admin.jumplings.in',
           changeOrigin: true,
           secure: false,
           headers: {
