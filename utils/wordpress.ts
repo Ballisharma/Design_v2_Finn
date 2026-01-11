@@ -7,8 +7,12 @@ const WP_URL = import.meta.env.VITE_WORDPRESS_URL || import.meta.env.VITE_URL ||
 // (Public key, safe for frontend)
 export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_RyG0ZXrWONWBho';
 
-// Use full WordPress URL directly
-const WP_API_URL = `${WP_URL}/wp-json/wc/v3`;
+// Use full WordPress URL for public GET requests (products, read-only)
+const WP_API_URL_PUBLIC = `${WP_URL}/wp-json/wc/v3`;
+
+// Use nginx proxy path for authenticated POST/PUT requests (orders, customers)
+// The proxy adds authentication headers automatically
+const WP_API_URL_AUTH = '/wp-json/wc/v3';
 
 // Helper for Auth Header (Secure Proxy handles this now for API calls)
 const getAuthHeader = () => {
@@ -36,7 +40,7 @@ const WP_JWT_URL = `${WP_URL}/wp-json/jwt-auth/v1/token`;
  */
 export const fetchWooProducts = async (): Promise<Product[]> => {
   try {
-    const response = await fetch(`${WP_API_URL}/products?per_page=100&status=publish`, {
+    const response = await fetch(`${WP_API_URL_PUBLIC}/products?per_page=100&status=publish`, {
       headers: {
         'Authorization': getAuthHeader(),
         'Content-Type': 'application/json'
@@ -137,7 +141,7 @@ export const createWooOrder = async (
 
     // If guest, check if customer already exists by email
     if (!finalCustomerId) {
-      const custCheckResponse = await fetch(`${WP_API_URL}/customers?email=${encodeURIComponent(customer.email)}`, {
+      const custCheckResponse = await fetch(`${WP_API_URL_PUBLIC}/customers?email=${encodeURIComponent(customer.email)}`, {
         headers: { 'Authorization': getAuthHeader() }
       });
 
@@ -148,7 +152,7 @@ export const createWooOrder = async (
 
           // Update existing customer billing info if needed
           try {
-            await fetch(`${WP_API_URL}/customers/${finalCustomerId}`, {
+            await fetch(`${WP_API_URL_AUTH}/customers/${finalCustomerId}`, {
               method: 'PUT',
               headers: {
                 'Authorization': getAuthHeader(),
@@ -180,7 +184,7 @@ export const createWooOrder = async (
             Math.floor(Math.random() * 100);
 
           // Create new customer with password
-          const newCustomerResponse = await fetch(`${WP_API_URL}/customers`, {
+          const newCustomerResponse = await fetch(`${WP_API_URL_AUTH}/customers`, {
             method: 'POST',
             headers: {
               'Authorization': getAuthHeader(),
@@ -275,7 +279,7 @@ export const createWooOrder = async (
 
     console.log("📤 Sending Order to WordPress:", orderData);
 
-    const response = await fetch(`${WP_API_URL}/orders`, {
+    const response = await fetch(`${WP_API_URL_AUTH}/orders`, {
       method: 'POST',
       headers: {
         'Authorization': getAuthHeader(),
@@ -319,7 +323,7 @@ export const createWooOrder = async (
 const triggerOrderEmail = async (orderId: number) => {
   try {
     // Get current order to check status
-    const orderResponse = await fetch(`${WP_API_URL}/orders/${orderId}`, {
+    const orderResponse = await fetch(`${WP_API_URL_PUBLIC}/orders/${orderId}`, {
       headers: {
         'Authorization': getAuthHeader(),
         'Content-Type': 'application/json'
@@ -337,7 +341,7 @@ const triggerOrderEmail = async (orderId: number) => {
     // Only update status if it's different - avoids unnecessary API calls
     // and ensures email is triggered by status change
     if (currentStatus === 'pending' || currentStatus === 'on-hold') {
-      const updateResponse = await fetch(`${WP_API_URL}/orders/${orderId}`, {
+      const updateResponse = await fetch(`${WP_API_URL_AUTH}/orders/${orderId}`, {
         method: 'PUT',
         headers: {
           'Authorization': getAuthHeader(),
@@ -356,7 +360,7 @@ const triggerOrderEmail = async (orderId: number) => {
     } else if (currentStatus === 'processing') {
       // Order is already processing, try adding a customer note to trigger email
       try {
-        const noteResponse = await fetch(`${WP_API_URL}/orders/${orderId}/notes`, {
+        const noteResponse = await fetch(`${WP_API_URL_AUTH}/orders/${orderId}/notes`, {
           method: 'POST',
           headers: {
             'Authorization': getAuthHeader(),
@@ -390,7 +394,7 @@ const triggerOrderEmail = async (orderId: number) => {
 export const updateWooOrder = async (orderId: number, data: any, retries = 3) => {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const response = await fetch(`${WP_API_URL}/orders/${orderId}`, {
+      const response = await fetch(`${WP_API_URL_AUTH}/orders/${orderId}`, {
         method: 'PUT',
         headers: {
           'Authorization': getAuthHeader(),
@@ -427,7 +431,7 @@ export const updateWooOrder = async (orderId: number, data: any, retries = 3) =>
 export const fetchCustomerOrders = async (customerId: string) => {
   try {
     const token = getJWTToken();
-    const response = await fetch(`${WP_API_URL}/orders?customer=${customerId}`, {
+    const response = await fetch(`${WP_API_URL_PUBLIC}/orders?customer=${customerId}`, {
       headers: {
         'Authorization': token ? `Bearer ${token}` : getAuthHeader(),
         'Content-Type': 'application/json'
@@ -501,7 +505,7 @@ export const loginCustomer = async (email: string, password: string) => {
     // Fetch WooCommerce customer data to get billing/shipping info
     let customerData: any = {};
     try {
-      const custResponse = await fetch(`${WP_API_URL}/customers?email=${encodeURIComponent(email)}`, {
+      const custResponse = await fetch(`${WP_API_URL_PUBLIC}/customers?email=${encodeURIComponent(email)}`, {
         headers: {
           'Authorization': getAuthHeader(),
         }
@@ -548,7 +552,7 @@ export const registerCustomer = async (
 ) => {
   try {
     // Create customer via WooCommerce API
-    const response = await fetch(`${WP_API_URL}/customers`, {
+    const response = await fetch(`${WP_API_URL_AUTH}/customers`, {
       method: 'POST',
       headers: {
         'Authorization': getAuthHeader(),
@@ -650,7 +654,7 @@ export const requestPasswordReset = async (email: string) => {
     }
 
     // Method 2: Verify customer exists first as a fallback
-    const custResponse = await fetch(`${WP_API_URL}/customers?email=${encodeURIComponent(email)}`, {
+    const custResponse = await fetch(`${WP_API_URL_PUBLIC}/customers?email=${encodeURIComponent(email)}`, {
       headers: {
         'Authorization': getAuthHeader(),
       }
@@ -819,7 +823,7 @@ export const updateCustomerProfile = async (customerId: string, data: {
     }
 
     const token = getJWTToken();
-    const response = await fetch(`${WP_API_URL}/customers/${customerId}`, {
+    const response = await fetch(`${WP_API_URL_AUTH}/customers/${customerId}`, {
       method: 'PUT',
       headers: {
         'Authorization': token ? `Bearer ${token}` : getAuthHeader(),
@@ -873,7 +877,7 @@ export const getCurrentUser = async () => {
     const user = await response.json();
 
     // Fetch WooCommerce customer data
-    const custResponse = await fetch(`${WP_API_URL}/customers?email=${encodeURIComponent(user.email)}`, {
+    const custResponse = await fetch(`${WP_API_URL_PUBLIC}/customers?email=${encodeURIComponent(user.email)}`, {
       headers: {
         'Authorization': getAuthHeader(),
       }
