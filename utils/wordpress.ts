@@ -7,10 +7,11 @@ const WP_URL = import.meta.env.VITE_WORDPRESS_URL || import.meta.env.VITE_URL ||
 // (Public key, safe for frontend)
 export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_RyG0ZXrWONWBho';
 
-// Use full WordPress URL for all API requests
-// CORS is handled by WordPress CORS plugin
-const WP_API_URL_PUBLIC = `${WP_URL}/wp-json/wc/v3`;
-const WP_API_URL_AUTH = `${WP_URL}/wp-json/wc/v3`;
+// In production, use relative URLs so requests go through nginx proxy (which injects auth headers)
+// In development, use full URLs with Vite proxy
+const isProduction = import.meta.env.PROD;
+const WP_API_URL_PUBLIC = isProduction ? '/wp-json/wc/v3' : `${WP_URL}/wp-json/wc/v3`;
+const WP_API_URL_AUTH = isProduction ? '/wp-json/wc/v3' : `${WP_URL}/wp-json/wc/v3`;
 
 // Helper for Auth Header (Secure Proxy handles this now for API calls)
 const getAuthHeader = () => {
@@ -31,7 +32,7 @@ const setJWTToken = (token: string | null) => {
 };
 
 // WordPress JWT Authentication endpoint (requires JWT Authentication plugin)
-const WP_JWT_URL = `${WP_URL}/wp-json/jwt-auth/v1/token`;
+const WP_JWT_URL = isProduction ? '/wp-json/jwt-auth/v1/token' : `${WP_URL}/wp-json/jwt-auth/v1/token`;
 
 /**
  * Fetches products from WooCommerce
@@ -625,7 +626,7 @@ export const requestPasswordReset = async (email: string) => {
 
     // Method 1: Try custom WordPress REST API endpoint
     try {
-      const response = await fetch(`${WP_URL}/wp-json/jumplings/v1/lost-password`, {
+      const response = await fetch(isProduction ? '/wp-json/jumplings/v1/lost-password' : `${WP_URL}/wp-json/jumplings/v1/lost-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -670,7 +671,7 @@ export const requestPasswordReset = async (email: string) => {
     // Method 3: If we are here, the email exists but our custom endpoints might be missing
     // Try to trigger the standard WordPress reset if possible, otherwise provide instructions
     try {
-      const response = await fetch(`${WP_URL}/wp-json/jumplings/v1/send-password-reset`, {
+      const response = await fetch(isProduction ? '/wp-json/jumplings/v1/send-password-reset' : `${WP_URL}/wp-json/jumplings/v1/send-password-reset`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -720,7 +721,7 @@ export const resetPasswordWithToken = async (login: string, key: string, newPass
 
     // Method 1: Try custom WordPress REST API endpoint
     try {
-      const response = await fetch(`${WP_URL}/wp-json/jumplings/v1/reset-password`, {
+      const response = await fetch(isProduction ? '/wp-json/jumplings/v1/reset-password' : `${WP_URL}/wp-json/jumplings/v1/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
